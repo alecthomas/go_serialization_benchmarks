@@ -13,12 +13,12 @@ import (
 )
 
 type A struct {
-	Name     string    `bson:"Name"`
-	BirthDay time.Time `bson:"BirthDay"`
-	Phone    string    `bson:"Phone"`
-	Siblings int       `bson:"Siblings"`
-	Spouse   bool      `bson:"Spouse"`
-	Money    float64   `bson:"Money"`
+	Name     string
+	BirthDay time.Time
+	Phone    string
+	Siblings int
+	Spouse   bool
+	Money    float64
 }
 
 func randString(l int) string {
@@ -153,7 +153,7 @@ func benchUnmarshal(b *testing.B, s Serializer) {
 		// i := data[n]
 		// correct := o.BirthDay.String() == i.BirthDay.String() && o.Name == i.Name && o.Phone == i.Phone && o.Siblings == i.Siblings && o.Spouse == i.Spouse && o.Money == i.Money
 		// if !correct {
-		// 	b.Fatalf("unmarshaled object differed: %v != %v", i, o)
+		// 	b.Fatalf("unmarshaled object differed:\n%v\n%v", i, o)
 		// }
 	}
 }
