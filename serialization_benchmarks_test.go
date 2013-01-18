@@ -18,6 +18,7 @@ type A struct {
 	Phone    string    `bson:"Phone"`
 	Siblings int       `bson:"Siblings"`
 	Spouse   bool      `bson:"Spouse"`
+	Money    float64   `bson:"Money"`
 }
 
 func randString(l int) string {
@@ -37,6 +38,7 @@ func generate() []*A {
 			Phone:    randString(10),
 			Siblings: rand.Intn(5),
 			Spouse:   rand.Intn(2) == 1,
+			Money:    rand.Float64(),
 		})
 	}
 	return a
@@ -147,6 +149,12 @@ func benchUnmarshal(b *testing.B, s Serializer) {
 		n := rand.Intn(len(ser))
 		o := &A{}
 		s.Unmarshal(ser[n], o)
+		// Validate unmarshalled data.
+		// i := data[n]
+		// correct := o.BirthDay.String() == i.BirthDay.String() && o.Name == i.Name && o.Phone == i.Phone && o.Siblings == i.Siblings && o.Spouse == i.Spouse && o.Money == i.Money
+		// if !correct {
+		// 	b.Fatalf("unmarshaled object differed: %v != %v", i, o)
+		// }
 	}
 }
 

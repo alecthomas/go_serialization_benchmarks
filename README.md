@@ -4,8 +4,8 @@ This is a test suite for benchmarking various Go serialization methods.
 To run:
 
 ```
-    go get github.com/ugorji/go-msgpack labix.org/v2/mgo/bson
-    go test -bench='.*' ./
+go get github.com/ugorji/go-msgpack labix.org/v2/mgo/bson code.google.com/p/vitess/go/bson
+go test -bench='.*' ./
 ```
 
 No testing for serialization correctness is performed.
@@ -19,6 +19,20 @@ Currently tested are:
 - `github.com/ugorji/go-msgpack`
 - `labix.org/v2/mgo/bson`
 - `code.google.com/p/vitess/go/bson`
+
+
+## Caveats
+
+Note that mgo's bson serializer seems to drop some precision with `time.Date` structs. Uncommenting validation code in the benchmark fails with:
+
+```
+serialization_benchmarks_test.go:156: 	unmarshaled object differed:
+&{d8c7b339f1dd290e 2013-01-18 11:39:39.64337014 -0500 EST 9894e18711 2 true 0.9013406798206226}
+&{d8c7b339f1dd290e 2013-01-18 11:39:39.643 -0500 EST 9894e18711 2 true 0.9013406798206226}
+```
+
+All other fields are correct however.
+
 
 ## Results
 
