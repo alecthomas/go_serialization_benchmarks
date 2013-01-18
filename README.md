@@ -10,12 +10,28 @@ go test -bench='.*' ./
 
 No testing for serialization correctness is performed.
 
-## Serialization methods
+## Data
+
+The data being serialized is the following structure with randomly generated values:
+
+```
+type A struct {
+	Name     string
+	BirthDay time.Time
+	Phone    string
+	Siblings int
+	Spouse   bool
+	Money    float64
+	Tags     map[string]string
+	Aliases  []string
+}
+```
+
+## Tested serialization methods
 
 Currently tested are:
 
 - `encoding/json`
-- `encoding/xml`
 - `github.com/ugorji/go-msgpack`
 - `labix.org/v2/mgo/bson`
 - `code.google.com/p/vitess/go/bson`
@@ -39,14 +55,12 @@ All other fields are correct however.
 Results on my late 2012 MacBook Air 11" are:
 
 ```
-BenchmarkMsgpackMarshal	  		500000	      5190 ns/op
-BenchmarkMsgpackUnmarshal	  	200000	     10695 ns/op
-BenchmarkJsonMarshal	  		200000	      8365 ns/op
-BenchmarkJsonUnmarshal	  		200000	     10472 ns/op
-BenchmarkXmlMarshal	  			200000	      8007 ns/op
-BenchmarkXmlUnmarshal	   		50000	     34064 ns/op
-BenchmarkBsonMarshal	  		500000	      3734 ns/op
-BenchmarkBsonUnmarshal	  		500000	      3934 ns/op
-BenchmarkVitessBsonMarshal	  	200000	      8507 ns/op
-BenchmarkVitessBsonUnmarshal	500000	      5627 ns/op
+BenchmarkMsgpackMarshal   			200000             10578 ns/op
+BenchmarkMsgpackUnmarshal         	100000             24522 ns/op
+BenchmarkJsonMarshal      			100000             19423 ns/op
+BenchmarkJsonUnmarshal    			100000             24113 ns/op
+BenchmarkBsonMarshal      			200000             10657 ns/op
+BenchmarkBsonUnmarshal    			100000             16348 ns/op
+BenchmarkVitessBsonMarshal        	100000             14922 ns/op
+BenchmarkVitessBsonUnmarshal      	100000             16769 ns/op
 ```
