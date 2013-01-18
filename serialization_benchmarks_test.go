@@ -12,11 +12,11 @@ import (
 )
 
 type A struct {
-	Name     string
-	BirthDay time.Time
-	Phone    string
-	Siblings int
-	Spouse   bool
+	Name     string    `bson:"Name"`
+	BirthDay time.Time `bson:"BirthDay"`
+	Phone    string    `bson:"Phone"`
+	Siblings int       `bson:"Siblings"`
+	Spouse   bool      `bson:"Spouse"`
 }
 
 func randString(l int) string {
@@ -116,7 +116,7 @@ func benchMarshal(b *testing.B, s Serializer) {
 		b := s.Marshal(data[rand.Intn(len(data))])
 		size += uint64(len(b))
 	}
-	// fmt.Fprintf(os.Stderr, "average size of %s serialized structure is %d\n", s, size/uint64(b.N))
+	// println(fmt.Sprintf("average size of %s serialized structure is %d", s, size/uint64(b.N)))
 }
 
 func benchUnmarshal(b *testing.B, s Serializer) {
