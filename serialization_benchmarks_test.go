@@ -1,6 +1,7 @@
 package goserbench
 
 import (
+	vitessbson "code.google.com/p/vitess/go/bson"
 	"encoding/json"
 	"encoding/xml"
 	"fmt"
@@ -107,6 +108,21 @@ func (j BsonSerializer) String() string {
 	return "bson"
 }
 
+type VitessBsonSerializer int
+
+func (m VitessBsonSerializer) Marshal(o interface{}) []byte {
+	d, _ := vitessbson.Marshal(o)
+	return d
+}
+
+func (m VitessBsonSerializer) Unmarshal(d []byte, o interface{}) {
+	vitessbson.Unmarshal(d, o)
+}
+
+func (j VitessBsonSerializer) String() string {
+	return "vitessbson"
+}
+
 func benchMarshal(b *testing.B, s Serializer) {
 	b.StopTimer()
 	data := generate()
@@ -137,11 +153,8 @@ func benchUnmarshal(b *testing.B, s Serializer) {
 func TestMessage(t *testing.T) {
 	println(`
 A test suite for benchmarking various Go serialization methods.
-To run:
 
-     go get github.com/ugorji/go-msgpack labix.org/v2/mgo/bson
-     go test -bench='.*' ./
-
+See README.md for details on running the benchmarks.
 `)
 
 }
@@ -176,4 +189,12 @@ func BenchmarkBsonMarshal(b *testing.B) {
 
 func BenchmarkBsonUnmarshal(b *testing.B) {
 	benchUnmarshal(b, BsonSerializer(0))
+}
+
+func BenchmarkVitessBsonMarshal(b *testing.B) {
+	benchMarshal(b, VitessBsonSerializer(0))
+}
+
+func BenchmarkVitessBsonUnmarshal(b *testing.B) {
+	benchUnmarshal(b, VitessBsonSerializer(0))
 }
