@@ -4,7 +4,7 @@ This is a test suite for benchmarking various Go serialization methods.
 To run:
 
 ```
-go get github.com/ugorji/go-msgpack labix.org/v2/mgo/bson code.google.com/p/vitess/go/bson
+go get github.com/ugorji/go-msgpack labix.org/v2/mgo/bson code.google.com/p/vitess/go/bson github.com/vmihailenco/msgpack
 go test -bench='.*' ./
 ```
 
@@ -35,6 +35,7 @@ Currently tested are:
 - `github.com/ugorji/go-msgpack`
 - `labix.org/v2/mgo/bson`
 - `code.google.com/p/vitess/go/bson`
+- `github.com/vmihailenco/msgpack`
 
 
 ## Caveats
