@@ -4,7 +4,8 @@ import (
 	vitessbson "code.google.com/p/vitess/go/bson"
 	"encoding/json"
 	"fmt"
-	"github.com/ugorji/go-msgpack"
+	ugorji "github.com/ugorji/go-msgpack"
+	vmihailenco "github.com/vmihailenco/msgpack"
 	"labix.org/v2/mgo/bson"
 	"math/rand"
 	"testing"
@@ -53,19 +54,34 @@ type Serializer interface {
 	String() string
 }
 
-type MsgpackSerializer int
+type UgorjiMsgpackSerializer int
 
-func (m MsgpackSerializer) Marshal(o interface{}) []byte {
-	d, _ := msgpack.Marshal(o)
+func (m UgorjiMsgpackSerializer) Marshal(o interface{}) []byte {
+	d, _ := ugorji.Marshal(o)
 	return d
 }
 
-func (m MsgpackSerializer) Unmarshal(d []byte, o interface{}) error {
-	return msgpack.Unmarshal(d, o, nil)
+func (m UgorjiMsgpackSerializer) Unmarshal(d []byte, o interface{}) error {
+	return ugorji.Unmarshal(d, o, nil)
 }
 
-func (m MsgpackSerializer) String() string {
-	return "msgpack"
+func (m UgorjiMsgpackSerializer) String() string {
+	return "ugorji-msgpack"
+}
+
+type VmihailencoMsgpackSerializer int
+
+func (m VmihailencoMsgpackSerializer) Marshal(o interface{}) []byte {
+	d, _ := vmihailenco.Marshal(o)
+	return d
+}
+
+func (m VmihailencoMsgpackSerializer) Unmarshal(d []byte, o interface{}) error {
+	return vmihailenco.Unmarshal(d, o)
+}
+
+func (m VmihailencoMsgpackSerializer) String() string {
+	return "vmihailenco-msgpack"
 }
 
 type JsonSerializer int
@@ -182,13 +198,20 @@ See README.md for details on running the benchmarks.
 `)
 
 }
-
-func BenchmarkMsgpackMarshal(b *testing.B) {
-	benchMarshal(b, MsgpackSerializer(0))
+func BenchmarkUgorjiMsgpackMarshal(b *testing.B) {
+	benchMarshal(b, UgorjiMsgpackSerializer(0))
 }
 
-func BenchmarkMsgpackUnmarshal(b *testing.B) {
-	benchUnmarshal(b, MsgpackSerializer(0))
+func BenchmarkUgorjiMsgpackUnmarshal(b *testing.B) {
+	benchUnmarshal(b, UgorjiMsgpackSerializer(0))
+}
+
+func BenchmarkVmihailencoMsgpackMarshal(b *testing.B) {
+	benchMarshal(b, VmihailencoMsgpackSerializer(0))
+}
+
+func BenchmarkVmihailencoMsgpackUnmarshal(b *testing.B) {
+	benchUnmarshal(b, VmihailencoMsgpackSerializer(0))
 }
 
 func BenchmarkJsonMarshal(b *testing.B) {
