@@ -1,7 +1,9 @@
 package goserbench
 
 import (
+	"bytes"
 	vitessbson "code.google.com/p/vitess/go/bson"
+	"encoding/gob"
 	"encoding/json"
 	"fmt"
 	ugorji "github.com/ugorji/go-msgpack"
@@ -19,8 +21,6 @@ type A struct {
 	Siblings int
 	Spouse   bool
 	Money    float64
-	Tags     map[string]string
-	Aliases  []string
 }
 
 func randString(l int) string {
@@ -41,8 +41,6 @@ func generate() []*A {
 			Siblings: rand.Intn(5),
 			Spouse:   rand.Intn(2) == 1,
 			Money:    rand.Float64(),
-			Tags:     map[string]string{"a": "a", "b": "b", "c": "c"},
-			Aliases:  []string{randString(5), randString(5)},
 		})
 	}
 	return a
@@ -129,6 +127,29 @@ func (j VitessBsonSerializer) String() string {
 	return "vitessbson"
 }
 
+type GobSerializer int
+
+func (g GobSerializer) Marshal(o interface{}) []byte {
+	b := &bytes.Buffer{}
+	e := gob.NewEncoder(b)
+	err := e.Encode(o)
+	if err != nil {
+		panic(err)
+	}
+	return b.Bytes()
+}
+
+func (g GobSerializer) Unmarshal(d []byte, o interface{}) error {
+	b := bytes.NewBuffer(d)
+	e := gob.NewDecoder(b)
+	err := e.Decode(o)
+	return err
+}
+
+func (g GobSerializer) String() string {
+	return "gob"
+}
+
 func benchMarshal(b *testing.B, s Serializer) {
 	b.StopTimer()
 	data := generate()
@@ -180,10 +201,10 @@ func benchUnmarshal(b *testing.B, s Serializer) {
 		if err != nil {
 			b.Fatalf("%s failed to unmarshal: %s", s, err)
 		}
-		// Validate unmarshalled data.
+		// // Validate unmarshalled data.
 		// i := data[n]
 		// // o.BirthDay.String() == i.BirthDay.String() &&
-		// correct := o.Name == i.Name && o.Phone == i.Phone && o.Siblings == i.Siblings && o.Spouse == i.Spouse && o.Money == i.Money && cmpTags(o.Tags, i.Tags) && cmpAliases(o.Aliases, i.Aliases)
+		// correct := o.Name == i.Name && o.Phone == i.Phone && o.Siblings == i.Siblings && o.Spouse == i.Spouse && o.Money == i.Money //&& cmpTags(o.Tags, i.Tags) && cmpAliases(o.Aliases, i.Aliases)
 		// if !correct {
 		// 	b.Fatalf("unmarshaled object differed:\n%v\n%v", i, o)
 		// }
@@ -236,4 +257,12 @@ func BenchmarkVitessBsonMarshal(b *testing.B) {
 
 func BenchmarkVitessBsonUnmarshal(b *testing.B) {
 	benchUnmarshal(b, VitessBsonSerializer(0))
+}
+
+func BenchmarkGobMarshal(b *testing.B) {
+	benchMarshal(b, GobSerializer(0))
+}
+
+func BenchmarkGobUnmarshal(b *testing.B) {
+	benchUnmarshal(b, GobSerializer(0))
 }

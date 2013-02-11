@@ -8,6 +8,10 @@ go get github.com/ugorji/go-msgpack labix.org/v2/mgo/bson code.google.com/p/vite
 go test -bench='.*' ./
 ```
 
+Shameless plug: I use [pawk](https://github.com/alecthomas/pawk) to format the table:
+
+`go test -bench='.*' ./ | pawk '"%-40s %10s %10s %s" % f'`)
+
 No testing for serialization correctness is performed.
 
 ## Data
@@ -56,12 +60,18 @@ All other fields are correct however.
 Results on my late 2012 MacBook Air 11" are:
 
 ```
-BenchmarkMsgpackMarshal   			200000             10578 ns/op
-BenchmarkMsgpackUnmarshal         	100000             24522 ns/op
-BenchmarkJsonMarshal      			100000             19423 ns/op
-BenchmarkJsonUnmarshal    			100000             24113 ns/op
-BenchmarkBsonMarshal      			200000             10657 ns/op
-BenchmarkBsonUnmarshal    			100000             16348 ns/op
-BenchmarkVitessBsonMarshal        	100000             14922 ns/op
-BenchmarkVitessBsonUnmarshal      	100000             16769 ns/op
+BenchmarkUgorjiMsgpackMarshal                500000       5809 ns/op
+BenchmarkUgorjiMsgpackUnmarshal              200000      11027 ns/op
+BenchmarkVmihailencoMsgpackMarshal           500000       3383 ns/op
+BenchmarkVmihailencoMsgpackUnmarshal         500000       7054 ns/op
+BenchmarkJsonMarshal                         200000       9762 ns/op
+BenchmarkJsonUnmarshal                       200000      10897 ns/op
+BenchmarkBsonMarshal                         500000       4437 ns/op
+BenchmarkBsonUnmarshal                       500000       4477 ns/op
+BenchmarkVitessBsonMarshal                   200000       8564 ns/op
+BenchmarkVitessBsonUnmarshal                 500000       6553 ns/op
+BenchmarkGobMarshal                          200000      12531 ns/op
+BenchmarkGobUnmarshal                         20000      99961 ns/op
 ```
+
+**Note:** the gob results are not really representative of normal performance, as gob is designed for serializing streams or vectors of a single type, not individual values.
