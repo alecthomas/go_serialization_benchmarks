@@ -6,12 +6,18 @@ import (
 	"encoding/gob"
 	"encoding/json"
 	"fmt"
+	"github.com/davecgh/go-xdr/xdr"
 	ugorji "github.com/ugorji/go-msgpack"
 	vmihailenco "github.com/vmihailenco/msgpack"
 	"labix.org/v2/mgo/bson"
 	"math/rand"
+	"os"
 	"testing"
 	"time"
+)
+
+var (
+	validate = os.Getenv("VALIDATE")
 )
 
 type A struct {
@@ -150,6 +156,22 @@ func (g GobSerializer) String() string {
 	return "gob"
 }
 
+type XdrSerializer int
+
+func (x XdrSerializer) Marshal(o interface{}) []byte {
+	d, _ := xdr.Marshal(o)
+	return d
+}
+
+func (x XdrSerializer) Unmarshal(d []byte, o interface{}) error {
+	_, err := xdr.Unmarshal(d, o)
+	return err
+}
+
+func (x XdrSerializer) String() string {
+	return "xdr"
+}
+
 func benchMarshal(b *testing.B, s Serializer) {
 	b.StopTimer()
 	data := generate()
@@ -202,11 +224,13 @@ func benchUnmarshal(b *testing.B, s Serializer) {
 			b.Fatalf("%s failed to unmarshal: %s", s, err)
 		}
 		// Validate unmarshalled data.
-		//		i := data[n]
-		//		correct := o.Name == i.Name && o.Phone == i.Phone && o.Siblings == i.Siblings && o.Spouse == i.Spouse && o.Money == i.Money && o.BirthDay.String() == i.BirthDay.String() //&& cmpTags(o.Tags, i.Tags) && cmpAliases(o.Aliases, i.Aliases)
-		//		if !correct {
-		//			b.Fatalf("unmarshaled object differed:\n%v\n%v", i, o)
-		//		}
+		if validate != "" {
+			i := data[n]
+			correct := o.Name == i.Name && o.Phone == i.Phone && o.Siblings == i.Siblings && o.Spouse == i.Spouse && o.Money == i.Money && o.BirthDay.String() == i.BirthDay.String() //&& cmpTags(o.Tags, i.Tags) && cmpAliases(o.Aliases, i.Aliases)
+			if !correct {
+				b.Fatalf("unmarshaled object differed:\n%v\n%v", i, o)
+			}
+		}
 	}
 }
 
@@ -264,4 +288,12 @@ func BenchmarkGobMarshal(b *testing.B) {
 
 func BenchmarkGobUnmarshal(b *testing.B) {
 	benchUnmarshal(b, GobSerializer(0))
+}
+
+func BenchmarkXdrMarshal(b *testing.B) {
+	benchMarshal(b, XdrSerializer(0))
+}
+
+func BenchmarkXdrUnmarshal(b *testing.B) {
+	benchUnmarshal(b, XdrSerializer(0))
 }
