@@ -201,13 +201,12 @@ func benchUnmarshal(b *testing.B, s Serializer) {
 		if err != nil {
 			b.Fatalf("%s failed to unmarshal: %s", s, err)
 		}
-		// // Validate unmarshalled data.
-		// i := data[n]
-		// // o.BirthDay.String() == i.BirthDay.String() &&
-		// correct := o.Name == i.Name && o.Phone == i.Phone && o.Siblings == i.Siblings && o.Spouse == i.Spouse && o.Money == i.Money //&& cmpTags(o.Tags, i.Tags) && cmpAliases(o.Aliases, i.Aliases)
-		// if !correct {
-		// 	b.Fatalf("unmarshaled object differed:\n%v\n%v", i, o)
-		// }
+		// Validate unmarshalled data.
+		//		i := data[n]
+		//		correct := o.Name == i.Name && o.Phone == i.Phone && o.Siblings == i.Siblings && o.Spouse == i.Spouse && o.Money == i.Money && o.BirthDay.String() == i.BirthDay.String() //&& cmpTags(o.Tags, i.Tags) && cmpAliases(o.Aliases, i.Aliases)
+		//		if !correct {
+		//			b.Fatalf("unmarshaled object differed:\n%v\n%v", i, o)
+		//		}
 	}
 }
 
