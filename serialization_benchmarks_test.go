@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"github.com/davecgh/go-xdr/xdr"
 	ugorji "github.com/ugorji/go-msgpack"
+	"github.com/ugorji/go/codec"
 	vmihailenco "github.com/vmihailenco/msgpack"
 	"labix.org/v2/mgo/bson"
 	"math/rand"
@@ -172,11 +173,40 @@ func (x XdrSerializer) String() string {
 	return "xdr"
 }
 
+type UgorjiCodecSerializer struct {
+	name string
+	h    codec.Handle
+}
+
+func NewUgorjiCodecSerializer(name string, h codec.Handle) *UgorjiCodecSerializer {
+	return &UgorjiCodecSerializer{
+		name: name,
+		h:    h,
+	}
+}
+
+func (u *UgorjiCodecSerializer) Marshal(o interface{}) []byte {
+	buf := bytes.NewBuffer(nil)
+	enc := codec.NewEncoder(buf, u.h)
+	enc.Encode(o)
+	return buf.Bytes()
+}
+
+func (u *UgorjiCodecSerializer) Unmarshal(d []byte, o interface{}) error {
+	buf := bytes.NewReader(d)
+	dec := codec.NewDecoder(buf, u.h)
+	return dec.Decode(o)
+}
+
+func (u *UgorjiCodecSerializer) String() string {
+	return "ugorjicodec-" + u.name
+}
+
 func benchMarshal(b *testing.B, s Serializer) {
 	b.StopTimer()
 	data := generate()
 	b.StartTimer()
-	var size uint64 = 0
+	var size uint64
 	for i := 0; i < b.N; i++ {
 		b := s.Marshal(data[rand.Intn(len(data))])
 		size += uint64(len(b))
@@ -296,4 +326,24 @@ func BenchmarkXdrMarshal(b *testing.B) {
 
 func BenchmarkXdrUnmarshal(b *testing.B) {
 	benchUnmarshal(b, XdrSerializer(0))
+}
+
+func BenchmarkUgorjiCodecMsgpackMarshal(b *testing.B) {
+	s := NewUgorjiCodecSerializer("msgpack", &codec.MsgpackHandle{})
+	benchMarshal(b, s)
+}
+
+func BenchmarkUgorjiCodecMsgpackUnmarshal(b *testing.B) {
+	s := NewUgorjiCodecSerializer("msgpack", &codec.MsgpackHandle{})
+	benchUnmarshal(b, s)
+}
+
+func BenchmarkUgorjiCodecBincMarshal(b *testing.B) {
+	s := NewUgorjiCodecSerializer("binc", &codec.BincHandle{})
+	benchMarshal(b, s)
+}
+
+func BenchmarkUgorjiCodecBincUnmarshal(b *testing.B) {
+	s := NewUgorjiCodecSerializer("binc", &codec.BincHandle{})
+	benchUnmarshal(b, s)
 }
