@@ -2,7 +2,7 @@ package goserbench
 
 import (
 	"bytes"
-	vitessbson "code.google.com/p/vitess/go/bson"
+	vitessbson "github.com/youtube/vitess/go/bson"
 	"encoding/gob"
 	"encoding/json"
 	"fmt"
