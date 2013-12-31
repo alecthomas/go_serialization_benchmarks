@@ -7,6 +7,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/davecgh/go-xdr/xdr"
+	"github.com/Sereal/Sereal/Go/sereal"
 	ugorji "github.com/ugorji/go-msgpack"
 	"github.com/ugorji/go/codec"
 	vmihailenco "github.com/vmihailenco/msgpack"
@@ -202,6 +203,22 @@ func (u *UgorjiCodecSerializer) String() string {
 	return "ugorjicodec-" + u.name
 }
 
+type SerealSerializer int
+
+func (s SerealSerializer) Marshal(o interface{}) []byte {
+	d, _ := sereal.Marshal(o)
+	return d
+}
+
+func (s SerealSerializer) Unmarshal(d []byte, o interface{}) error {
+	err := sereal.Unmarshal(d, o)
+	return err
+}
+
+func (s SerealSerializer) String() string {
+	return "sereal"
+}
+
 func benchMarshal(b *testing.B, s Serializer) {
 	b.StopTimer()
 	data := generate()
@@ -346,4 +363,12 @@ func BenchmarkUgorjiCodecBincMarshal(b *testing.B) {
 func BenchmarkUgorjiCodecBincUnmarshal(b *testing.B) {
 	s := NewUgorjiCodecSerializer("binc", &codec.BincHandle{})
 	benchUnmarshal(b, s)
+}
+
+func BenchmarkSerealMarshal(b *testing.B) {
+	benchMarshal(b, SerealSerializer(0))
+}
+
+func BenchmarkSerealUnmarshal(b *testing.B) {
+	benchUnmarshal(b, SerealSerializer(0))
 }
