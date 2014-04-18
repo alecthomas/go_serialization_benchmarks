@@ -5,13 +5,7 @@ This is a test suite for benchmarking various Go serialization methods.
 To run:
 
 ```bash
-go get -u \
-    github.com/ugorji/go-msgpack \
-    labix.org/v2/mgo/bson \
-    code.google.com/p/vitess/go/bson \
-    github.com/vmihailenco/msgpack \
-    github.com/davecgh/go-xdr/xdr \
-    github.com/ugorji/go/codec
+go get -u -t
 go test -bench='.*' ./
 ```
 
@@ -52,34 +46,36 @@ Currently tested are:
 - `github.com/ugorji/go-msgpack`
 - `github.com/vmihailenco/msgpack`
 - `labix.org/v2/mgo/bson`
-- `code.google.com/p/vitess/go/bson`
+- `github.com/youtube/vitess/go/bson`
 - `github.com/davecgh/go-xdr/xdr`
-- `github.com/ugorji/go/codec`
+- `github.com/ugorji/go/codec` (msgpack and binc)
+- `github.com/Sereal/Sereal`
 
 ## Results
 
 Results on my late 2012 MacBook Air 11" are:
 
 ```
-BenchmarkUgorjiMsgpackMarshal                500000       4882 ns/op
-BenchmarkUgorjiMsgpackUnmarshal              500000       4581 ns/op
-BenchmarkVmihailencoMsgpackMarshal          1000000       2256 ns/op
-BenchmarkVmihailencoMsgpackUnmarshal        1000000       2759 ns/op
-BenchmarkJsonMarshal                         500000       4608 ns/op
-BenchmarkJsonUnmarshal                       500000       7794 ns/op
-BenchmarkBsonMarshal                        1000000       2640 ns/op
-BenchmarkBsonUnmarshal                       500000       3114 ns/op
-BenchmarkVitessBsonMarshal                   200000      10754 ns/op
-BenchmarkVitessBsonUnmarshal                 500000       4169 ns/op
-BenchmarkGobMarshal                          200000      11297 ns/op
-BenchmarkGobUnmarshal                         20000      76537 ns/op
-BenchmarkXdrMarshal                         1000000       2839 ns/op
-BenchmarkXdrUnmarshal                       1000000       2068 ns/op
-BenchmarkUgorjiCodecMsgpackMarshal           500000       5685 ns/op
-BenchmarkUgorjiCodecMsgpackUnmarshal         500000       5491 ns/op
-BenchmarkUgorjiCodecBincMarshal              500000       7927 ns/op
-BenchmarkUgorjiCodecBincUnmarshal            200000       7624 ns/op
-```
+BenchmarkUgorjiMsgpackMarshal                500000       3723 ns/op
+BenchmarkUgorjiMsgpackUnmarshal              500000       3330 ns/op
+BenchmarkVmihailencoMsgpackMarshal          1000000       1585 ns/op
+BenchmarkVmihailencoMsgpackUnmarshal        1000000       1933 ns/op
+BenchmarkJsonMarshal                        1000000       2938 ns/op
+BenchmarkJsonUnmarshal                       500000       4749 ns/op
+BenchmarkBsonMarshal                        1000000       2065 ns/op
+BenchmarkBsonUnmarshal                      1000000       2361 ns/op
+BenchmarkVitessBsonMarshal                   200000       9278 ns/op
+BenchmarkVitessBsonUnmarshal                 500000       3340 ns/op
+BenchmarkGobMarshal                          500000       7056 ns/op
+BenchmarkGobUnmarshal                         50000      53088 ns/op
+BenchmarkXdrMarshal                         1000000       2798 ns/op
+BenchmarkXdrUnmarshal                       1000000       1903 ns/op
+BenchmarkUgorjiCodecMsgpackMarshal           500000       3916 ns/op
+BenchmarkUgorjiCodecMsgpackUnmarshal         500000       4033 ns/op
+BenchmarkUgorjiCodecBincMarshal              500000       5356 ns/op
+BenchmarkUgorjiCodecBincUnmarshal            500000       5341 ns/op
+BenchmarkSerealMarshal                       500000       4531 ns/op
+BenchmarkSerealUnmarshal                     500000       4201 ns/op```
 
 **Note:** the gob results are not really representative of normal performance, as gob is designed for serializing streams or vectors of a single type, not individual values.
 
@@ -97,8 +93,7 @@ Unfortunately, several of the serializers exhibit issues:
 1. **(MAJOR)** Ugorji msgpack implementation drops the timezone frome `time.Time`.
 2. **(minor)** BSON drops sub-second precision from `time.Time`.
 3. **(minor)** Vitess BSON drops sub-second precision from `time.Time`.
-4. **(MAJOR)** XDR does not support `time.Time` at all.
-5. **(minor)** Ugorji Binc Codec drops the timezone name (eg. "EST" -> "-0500") from `time.Time`.
+4. **(minor)** Ugorji Binc Codec drops the timezone name (eg. "EST" -> "-0500") from `time.Time`.
 
 ```
 BenchmarkUgorjiMsgpackMarshal     500000          4919 ns/op
