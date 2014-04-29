@@ -2,20 +2,22 @@ package goserbench
 
 import (
 	"bytes"
-	vitessbson "github.com/youtube/vitess/go/bson"
 	"encoding/gob"
 	"encoding/json"
 	"fmt"
-	"github.com/davecgh/go-xdr/xdr"
-	"github.com/Sereal/Sereal/Go/sereal"
-	ugorji "github.com/ugorji/go-msgpack"
-	"github.com/ugorji/go/codec"
-	vmihailenco "github.com/vmihailenco/msgpack"
-	"labix.org/v2/mgo/bson"
 	"math/rand"
 	"os"
 	"testing"
 	"time"
+
+	"github.com/Sereal/Sereal/Go/sereal"
+	"github.com/alecthomas/binary"
+	"github.com/davecgh/go-xdr/xdr"
+	ugorji "github.com/ugorji/go-msgpack"
+	"github.com/ugorji/go/codec"
+	vmihailenco "github.com/vmihailenco/msgpack"
+	vitessbson "github.com/youtube/vitess/go/bson"
+	"labix.org/v2/mgo/bson"
 )
 
 var (
@@ -219,6 +221,21 @@ func (s SerealSerializer) String() string {
 	return "sereal"
 }
 
+type BinarySerializer int
+
+func (b BinarySerializer) Marshal(o interface{}) []byte {
+	d, _ := binary.Marshal(o)
+	return d
+}
+
+func (b BinarySerializer) Unmarshal(d []byte, o interface{}) error {
+	return binary.Unmarshal(d, o)
+}
+
+func (b BinarySerializer) String() string {
+	return "binary"
+}
+
 func benchMarshal(b *testing.B, s Serializer) {
 	b.StopTimer()
 	data := generate()
@@ -268,7 +285,7 @@ func benchUnmarshal(b *testing.B, s Serializer) {
 		o := &A{}
 		err := s.Unmarshal(ser[n], o)
 		if err != nil {
-			b.Fatalf("%s failed to unmarshal: %s", s, err)
+			b.Fatalf("%s failed to unmarshal: %s (%s)", s, err, ser[n])
 		}
 		// Validate unmarshalled data.
 		if validate != "" {
@@ -371,4 +388,12 @@ func BenchmarkSerealMarshal(b *testing.B) {
 
 func BenchmarkSerealUnmarshal(b *testing.B) {
 	benchUnmarshal(b, SerealSerializer(0))
+}
+
+func BenchmarkBinaryMarshal(b *testing.B) {
+	benchMarshal(b, BinarySerializer(0))
+}
+
+func BenchmarkBinaryUnmarshal(b *testing.B) {
+	benchUnmarshal(b, BinarySerializer(0))
 }
