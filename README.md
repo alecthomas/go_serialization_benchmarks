@@ -4,8 +4,8 @@ This is a test suite for benchmarking various Go serialization methods.
 
 ## Tested serialization methods
 
-- [encoding/json](http://golang.org/pkg/encoding/json/)
 - [encoding/gob](http://golang.org/pkg/encoding/gob/)
+- [encoding/json](http://golang.org/pkg/encoding/json/)
 - [github.com/alecthomas/binary](https://github.com/alecthomas/binary)
 - [github.com/davecgh/go-xdr/xdr](https://github.com/davecgh/go-xdr)
 - [github.com/Sereal/Sereal/Go/sereal](https://github.com/Sereal/Sereal)
@@ -32,10 +32,11 @@ go test -bench='.*' ./ | pawk '"%-40s %10s %10s %s" % f'
 ## Recommendation
 
 If performance, correctness and interoperability are the most important
-factors, it seems that https://github.com/vmihailenco/msgpack is currently the
-best choice.
+factors, it seems that
+[github.com/vmihailenco/msgpack](https://github.com/vmihailenco/msgpack) is
+currently the best choice.
 
-If performance is the biggest factor, https://github.com/davecgh/go-xdr is the
+If performance is the biggest factor, [github.com/davecgh/go-xdr](https://github.com/davecgh/go-xdr) is the
 best choice.
 
 But as always, make your own choice based on your requirements.
