@@ -4,14 +4,16 @@ This is a test suite for benchmarking various Go serialization methods.
 
 ## Tested serialization methods
 
-- github.com/alecthomas/binary
-- github.com/davecgh/go-xdr/xdr
-- github.com/Sereal/Sereal/Go/sereal
-- github.com/ugorji/go-msgpack
-- github.com/ugorji/go/codec
-- github.com/vmihailenco/msgpack
-- github.com/youtube/vitess/go/bson
-- labix.org/v2/mgo/bson
+- [encoding/json](http://golang.org/pkg/encoding/json/)
+- [encoding/gob](http://golang.org/pkg/encoding/gob/)
+- [github.com/alecthomas/binary](https://github.com/alecthomas/binary)
+- [github.com/davecgh/go-xdr/xdr](https://github.com/davecgh/go-xdr)
+- [github.com/Sereal/Sereal/Go/sereal](https://github.com/Sereal/Sereal)
+- [github.com/ugorji/go-msgpack](https://github.com/ugorji/go-msgpack)
+- [github.com/ugorji/go/codec](https://github.com/ugorji/go/tree/master/codec)
+- [github.com/vmihailenco/msgpack](https://github.com/vmihailenco/msgpack)
+- [github.com/youtube/vitess/go/bson](https://github.com/youtube/vitess/tree/master/go/bson)
+- [labix.org/v2/mgo/bson](https://labix.org/v2/mgo/bson)
 
 
 ## Running the benchmarks
@@ -55,17 +57,6 @@ type A struct {
 }
 ```
 
-
-Currently tested are:
-
-- `encoding/json`
-- `github.com/ugorji/go-msgpack`
-- `github.com/vmihailenco/msgpack`
-- `labix.org/v2/mgo/bson`
-- `github.com/youtube/vitess/go/bson`
-- `github.com/davecgh/go-xdr/xdr`
-- `github.com/ugorji/go/codec` (msgpack and binc)
-- `github.com/Sereal/Sereal`
 
 ## Results
 
