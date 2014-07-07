@@ -36,8 +36,9 @@ factors, it seems that
 [github.com/vmihailenco/msgpack](https://github.com/vmihailenco/msgpack) is
 currently the best choice.
 
-If performance is the biggest factor, [github.com/davecgh/go-xdr](https://github.com/davecgh/go-xdr) is the
-best choice.
+If performance is the biggest factor,
+[github.com/youtube/vitess/tree/master/go/bson](//github.com/youtube/vitess/tree/master/go/bson)
+is the best choice.
 
 But as always, make your own choice based on your requirements.
 
