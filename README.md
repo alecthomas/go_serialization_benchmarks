@@ -64,28 +64,29 @@ type A struct {
 Results on my late 2013 MacBook Pro 15" are:
 
 ```
-BenchmarkUgorjiMsgpackMarshal                500000       3710 ns/op
-BenchmarkUgorjiMsgpackUnmarshal              500000       3439 ns/op
-BenchmarkVmihailencoMsgpackMarshal          1000000       1652 ns/op
-BenchmarkVmihailencoMsgpackUnmarshal        1000000       1967 ns/op
-BenchmarkJsonMarshal                        1000000       2905 ns/op
-BenchmarkJsonUnmarshal                       500000       4911 ns/op
-BenchmarkBsonMarshal                        1000000       1990 ns/op
-BenchmarkBsonUnmarshal                      1000000       2311 ns/op
-BenchmarkVitessBsonMarshal                   200000       9458 ns/op
-BenchmarkVitessBsonUnmarshal                2000000        824 ns/op
-BenchmarkGobMarshal                          500000       6628 ns/op
-BenchmarkGobUnmarshal                         50000      46940 ns/op
-BenchmarkXdrMarshal                         1000000       2659 ns/op
-BenchmarkXdrUnmarshal                       1000000       1930 ns/op
-BenchmarkUgorjiCodecMsgpackMarshal           500000       3692 ns/op
-BenchmarkUgorjiCodecMsgpackUnmarshal         500000       3762 ns/op
-BenchmarkUgorjiCodecBincMarshal              500000       5123 ns/op
-BenchmarkUgorjiCodecBincUnmarshal            500000       4984 ns/op
-BenchmarkSerealMarshal                       500000       4090 ns/op
-BenchmarkSerealUnmarshal                     500000       4404 ns/op
-BenchmarkBinaryMarshal                      1000000       2178 ns/op
-BenchmarkBinaryUnmarshal                    1000000       2280 ns/op```
+BenchmarkUgorjiMsgpackMarshal                500000       3730 ns/op
+BenchmarkUgorjiMsgpackUnmarshal              500000       3431 ns/op
+BenchmarkVmihailencoMsgpackMarshal          1000000       1649 ns/op
+BenchmarkVmihailencoMsgpackUnmarshal        1000000       1931 ns/op
+BenchmarkJsonMarshal                        1000000       2901 ns/op
+BenchmarkJsonUnmarshal                       500000       4816 ns/op
+BenchmarkBsonMarshal                        1000000       1941 ns/op
+BenchmarkBsonUnmarshal                      1000000       2194 ns/op
+BenchmarkVitessBsonMarshal                  1000000       1442 ns/op
+BenchmarkVitessBsonUnmarshal                2000000        805 ns/op
+BenchmarkGobMarshal                          500000       6396 ns/op
+BenchmarkGobUnmarshal                         50000      46198 ns/op
+BenchmarkXdrMarshal                         1000000       2525 ns/op
+BenchmarkXdrUnmarshal                       1000000       1858 ns/op
+BenchmarkUgorjiCodecMsgpackMarshal           500000       3546 ns/op
+BenchmarkUgorjiCodecMsgpackUnmarshal         500000       3634 ns/op
+BenchmarkUgorjiCodecBincMarshal              500000       4846 ns/op
+BenchmarkUgorjiCodecBincUnmarshal            500000       4818 ns/op
+BenchmarkSerealMarshal                       500000       3948 ns/op
+BenchmarkSerealUnmarshal                     500000       4313 ns/op
+BenchmarkBinaryMarshal                      1000000       2136 ns/op
+BenchmarkBinaryUnmarshal                    1000000       2136 ns/op
+```
 
 **Note:** the gob results are not really representative of normal performance, as gob is designed for serializing streams or vectors of a single type, not individual values.
 
