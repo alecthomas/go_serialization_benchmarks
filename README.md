@@ -12,7 +12,7 @@ This is a test suite for benchmarking various Go serialization methods.
 - [github.com/ugorji/go-msgpack](https://github.com/ugorji/go-msgpack)
 - [github.com/ugorji/go/codec](https://github.com/ugorji/go/tree/master/codec)
 - [github.com/vmihailenco/msgpack](https://github.com/vmihailenco/msgpack)
-- [github.com/youtube/vitess/go/bson](https://github.com/youtube/vitess/tree/master/go/bson)
+- [github.com/youtube/vitess/go/bson](https://github.com/youtube/vitess/tree/master/go/bson) *(using the bsongen code generator)*
 - [labix.org/v2/mgo/bson](https://labix.org/v2/mgo/bson)
 
 
@@ -64,29 +64,28 @@ type A struct {
 Results on my late 2013 MacBook Pro 15" are:
 
 ```
-BenchmarkUgorjiMsgpackMarshal                500000       3715 ns/op
-BenchmarkUgorjiMsgpackUnmarshal              500000       3364 ns/op
-BenchmarkVmihailencoMsgpackMarshal          1000000       1636 ns/op
-BenchmarkVmihailencoMsgpackUnmarshal        1000000       2003 ns/op
-BenchmarkJsonMarshal                         500000       3006 ns/op
-BenchmarkJsonUnmarshal                       500000       4872 ns/op
-BenchmarkBsonMarshal                        1000000       2072 ns/op
-BenchmarkBsonUnmarshal                      1000000       2416 ns/op
-BenchmarkVitessBsonMarshal                   200000       9283 ns/op
-BenchmarkVitessBsonUnmarshal                 500000       3406 ns/op
-BenchmarkGobMarshal                          500000       7362 ns/op
-BenchmarkGobUnmarshal                         50000      53126 ns/op
-BenchmarkXdrMarshal                         1000000       2845 ns/op
-BenchmarkXdrUnmarshal                       1000000       1934 ns/op
-BenchmarkUgorjiCodecMsgpackMarshal           500000       3843 ns/op
-BenchmarkUgorjiCodecMsgpackUnmarshal         500000       3941 ns/op
-BenchmarkUgorjiCodecBincMarshal              500000       5280 ns/op
-BenchmarkUgorjiCodecBincUnmarshal            500000       5332 ns/op
-BenchmarkSerealMarshal                       500000       4503 ns/op
-BenchmarkSerealUnmarshal                     500000       4189 ns/op
-BenchmarkBinaryMarshal                      1000000       2181 ns/op
-BenchmarkBinaryUnmarshal                    1000000       2190 ns/op
-```
+BenchmarkUgorjiMsgpackMarshal                500000       3710 ns/op
+BenchmarkUgorjiMsgpackUnmarshal              500000       3439 ns/op
+BenchmarkVmihailencoMsgpackMarshal          1000000       1652 ns/op
+BenchmarkVmihailencoMsgpackUnmarshal        1000000       1967 ns/op
+BenchmarkJsonMarshal                        1000000       2905 ns/op
+BenchmarkJsonUnmarshal                       500000       4911 ns/op
+BenchmarkBsonMarshal                        1000000       1990 ns/op
+BenchmarkBsonUnmarshal                      1000000       2311 ns/op
+BenchmarkVitessBsonMarshal                   200000       9458 ns/op
+BenchmarkVitessBsonUnmarshal                2000000        824 ns/op
+BenchmarkGobMarshal                          500000       6628 ns/op
+BenchmarkGobUnmarshal                         50000      46940 ns/op
+BenchmarkXdrMarshal                         1000000       2659 ns/op
+BenchmarkXdrUnmarshal                       1000000       1930 ns/op
+BenchmarkUgorjiCodecMsgpackMarshal           500000       3692 ns/op
+BenchmarkUgorjiCodecMsgpackUnmarshal         500000       3762 ns/op
+BenchmarkUgorjiCodecBincMarshal              500000       5123 ns/op
+BenchmarkUgorjiCodecBincUnmarshal            500000       4984 ns/op
+BenchmarkSerealMarshal                       500000       4090 ns/op
+BenchmarkSerealUnmarshal                     500000       4404 ns/op
+BenchmarkBinaryMarshal                      1000000       2178 ns/op
+BenchmarkBinaryUnmarshal                    1000000       2280 ns/op```
 
 **Note:** the gob results are not really representative of normal performance, as gob is designed for serializing streams or vectors of a single type, not individual values.
 
