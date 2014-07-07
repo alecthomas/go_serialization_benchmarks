@@ -86,6 +86,7 @@ BenchmarkSerealMarshal                       500000       4090 ns/op
 BenchmarkSerealUnmarshal                     500000       4404 ns/op
 BenchmarkBinaryMarshal                      1000000       2178 ns/op
 BenchmarkBinaryUnmarshal                    1000000       2280 ns/op```
+```
 
 **Note:** the gob results are not really representative of normal performance, as gob is designed for serializing streams or vectors of a single type, not individual values.
 
