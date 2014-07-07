@@ -103,8 +103,8 @@ VALIDATE=1 go test -bench='.*' ./
 Unfortunately, several of the serializers exhibit issues:
 
 1. **(MAJOR)** Ugorji msgpack implementation drops the timezone frome `time.Time`.
-2. **(minor)** BSON drops sub-second precision from `time.Time`.
-3. **(minor)** Vitess BSON drops sub-second precision from `time.Time`.
+2. **(minor)** BSON drops sub-microsecond precision from `time.Time`.
+3. **(minor)** Vitess BSON drops sub-microsecond precision from `time.Time`.
 4. **(minor)** Ugorji Binc Codec drops the timezone name (eg. "EST" -> "-0500") from `time.Time`.
 
 ```
