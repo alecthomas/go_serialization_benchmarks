@@ -63,8 +63,8 @@ func (m MsgpSerializer) Marshal(o interface{}) []byte {
 }
 
 func (m MsgpSerializer) Unmarshal(d []byte, o interface{}) error {
-	o.(io.ReaderFrom).ReadFrom(bytes.NewReader(d))
-	return nil
+	_, err := o.(io.ReaderFrom).ReadFrom(bytes.NewReader(d))
+	return err
 }
 
 func (m MsgpSerializer) String() string { return "Msgp" }
@@ -246,13 +246,11 @@ func (b BinarySerializer) String() string {
 func benchMarshal(b *testing.B, s Serializer) {
 	b.StopTimer()
 	data := generate()
+	b.ReportAllocs()
 	b.StartTimer()
-	var size uint64
 	for i := 0; i < b.N; i++ {
-		b := s.Marshal(data[rand.Intn(len(data))])
-		size += uint64(len(b))
+		s.Marshal(data[rand.Intn(len(data))])
 	}
-	// println(fmt.Sprintf("average size of %s serialized structure is %d", s, size/uint64(b.N)))
 }
 
 func cmpTags(a, b map[string]string) bool {
@@ -286,6 +284,7 @@ func benchUnmarshal(b *testing.B, s Serializer) {
 	for i, d := range data {
 		ser[i] = s.Marshal(d)
 	}
+	b.ReportAllocs()
 	b.StartTimer()
 	for i := 0; i < b.N; i++ {
 		n := rand.Intn(len(ser))
