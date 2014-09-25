@@ -5,6 +5,7 @@ import (
 	"encoding/gob"
 	"encoding/json"
 	"fmt"
+	"io"
 	"math/rand"
 	"os"
 	"testing"
@@ -23,15 +24,6 @@ import (
 var (
 	validate = os.Getenv("VALIDATE")
 )
-
-type A struct {
-	Name     string
-	BirthDay time.Time
-	Phone    string
-	Siblings int
-	Spouse   bool
-	Money    float64
-}
 
 func randString(l int) string {
 	buf := make([]byte, l)
@@ -61,6 +53,21 @@ type Serializer interface {
 	Unmarshal(d []byte, o interface{}) error
 	String() string
 }
+
+type MsgpSerializer struct{}
+
+func (m MsgpSerializer) Marshal(o interface{}) []byte {
+	var buf bytes.Buffer
+	o.(io.WriterTo).WriteTo(&buf)
+	return buf.Bytes()
+}
+
+func (m MsgpSerializer) Unmarshal(d []byte, o interface{}) error {
+	o.(io.ReaderFrom).ReadFrom(bytes.NewReader(d))
+	return nil
+}
+
+func (m MsgpSerializer) String() string { return "Msgp" }
 
 type UgorjiMsgpackSerializer int
 
@@ -396,4 +403,12 @@ func BenchmarkBinaryMarshal(b *testing.B) {
 
 func BenchmarkBinaryUnmarshal(b *testing.B) {
 	benchUnmarshal(b, BinarySerializer(0))
+}
+
+func BenchmarkMsgpMarshal(b *testing.B) {
+	benchMarshal(b, MsgpSerializer{})
+}
+
+func BenchmarkMsgpUnmarshal(b *testing.B) {
+	benchUnmarshal(b, MsgpSerializer{})
 }
