@@ -5,6 +5,7 @@ import (
 	"encoding/gob"
 	"encoding/json"
 	"fmt"
+	"io"
 	"math/rand"
 	"os"
 	"testing"
@@ -23,15 +24,6 @@ import (
 var (
 	validate = os.Getenv("VALIDATE")
 )
-
-type A struct {
-	Name     string
-	BirthDay time.Time
-	Phone    string
-	Siblings int
-	Spouse   bool
-	Money    float64
-}
 
 func randString(l int) string {
 	buf := make([]byte, l)
@@ -61,6 +53,21 @@ type Serializer interface {
 	Unmarshal(d []byte, o interface{}) error
 	String() string
 }
+
+type MsgpSerializer struct{}
+
+func (m MsgpSerializer) Marshal(o interface{}) []byte {
+	var buf bytes.Buffer
+	o.(io.WriterTo).WriteTo(&buf)
+	return buf.Bytes()
+}
+
+func (m MsgpSerializer) Unmarshal(d []byte, o interface{}) error {
+	_, err := o.(io.ReaderFrom).ReadFrom(bytes.NewReader(d))
+	return err
+}
+
+func (m MsgpSerializer) String() string { return "Msgp" }
 
 type UgorjiMsgpackSerializer int
 
@@ -239,13 +246,11 @@ func (b BinarySerializer) String() string {
 func benchMarshal(b *testing.B, s Serializer) {
 	b.StopTimer()
 	data := generate()
+	b.ReportAllocs()
 	b.StartTimer()
-	var size uint64
 	for i := 0; i < b.N; i++ {
-		b := s.Marshal(data[rand.Intn(len(data))])
-		size += uint64(len(b))
+		s.Marshal(data[rand.Intn(len(data))])
 	}
-	// println(fmt.Sprintf("average size of %s serialized structure is %d", s, size/uint64(b.N)))
 }
 
 func cmpTags(a, b map[string]string) bool {
@@ -279,6 +284,7 @@ func benchUnmarshal(b *testing.B, s Serializer) {
 	for i, d := range data {
 		ser[i] = s.Marshal(d)
 	}
+	b.ReportAllocs()
 	b.StartTimer()
 	for i := 0; i < b.N; i++ {
 		n := rand.Intn(len(ser))
@@ -396,4 +402,12 @@ func BenchmarkBinaryMarshal(b *testing.B) {
 
 func BenchmarkBinaryUnmarshal(b *testing.B) {
 	benchUnmarshal(b, BinarySerializer(0))
+}
+
+func BenchmarkMsgpMarshal(b *testing.B) {
+	benchMarshal(b, MsgpSerializer{})
+}
+
+func BenchmarkMsgpUnmarshal(b *testing.B) {
+	benchUnmarshal(b, MsgpSerializer{})
 }

@@ -26,7 +26,7 @@ go test -bench='.*' ./
 Shameless plug: I use [pawk](https://github.com/alecthomas/pawk) to format the table:
 
 ```bash
-go test -bench='.*' ./ | pawk '"%-40s %10s %10s %s" % f'
+go test -bench='.*' ./ | pawk -F'\t' '"%-40s %10s %10s %s %s" % f'
 ```
 
 ## Recommendation
@@ -65,28 +65,30 @@ type A struct {
 Results on my late 2013 MacBook Pro 15" are:
 
 ```
-BenchmarkUgorjiMsgpackMarshal                500000       3730 ns/op
-BenchmarkUgorjiMsgpackUnmarshal              500000       3431 ns/op
-BenchmarkVmihailencoMsgpackMarshal          1000000       1649 ns/op
-BenchmarkVmihailencoMsgpackUnmarshal        1000000       1931 ns/op
-BenchmarkJsonMarshal                        1000000       2901 ns/op
-BenchmarkJsonUnmarshal                       500000       4816 ns/op
-BenchmarkBsonMarshal                        1000000       1941 ns/op
-BenchmarkBsonUnmarshal                      1000000       2194 ns/op
-BenchmarkVitessBsonMarshal                  1000000       1442 ns/op
-BenchmarkVitessBsonUnmarshal                2000000        805 ns/op
-BenchmarkGobMarshal                          500000       6396 ns/op
-BenchmarkGobUnmarshal                         50000      46198 ns/op
-BenchmarkXdrMarshal                         1000000       2525 ns/op
-BenchmarkXdrUnmarshal                       1000000       1858 ns/op
-BenchmarkUgorjiCodecMsgpackMarshal           500000       3546 ns/op
-BenchmarkUgorjiCodecMsgpackUnmarshal         500000       3634 ns/op
-BenchmarkUgorjiCodecBincMarshal              500000       4846 ns/op
-BenchmarkUgorjiCodecBincUnmarshal            500000       4818 ns/op
-BenchmarkSerealMarshal                       500000       3948 ns/op
-BenchmarkSerealUnmarshal                     500000       4313 ns/op
-BenchmarkBinaryMarshal                      1000000       2136 ns/op
-BenchmarkBinaryUnmarshal                    1000000       2136 ns/op
+BenchmarkUgorjiMsgpackMarshal                500000       3716 ns/op     1328 B/op       21 allocs/op
+BenchmarkUgorjiMsgpackUnmarshal              500000       3518 ns/op      644 B/op       20 allocs/op
+BenchmarkVmihailencoMsgpackMarshal          1000000       1692 ns/op      412 B/op        6 allocs/op
+BenchmarkVmihailencoMsgpackUnmarshal        1000000       1999 ns/op      421 B/op       10 allocs/op
+BenchmarkJsonMarshal                        1000000       2918 ns/op      590 B/op        7 allocs/op
+BenchmarkJsonUnmarshal                       500000       4968 ns/op      468 B/op        7 allocs/op
+BenchmarkBsonMarshal                        1000000       1981 ns/op      488 B/op       13 allocs/op
+BenchmarkBsonUnmarshal                      1000000       2199 ns/op      281 B/op       10 allocs/op
+BenchmarkVitessBsonMarshal                  1000000       1412 ns/op     1169 B/op        4 allocs/op
+BenchmarkVitessBsonUnmarshal                2000000        803 ns/op      227 B/op        4 allocs/op
+BenchmarkGobMarshal                          500000       6398 ns/op     1661 B/op       25 allocs/op
+BenchmarkGobUnmarshal                         50000      46302 ns/op    19024 B/op      365 allocs/op
+BenchmarkXdrMarshal                         1000000       2518 ns/op      520 B/op       15 allocs/op
+BenchmarkXdrUnmarshal                       1000000       1857 ns/op      274 B/op        9 allocs/op
+BenchmarkUgorjiCodecMsgpackMarshal           500000       3597 ns/op     1427 B/op       22 allocs/op
+BenchmarkUgorjiCodecMsgpackUnmarshal         500000       3613 ns/op     1145 B/op       29 allocs/op
+BenchmarkUgorjiCodecBincMarshal              500000       4872 ns/op     2142 B/op       24 allocs/op
+BenchmarkUgorjiCodecBincUnmarshal            500000       4795 ns/op     2064 B/op       34 allocs/op
+BenchmarkSerealMarshal                       500000       3928 ns/op     1277 B/op       21 allocs/op
+BenchmarkSerealUnmarshal                     500000       4319 ns/op      696 B/op       30 allocs/op
+BenchmarkBinaryMarshal                      1000000       2102 ns/op      479 B/op       15 allocs/op
+BenchmarkBinaryUnmarshal                    1000000       2232 ns/op      432 B/op       17 allocs/op
+BenchmarkMsgpMarshal                        2000000        950 ns/op      322 B/op        4 allocs/op
+BenchmarkMsgpUnmarshal                      1000000       1136 ns/op      178 B/op        5 allocs/op
 ```
 
 **Note:** the gob results are not really representative of normal performance, as gob is designed for serializing streams or vectors of a single type, not individual values.
