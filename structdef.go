@@ -4,7 +4,7 @@ import (
 	"time"
 )
 
-//go:generate msgp
+//go:generate msgp -o msgp_gen.go
 
 type A struct {
 	Name     string

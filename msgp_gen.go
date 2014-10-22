@@ -20,9 +20,7 @@ func (z *A) MarshalMsg() ([]byte, error) {
 // UnmarshalMsg unmarshals a A from MessagePack, returning any extra bytes
 // and any errors encountered
 func (z *A) UnmarshalMsg(bts []byte) (o []byte, err error) {
-	var sz uint32
 	var field []byte
-	_ = sz
 	_ = field
 
 	var isz uint32
@@ -209,10 +207,8 @@ func (z *A) DecodeMsg(r io.Reader) (n int, err error) {
 // DecodeFrom deocdes MessagePack from the provided decoder into the A,
 // returning the number of bytes read and any errors encountered.
 func (z *A) DecodeFrom(dc *enc.MsgReader) (n int, err error) {
-	var sz uint32
 	var nn int
 	var field []byte
-	_ = sz
 	_ = nn
 	_ = field
 
