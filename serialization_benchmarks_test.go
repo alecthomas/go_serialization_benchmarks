@@ -10,6 +10,7 @@ import (
 	"testing"
 	"time"
 
+	"code.google.com/p/goprotobuf/proto"
 	"github.com/Sereal/Sereal/Go/sereal"
 	"github.com/alecthomas/binary"
 	"github.com/davecgh/go-xdr/xdr"
@@ -43,6 +44,21 @@ func generate() []*A {
 			Siblings: rand.Intn(5),
 			Spouse:   rand.Intn(2) == 1,
 			Money:    rand.Float64(),
+		})
+	}
+	return a
+}
+
+func generateProto() []*ProtoBufA {
+	a := make([]*ProtoBufA, 0, 1000)
+	for i := 0; i < 1000; i++ {
+		a = append(a, &ProtoBufA{
+			Name:     proto.String(randString(16)),
+			BirthDay: proto.Int64(time.Now().Unix()),
+			Phone:    proto.String(randString(10)),
+			Siblings: proto.Int32(rand.Int31n(5)),
+			Spouse:   proto.Bool(rand.Intn(2) == 1),
+			Money:    proto.Float64(rand.Float64()),
 		})
 	}
 	return a
@@ -419,4 +435,41 @@ func BenchmarkMsgpUnmarshal(b *testing.B) {
 	s := MsgpSerializer{}
 	s.en = enc.NewEncoder(&s.buf)
 	benchUnmarshal(b, &s)
+}
+
+func BenchmarkGoprotobufMarshal(b *testing.B) {
+	b.StopTimer()
+	data := generateProto()
+	b.ReportAllocs()
+	b.StartTimer()
+	for i := 0; i < b.N; i++ {
+		proto.Marshal(data[rand.Intn(len(data))])
+	}
+}
+
+func BenchmarkGoprotobufUnmarshal(b *testing.B) {
+	b.StopTimer()
+	data := generateProto()
+	ser := make([][]byte, len(data))
+	for i, d := range data {
+		ser[i], _ = proto.Marshal(d)
+	}
+	b.ReportAllocs()
+	b.StartTimer()
+	for i := 0; i < b.N; i++ {
+		n := rand.Intn(len(ser))
+		o := &ProtoBufA{}
+		err := proto.Unmarshal(ser[n], o)
+		if err != nil {
+			b.Fatalf("goprotobuf failed to unmarshal: %s (%s)", err, ser[n])
+		}
+		// Validate unmarshalled data.
+		if validate != "" {
+			i := data[n]
+			correct := *o.Name == *i.Name && *o.Phone == *i.Phone && *o.Siblings == *i.Siblings && *o.Spouse == *i.Spouse && *o.Money == *i.Money && *o.BirthDay == *i.BirthDay //&& cmpTags(o.Tags, i.Tags) && cmpAliases(o.Aliases, i.Aliases)
+			if !correct {
+				b.Fatalf("unmarshaled object differed:\n%v\n%v", i, o)
+			}
+		}
+	}
 }
