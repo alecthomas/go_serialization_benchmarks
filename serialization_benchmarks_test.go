@@ -5,7 +5,6 @@ import (
 	"encoding/gob"
 	"encoding/json"
 	"fmt"
-	"io"
 	"math/rand"
 	"os"
 	"testing"
@@ -14,6 +13,7 @@ import (
 	"github.com/Sereal/Sereal/Go/sereal"
 	"github.com/alecthomas/binary"
 	"github.com/davecgh/go-xdr/xdr"
+	"github.com/philhofer/msgp/enc"
 	ugorji "github.com/ugorji/go-msgpack"
 	"github.com/ugorji/go/codec"
 	vmihailenco "github.com/vmihailenco/msgpack"
@@ -54,16 +54,21 @@ type Serializer interface {
 	String() string
 }
 
-type MsgpSerializer struct{}
-
-func (m MsgpSerializer) Marshal(o interface{}) []byte {
-	var buf bytes.Buffer
-	o.(io.WriterTo).WriteTo(&buf)
-	return buf.Bytes()
+type MsgpSerializer struct {
+	en  *enc.MsgWriter
+	buf bytes.Buffer
 }
 
-func (m MsgpSerializer) Unmarshal(d []byte, o interface{}) error {
-	_, err := o.(io.ReaderFrom).ReadFrom(bytes.NewReader(d))
+func (m *MsgpSerializer) Marshal(o interface{}) []byte {
+	m.buf.Reset()
+	o.(enc.MsgEncoder).EncodeTo(m.en)
+	out := make([]byte, m.buf.Len())
+	copy(out, m.buf.Bytes())
+	return out
+}
+
+func (m *MsgpSerializer) Unmarshal(d []byte, o interface{}) error {
+	_, err := o.(enc.MsgDecoder).UnmarshalMsg(d)
 	return err
 }
 
@@ -405,9 +410,13 @@ func BenchmarkBinaryUnmarshal(b *testing.B) {
 }
 
 func BenchmarkMsgpMarshal(b *testing.B) {
-	benchMarshal(b, MsgpSerializer{})
+	s := MsgpSerializer{}
+	s.en = enc.NewEncoder(&s.buf)
+	benchMarshal(b, &s)
 }
 
 func BenchmarkMsgpUnmarshal(b *testing.B) {
-	benchUnmarshal(b, MsgpSerializer{})
+	s := MsgpSerializer{}
+	s.en = enc.NewEncoder(&s.buf)
+	benchUnmarshal(b, &s)
 }
