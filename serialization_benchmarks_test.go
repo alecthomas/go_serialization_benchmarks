@@ -18,7 +18,7 @@ import (
 	"github.com/ugorji/go/codec"
 	vmihailenco "github.com/vmihailenco/msgpack"
 	vitessbson "github.com/youtube/vitess/go/bson"
-	"labix.org/v2/mgo/bson"
+	"gopkg.in/mgo.v2/bson"
 )
 
 var (
