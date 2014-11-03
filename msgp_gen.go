@@ -5,18 +5,48 @@ package goserbench
 // DO NOT EDIT
 
 import (
-	"bytes"
-	"github.com/philhofer/msgp/enc"
-	"io"
+	"github.com/philhofer/msgp/msgp"
 )
+
 
 // MarshalMsg marshals a A into MessagePack
 func (z *A) MarshalMsg() ([]byte, error) {
-	var buf bytes.Buffer
-	_, err := z.EncodeMsg(&buf)
-	return buf.Bytes(), err
+	o := make([]byte, 0, z.Maxsize())
+	return z.AppendMsg(o)
 }
 
+// AppendMsg marshals a A onto the end of a []byte
+func (z *A) AppendMsg(b []byte) (o []byte, err error) {
+	o = b
+
+	o = msgp.AppendMapHeader(o, 6)
+
+	o = msgp.AppendString(o, "Name")
+
+	o = msgp.AppendString(o, z.Name)
+
+	o = msgp.AppendString(o, "BirthDay")
+
+	o = msgp.AppendTime(o, z.BirthDay)
+
+	o = msgp.AppendString(o, "Phone")
+
+	o = msgp.AppendString(o, z.Phone)
+
+	o = msgp.AppendString(o, "Siblings")
+
+	o = msgp.AppendInt(o, z.Siblings)
+
+	o = msgp.AppendString(o, "Spouse")
+
+	o = msgp.AppendBool(o, z.Spouse)
+
+	o = msgp.AppendString(o, "Money")
+
+	o = msgp.AppendFloat64(o, z.Money)
+
+	return
+}
 // UnmarshalMsg unmarshals a A from MessagePack, returning any extra bytes
 // and any errors encountered
 func (z *A) UnmarshalMsg(bts []byte) (o []byte, err error) {
@@ -24,20 +54,20 @@ func (z *A) UnmarshalMsg(bts []byte) (o []byte, err error) {
 	_ = field
 
 	var isz uint32
-	isz, bts, err = enc.ReadMapHeaderBytes(bts)
+	isz, bts, err = msgp.ReadMapHeaderBytes(bts)
 	if err != nil {
 		return
 	}
 	for xplz := uint32(0); xplz < isz; xplz++ {
-		field, bts, err = enc.ReadStringZC(bts)
+		field, bts, err = msgp.ReadStringZC(bts)
 		if err != nil {
 			return
 		}
-		switch enc.UnsafeString(field) {
+		switch msgp.UnsafeString(field) {
 
 		case "Name":
 
-			z.Name, bts, err = enc.ReadStringBytes(bts)
+			z.Name, bts, err = msgp.ReadStringBytes(bts)
 
 			if err != nil {
 				return
@@ -45,7 +75,7 @@ func (z *A) UnmarshalMsg(bts []byte) (o []byte, err error) {
 
 		case "BirthDay":
 
-			z.BirthDay, bts, err = enc.ReadTimeBytes(bts)
+			z.BirthDay, bts, err = msgp.ReadTimeBytes(bts)
 
 			if err != nil {
 				return
@@ -53,7 +83,7 @@ func (z *A) UnmarshalMsg(bts []byte) (o []byte, err error) {
 
 		case "Phone":
 
-			z.Phone, bts, err = enc.ReadStringBytes(bts)
+			z.Phone, bts, err = msgp.ReadStringBytes(bts)
 
 			if err != nil {
 				return
@@ -61,7 +91,7 @@ func (z *A) UnmarshalMsg(bts []byte) (o []byte, err error) {
 
 		case "Siblings":
 
-			z.Siblings, bts, err = enc.ReadIntBytes(bts)
+			z.Siblings, bts, err = msgp.ReadIntBytes(bts)
 
 			if err != nil {
 				return
@@ -69,7 +99,7 @@ func (z *A) UnmarshalMsg(bts []byte) (o []byte, err error) {
 
 		case "Spouse":
 
-			z.Spouse, bts, err = enc.ReadBoolBytes(bts)
+			z.Spouse, bts, err = msgp.ReadBoolBytes(bts)
 
 			if err != nil {
 				return
@@ -77,14 +107,14 @@ func (z *A) UnmarshalMsg(bts []byte) (o []byte, err error) {
 
 		case "Money":
 
-			z.Money, bts, err = enc.ReadFloat64Bytes(bts)
+			z.Money, bts, err = msgp.ReadFloat64Bytes(bts)
 
 			if err != nil {
 				return
 			}
 
 		default:
-			bts, err = enc.Skip(bts)
+			bts, err = msgp.Skip(bts)
 			if err != nil {
 				return
 			}
@@ -95,199 +125,31 @@ func (z *A) UnmarshalMsg(bts []byte) (o []byte, err error) {
 	return
 }
 
-// EncodeMsg encodes a A as MessagePack to the supplied io.Writer,
-// returning the number of bytes written and any errors encountered
-func (z *A) EncodeMsg(w io.Writer) (n int, err error) {
-	en := enc.NewEncoder(w)
-	return z.EncodeTo(en)
-}
+// Maxsize returns the encoded size of the object when messagepack encoded.
+// This value is guaranteed to be larger than the encoded size
+// of the A unless it contains any non-concrete
+// (e.g. "interface{}") fields.
+func (z *A) Maxsize() (s int) {
 
-// EncodeTo encodes a A as MessagePack using the provided encoder,
-// returning the number of bytes written and any errors encountered
-func (z *A) EncodeTo(en *enc.MsgWriter) (n int, err error) {
-	var nn int
-	_ = nn
+	s += msgp.MapHeaderSize
+	s += msgp.StringPrefixSize + 4
 
-	nn, err = en.WriteMapHeader(6)
-	n += nn
-	if err != nil {
-		return
-	}
+	s += msgp.StringPrefixSize + len(z.Name)
+	s += msgp.StringPrefixSize + 8
 
-	nn, err = en.WriteString("Name")
-	n += nn
-	if err != nil {
-		return
-	}
+	s += msgp.TimeSize
+	s += msgp.StringPrefixSize + 5
 
-	nn, err = en.WriteString(z.Name)
+	s += msgp.StringPrefixSize + len(z.Phone)
+	s += msgp.StringPrefixSize + 8
 
-	n += nn
-	if err != nil {
-		return
-	}
+	s += msgp.IntSize
+	s += msgp.StringPrefixSize + 6
 
-	nn, err = en.WriteString("BirthDay")
-	n += nn
-	if err != nil {
-		return
-	}
+	s += msgp.BoolSize
+	s += msgp.StringPrefixSize + 5
 
-	nn, err = en.WriteTime(z.BirthDay)
-
-	n += nn
-	if err != nil {
-		return
-	}
-
-	nn, err = en.WriteString("Phone")
-	n += nn
-	if err != nil {
-		return
-	}
-
-	nn, err = en.WriteString(z.Phone)
-
-	n += nn
-	if err != nil {
-		return
-	}
-
-	nn, err = en.WriteString("Siblings")
-	n += nn
-	if err != nil {
-		return
-	}
-
-	nn, err = en.WriteInt(z.Siblings)
-
-	n += nn
-	if err != nil {
-		return
-	}
-
-	nn, err = en.WriteString("Spouse")
-	n += nn
-	if err != nil {
-		return
-	}
-
-	nn, err = en.WriteBool(z.Spouse)
-
-	n += nn
-	if err != nil {
-		return
-	}
-
-	nn, err = en.WriteString("Money")
-	n += nn
-	if err != nil {
-		return
-	}
-
-	nn, err = en.WriteFloat64(z.Money)
-
-	n += nn
-	if err != nil {
-		return
-	}
-
-	return
-}
-
-// DecodeMsg decodes MessagePack from the provided io.Reader into the A,
-// returning the number of bytes read and any errors encountered
-func (z *A) DecodeMsg(r io.Reader) (n int, err error) {
-	dc := enc.NewDecoder(r)
-	n, err = z.DecodeFrom(dc)
-	enc.Done(dc)
-	return
-}
-
-// DecodeFrom deocdes MessagePack from the provided decoder into the A,
-// returning the number of bytes read and any errors encountered.
-func (z *A) DecodeFrom(dc *enc.MsgReader) (n int, err error) {
-	var nn int
-	var field []byte
-	_ = nn
-	_ = field
-
-	var isz uint32
-	isz, nn, err = dc.ReadMapHeader()
-	n += nn
-	if err != nil {
-		return
-	}
-	for xplz := uint32(0); xplz < isz; xplz++ {
-		field, nn, err = dc.ReadStringAsBytes(field)
-		n += nn
-		if err != nil {
-			return
-		}
-		switch enc.UnsafeString(field) {
-
-		case "Name":
-
-			z.Name, nn, err = dc.ReadString()
-
-			n += nn
-			if err != nil {
-				return
-			}
-
-		case "BirthDay":
-
-			z.BirthDay, nn, err = dc.ReadTime()
-
-			n += nn
-			if err != nil {
-				return
-			}
-
-		case "Phone":
-
-			z.Phone, nn, err = dc.ReadString()
-
-			n += nn
-			if err != nil {
-				return
-			}
-
-		case "Siblings":
-
-			z.Siblings, nn, err = dc.ReadInt()
-
-			n += nn
-			if err != nil {
-				return
-			}
-
-		case "Spouse":
-
-			z.Spouse, nn, err = dc.ReadBool()
-
-			n += nn
-			if err != nil {
-				return
-			}
-
-		case "Money":
-
-			z.Money, nn, err = dc.ReadFloat64()
-
-			n += nn
-			if err != nil {
-				return
-			}
-
-		default:
-			nn, err = dc.Skip()
-			n += nn
-			if err != nil {
-				return
-			}
-		}
-	}
+	s += msgp.Float64Size
 
 	return
 }
