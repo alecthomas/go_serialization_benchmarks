@@ -211,16 +211,13 @@ func NewUgorjiCodecSerializer(name string, h codec.Handle) *UgorjiCodecSerialize
 }
 
 func (u *UgorjiCodecSerializer) Marshal(o interface{}) []byte {
-	buf := bytes.NewBuffer(nil)
-	enc := codec.NewEncoder(buf, u.h)
-	enc.Encode(o)
-	return buf.Bytes()
+	var bs []byte
+	codec.NewEncoderBytes(&bs, u.h).Encode(o)
+	return bs
 }
 
 func (u *UgorjiCodecSerializer) Unmarshal(d []byte, o interface{}) error {
-	buf := bytes.NewReader(d)
-	dec := codec.NewDecoder(buf, u.h)
-	return dec.Decode(o)
+	return codec.NewDecoderBytes(d, u.h).Decode(o)
 }
 
 func (u *UgorjiCodecSerializer) String() string {
