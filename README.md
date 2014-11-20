@@ -9,6 +9,7 @@ This is a test suite for benchmarking various Go serialization methods.
 - [github.com/alecthomas/binary](https://github.com/alecthomas/binary)
 - [github.com/davecgh/go-xdr/xdr](https://github.com/davecgh/go-xdr)
 - [github.com/Sereal/Sereal/Go/sereal](https://github.com/Sereal/Sereal)
+- [github.com/ugorji/go-msgpack](https://github.com/ugorji/go-msgpack)
 - [github.com/ugorji/go/codec](https://github.com/ugorji/go/tree/master/codec)
 - [github.com/vmihailenco/msgpack](https://github.com/vmihailenco/msgpack)
 - [github.com/youtube/vitess/go/bson](https://github.com/youtube/vitess/tree/master/go/bson) *(using the bsongen code generator)*
@@ -59,6 +60,9 @@ type A struct {
 Results on my late 2013 MacBook Pro 15" are:
 
 ```
+BenchmarkUgorjiMsgpackMarshal                500000       3876 ns/op     1326 B/op       21 allocs/op
+BenchmarkUgorjiMsgpackUnmarshal              500000       3541 ns/op      644 B/op       20 allocs/op
+
 BenchmarkVmihailencoMsgpackMarshal          1000000       1682 ns/op      413 B/op        6 allocs/op
 BenchmarkVmihailencoMsgpackUnmarshal        1000000       2012 ns/op      421 B/op       10 allocs/op
 
@@ -109,11 +113,17 @@ VALIDATE=1 go test -bench='.*' ./
 
 Unfortunately, several of the serializers exhibit issues:
 
-1. **(minor)** BSON drops sub-microsecond precision from `time.Time`.
-2. **(minor)** Vitess BSON drops sub-microsecond precision from `time.Time`.
-3. **(minor)** Ugorji Binc Codec drops the timezone name (eg. "EST" -> "-0500") from `time.Time`.
+1. **(MAJOR)** Ugorji msgpack implementation drops the timezone frome `time.Time`.
+2. **(minor)** BSON drops sub-microsecond precision from `time.Time`.
+3. **(minor)** Vitess BSON drops sub-microsecond precision from `time.Time`.
+4. **(minor)** Ugorji Binc Codec drops the timezone name (eg. "EST" -> "-0500") from `time.Time`.
 
 ```
+BenchmarkUgorjiMsgpackMarshal     500000          3678 ns/op        1327 B/op         21 allocs/op
+BenchmarkUgorjiMsgpackUnmarshal --- FAIL: BenchmarkUgorjiMsgpackUnmarshal
+    serialization_benchmarks_test.go:301: unmarshaled object differed:
+        &{d8c7b339f1dd290e 2014-09-26 14:46:03.137970198 +1000 AEST 9894e18711 2 true 0.9013406798206226}
+        &{d8c7b339f1dd290e 2014-09-26 04:46:03.137970198 +0000 UTC 9894e18711 2 true 0.9013406798206226}
 BenchmarkVmihailencoMsgpackMarshal   1000000          1665 ns/op         412 B/op          6 allocs/op
 BenchmarkVmihailencoMsgpackUnmarshal     1000000          3001 ns/op         517 B/op         12 allocs/op
 BenchmarkJsonMarshal     1000000          2843 ns/op         590 B/op          7 allocs/op
