@@ -15,7 +15,6 @@ import (
 	"github.com/alecthomas/binary"
 	"github.com/davecgh/go-xdr/xdr"
 	"github.com/philhofer/msgp/msgp"
-	ugorji "github.com/ugorji/go-msgpack"
 	"github.com/ugorji/go/codec"
 	vmihailenco "github.com/vmihailenco/msgpack"
 	vitessbson "github.com/youtube/vitess/go/bson"
@@ -83,21 +82,6 @@ func (m MsgpSerializer) Unmarshal(d []byte, o interface{}) error {
 }
 
 func (m MsgpSerializer) String() string { return "Msgp" }
-
-type UgorjiMsgpackSerializer int
-
-func (m UgorjiMsgpackSerializer) Marshal(o interface{}) []byte {
-	d, _ := ugorji.Marshal(o)
-	return d
-}
-
-func (m UgorjiMsgpackSerializer) Unmarshal(d []byte, o interface{}) error {
-	return ugorji.Unmarshal(d, o, nil)
-}
-
-func (m UgorjiMsgpackSerializer) String() string {
-	return "ugorji-msgpack"
-}
 
 type VmihailencoMsgpackSerializer int
 
@@ -324,13 +308,6 @@ See README.md for details on running the benchmarks.
 `)
 
 }
-func BenchmarkUgorjiMsgpackMarshal(b *testing.B) {
-	benchMarshal(b, UgorjiMsgpackSerializer(0))
-}
-
-func BenchmarkUgorjiMsgpackUnmarshal(b *testing.B) {
-	benchUnmarshal(b, UgorjiMsgpackSerializer(0))
-}
 
 func BenchmarkVmihailencoMsgpackMarshal(b *testing.B) {
 	benchMarshal(b, VmihailencoMsgpackSerializer(0))
@@ -391,12 +368,16 @@ func BenchmarkUgorjiCodecMsgpackUnmarshal(b *testing.B) {
 }
 
 func BenchmarkUgorjiCodecBincMarshal(b *testing.B) {
-	s := NewUgorjiCodecSerializer("binc", &codec.BincHandle{})
+	h := &codec.BincHandle{}
+	h.AsSymbols = codec.AsSymbolNone
+	s := NewUgorjiCodecSerializer("binc", h)
 	benchMarshal(b, s)
 }
 
 func BenchmarkUgorjiCodecBincUnmarshal(b *testing.B) {
-	s := NewUgorjiCodecSerializer("binc", &codec.BincHandle{})
+	h := &codec.BincHandle{}
+	h.AsSymbols = codec.AsSymbolNone
+	s := NewUgorjiCodecSerializer("binc", h)
 	benchUnmarshal(b, s)
 }
 
