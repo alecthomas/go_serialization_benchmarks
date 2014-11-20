@@ -15,6 +15,7 @@ import (
 	"github.com/alecthomas/binary"
 	"github.com/davecgh/go-xdr/xdr"
 	"github.com/philhofer/msgp/msgp"
+	ugorji "github.com/ugorji/go-msgpack"
 	"github.com/ugorji/go/codec"
 	vmihailenco "github.com/vmihailenco/msgpack"
 	vitessbson "github.com/youtube/vitess/go/bson"
@@ -82,6 +83,21 @@ func (m MsgpSerializer) Unmarshal(d []byte, o interface{}) error {
 }
 
 func (m MsgpSerializer) String() string { return "Msgp" }
+
+type UgorjiMsgpackSerializer int
+
+func (m UgorjiMsgpackSerializer) Marshal(o interface{}) []byte {
+	d, _ := ugorji.Marshal(o)
+	return d
+}
+
+func (m UgorjiMsgpackSerializer) Unmarshal(d []byte, o interface{}) error {
+	return ugorji.Unmarshal(d, o, nil)
+}
+
+func (m UgorjiMsgpackSerializer) String() string {
+	return "ugorji-msgpack"
+}
 
 type VmihailencoMsgpackSerializer int
 
@@ -182,29 +198,29 @@ func (x XdrSerializer) String() string {
 	return "xdr"
 }
 
-type ugorjiCodecSerializer struct {
+type UgorjiCodecSerializer struct {
 	name string
 	h    codec.Handle
 }
 
-func NewugorjiCodecSerializer(name string, h codec.Handle) *ugorjiCodecSerializer {
-	return &ugorjiCodecSerializer{
+func NewUgorjiCodecSerializer(name string, h codec.Handle) *UgorjiCodecSerializer {
+	return &UgorjiCodecSerializer{
 		name: name,
 		h:    h,
 	}
 }
 
-func (u *ugorjiCodecSerializer) Marshal(o interface{}) []byte {
+func (u *UgorjiCodecSerializer) Marshal(o interface{}) []byte {
 	var bs []byte
 	codec.NewEncoderBytes(&bs, u.h).Encode(o)
 	return bs
 }
 
-func (u *ugorjiCodecSerializer) Unmarshal(d []byte, o interface{}) error {
+func (u *UgorjiCodecSerializer) Unmarshal(d []byte, o interface{}) error {
 	return codec.NewDecoderBytes(d, u.h).Decode(o)
 }
 
-func (u *ugorjiCodecSerializer) String() string {
+func (u *UgorjiCodecSerializer) String() string {
 	return "ugorjicodec-" + u.name
 }
 
@@ -308,6 +324,13 @@ See README.md for details on running the benchmarks.
 `)
 
 }
+func BenchmarkUgorjiMsgpackMarshal(b *testing.B) {
+	benchMarshal(b, UgorjiMsgpackSerializer(0))
+}
+
+func BenchmarkUgorjiMsgpackUnmarshal(b *testing.B) {
+	benchUnmarshal(b, UgorjiMsgpackSerializer(0))
+}
 
 func BenchmarkVmihailencoMsgpackMarshal(b *testing.B) {
 	benchMarshal(b, VmihailencoMsgpackSerializer(0))
@@ -357,23 +380,23 @@ func BenchmarkXdrUnmarshal(b *testing.B) {
 	benchUnmarshal(b, XdrSerializer(0))
 }
 
-func BenchmarkugorjiCodecMsgpackMarshal(b *testing.B) {
-	s := NewugorjiCodecSerializer("msgpack", &codec.MsgpackHandle{})
+func BenchmarkUgorjiCodecMsgpackMarshal(b *testing.B) {
+	s := NewUgorjiCodecSerializer("msgpack", &codec.MsgpackHandle{})
 	benchMarshal(b, s)
 }
 
-func BenchmarkugorjiCodecMsgpackUnmarshal(b *testing.B) {
-	s := NewugorjiCodecSerializer("msgpack", &codec.MsgpackHandle{})
+func BenchmarkUgorjiCodecMsgpackUnmarshal(b *testing.B) {
+	s := NewUgorjiCodecSerializer("msgpack", &codec.MsgpackHandle{})
 	benchUnmarshal(b, s)
 }
 
-func BenchmarkugorjiCodecBincMarshal(b *testing.B) {
-	s := NewugorjiCodecSerializer("binc", &codec.BincHandle{})
+func BenchmarkUgorjiCodecBincMarshal(b *testing.B) {
+	s := NewUgorjiCodecSerializer("binc", &codec.BincHandle{})
 	benchMarshal(b, s)
 }
 
-func BenchmarkugorjiCodecBincUnmarshal(b *testing.B) {
-	s := NewugorjiCodecSerializer("binc", &codec.BincHandle{})
+func BenchmarkUgorjiCodecBincUnmarshal(b *testing.B) {
+	s := NewUgorjiCodecSerializer("binc", &codec.BincHandle{})
 	benchUnmarshal(b, s)
 }
 
