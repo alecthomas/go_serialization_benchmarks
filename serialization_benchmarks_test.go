@@ -11,6 +11,7 @@ import (
 	"time"
 
 	"code.google.com/p/goprotobuf/proto"
+	"github.com/DeDiS/protobuf"
 	"github.com/Sereal/Sereal/Go/sereal"
 	"github.com/alecthomas/binary"
 	"github.com/davecgh/go-xdr/xdr"
@@ -72,8 +73,9 @@ type Serializer interface {
 type MsgpSerializer struct{}
 
 func (m MsgpSerializer) Marshal(o interface{}) []byte {
-	bts, _ := o.(msgp.Marshaler).MarshalMsg()
-	return bts
+	out := []byte{}
+	out, _ = o.(msgp.Marshaler).MarshalMsg(out)
+	return out
 }
 
 func (m MsgpSerializer) Unmarshal(d []byte, o interface{}) error {
@@ -397,13 +399,13 @@ func BenchmarkBinaryUnmarshal(b *testing.B) {
 	benchUnmarshal(b, BinarySerializer(0))
 }
 
-func BenchmarkMsgpMarshal(b *testing.B) {
-	benchMarshal(b, MsgpSerializer{})
-}
+// func BenchmarkMsgpMarshal(b *testing.B) {
+// 	benchMarshal(b, MsgpSerializer{})
+// }
 
-func BenchmarkMsgpUnmarshal(b *testing.B) {
-	benchUnmarshal(b, MsgpSerializer{})
-}
+// func BenchmarkMsgpUnmarshal(b *testing.B) {
+// 	benchUnmarshal(b, MsgpSerializer{})
+// }
 
 func BenchmarkGoprotobufMarshal(b *testing.B) {
 	b.StopTimer()
@@ -440,4 +442,27 @@ func BenchmarkGoprotobufUnmarshal(b *testing.B) {
 			}
 		}
 	}
+}
+
+type ProtobufSerializer int
+
+func (m ProtobufSerializer) Marshal(o interface{}) []byte {
+	d, _ := protobuf.Encode(o)
+	return d
+}
+
+func (m ProtobufSerializer) Unmarshal(d []byte, o interface{}) error {
+	return protobuf.Decode(d, o)
+}
+
+func (j ProtobufSerializer) String() string {
+	return "protobuf"
+}
+
+func BenchmarkProtobufMarshal(b *testing.B) {
+	benchMarshal(b, ProtobufSerializer(0))
+}
+
+func BenchmarkProtobufUnmarshal(b *testing.B) {
+	benchUnmarshal(b, ProtobufSerializer(0))
 }
