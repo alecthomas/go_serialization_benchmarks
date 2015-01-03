@@ -73,8 +73,7 @@ type Serializer interface {
 type MsgpSerializer struct{}
 
 func (m MsgpSerializer) Marshal(o interface{}) []byte {
-	out := []byte{}
-	out, _ = o.(msgp.Marshaler).MarshalMsg(out)
+	out, _ := o.(msgp.Marshaler).MarshalMsg(nil)
 	return out
 }
 
@@ -399,13 +398,13 @@ func BenchmarkBinaryUnmarshal(b *testing.B) {
 	benchUnmarshal(b, BinarySerializer(0))
 }
 
-// func BenchmarkMsgpMarshal(b *testing.B) {
-// 	benchMarshal(b, MsgpSerializer{})
-// }
+func BenchmarkMsgpMarshal(b *testing.B) {
+	benchMarshal(b, MsgpSerializer{})
+}
 
-// func BenchmarkMsgpUnmarshal(b *testing.B) {
-// 	benchUnmarshal(b, MsgpSerializer{})
-// }
+func BenchmarkMsgpUnmarshal(b *testing.B) {
+	benchUnmarshal(b, MsgpSerializer{})
+}
 
 func BenchmarkGoprotobufMarshal(b *testing.B) {
 	b.StopTimer()
