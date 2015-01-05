@@ -34,10 +34,10 @@ go test -bench='.*' ./ | pawk -F'\t' '"%-40s %10s %10s %s %s" % f'
 
 ## Recommendation
 
-If performance, correctness and interoperability are the most important
-factors, [github.com/philhofer/msgp](https://github.com/philhofer/msgp) is currently
-the best choice. It does require a pre-processing step (eg. via Go 1.4's "go
-generate" command).
+If performance, correctness and interoperability are the most
+important factors, [gogoprotobuf](https://gogo.github.io/) is
+currently the best choice. It does require a pre-processing step (eg.
+via Go 1.4's "go generate" command).
 
 But as always, make your own choice based on your requirements.
 
