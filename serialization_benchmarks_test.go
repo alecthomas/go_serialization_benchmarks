@@ -15,6 +15,7 @@ import (
 	"github.com/alecthomas/binary"
 	"github.com/davecgh/go-xdr/xdr"
 	"github.com/gogo/protobuf/proto"
+	flatbuffers "github.com/google/flatbuffers/go"
 	"github.com/philhofer/msgp/msgp"
 	"github.com/ugorji/go/codec"
 	vmihailenco "github.com/vmihailenco/msgpack"
@@ -488,6 +489,69 @@ func BenchmarkGogoprotobufUnmarshal(b *testing.B) {
 		if validate != "" {
 			i := data[n]
 			correct := o.Name == i.Name && o.Phone == i.Phone && o.Siblings == i.Siblings && o.Spouse == i.Spouse && o.Money == i.Money && o.BirthDay == i.BirthDay //&& cmpTags(o.Tags, i.Tags) && cmpAliases(o.Aliases, i.Aliases)
+			if !correct {
+				b.Fatalf("unmarshaled object differed:\n%v\n%v", i, o)
+			}
+		}
+	}
+}
+
+func serializeUsingFlatBuffers(a *A) []byte {
+	builder := flatbuffers.NewBuilder(0)
+	name := builder.CreateString(a.Name)
+	phone := builder.CreateString(a.Phone)
+
+	FlatBufferAStart(builder)
+	FlatBufferAAddName(builder, name)
+	FlatBufferAAddPhone(builder, phone)
+	FlatBufferAAddBirthDay(builder, a.BirthDay.Unix())
+	FlatBufferAAddSiblings(builder, int32(a.Siblings))
+	var spouse byte
+	if a.Spouse {
+		spouse = byte(1)
+	}
+	FlatBufferAAddSpouse(builder, spouse)
+	FlatBufferAAddMoney(builder, a.Money)
+	builder.Finish(FlatBufferAEnd(builder))
+	return builder.Bytes[builder.Head():]
+}
+
+func BenchmarkFlatbuffersMarshal(b *testing.B) {
+	b.StopTimer()
+	data := generate()
+	b.ReportAllocs()
+	b.StartTimer()
+
+	for i := 0; i < b.N; i++ {
+		serializeUsingFlatBuffers(data[rand.Intn(len(data))])
+	}
+}
+
+func BenchmarkFlatBuffersUnmarshal(b *testing.B) {
+	b.StopTimer()
+	data := generate()
+	ser := make([][]byte, len(data))
+	for i, d := range data {
+		ser[i] = serializeUsingFlatBuffers(d)
+	}
+
+	b.ReportAllocs()
+	b.StartTimer()
+	for i := 0; i < b.N; i++ {
+		n := rand.Intn(len(ser))
+		o := FlatBufferA{}
+		sData := ser[n]
+		o.Init(sData, flatbuffers.GetUOffsetT(sData))
+		if validate != "" {
+			i := data[n]
+			spouseVal := o.Spouse() == byte(1)
+
+			correct := o.Name() == i.Name &&
+				o.Phone() == i.Phone &&
+				int(o.Siblings()) == i.Siblings &&
+				spouseVal == i.Spouse &&
+				o.Money() == i.Money &&
+				o.BirthDay() == i.BirthDay.Unix()
 			if !correct {
 				b.Fatalf("unmarshaled object differed:\n%v\n%v", i, o)
 			}

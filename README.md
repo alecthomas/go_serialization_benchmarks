@@ -90,6 +90,8 @@ BenchmarkGoprotobufMarshal              2000000     988.00 ns/op      314 B/op  
 BenchmarkGoprotobufUnmarshal            1000000    1376.00 ns/op      440 B/op     9 allocs/op
 BenchmarkGogoprotobufMarshal           10000000     250.00 ns/op       64 B/op     1 allocs/op
 BenchmarkGogoprotobufUnmarshal          5000000     349.00 ns/op      113 B/op     3 allocs/op
+BenchmarkFlatbuffersMarshal             1000000       1383 ns/op      496 B/op    12 allocs/op
+BenchmarkFlatBuffersUnmarshal           30000000      55.0 ns/op        0 B/op     0 allocs/op
 BenchmarkProtobufMarshal                1000000    1399.00 ns/op      213 B/op     6 allocs/op
 BenchmarkProtobufUnmarshal              1000000    1371.00 ns/op      193 B/op     7 allocs/op
 ```
