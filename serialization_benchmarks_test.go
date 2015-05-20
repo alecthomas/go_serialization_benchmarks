@@ -499,8 +499,6 @@ func BenchmarkGogoprotobufUnmarshal(b *testing.B) {
 func serializeUsingFlatBuffers(builder *flatbuffers.Builder, a *A) []byte {
 	builder.Reset()
 
-	// TODO(any): Use CreateByteString with byte slices to bring allocs
-	// down to zero:
 	name := builder.CreateString(a.Name)
 	phone := builder.CreateString(a.Phone)
 
