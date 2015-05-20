@@ -496,8 +496,11 @@ func BenchmarkGogoprotobufUnmarshal(b *testing.B) {
 	}
 }
 
-func serializeUsingFlatBuffers(a *A) []byte {
-	builder := flatbuffers.NewBuilder(0)
+func serializeUsingFlatBuffers(builder *flatbuffers.Builder, a *A) []byte {
+	builder.Reset()
+
+	// TODO(any): Use CreateByteString with byte slices to bring allocs
+	// down to zero:
 	name := builder.CreateString(a.Name)
 	phone := builder.CreateString(a.Phone)
 
@@ -519,20 +522,22 @@ func serializeUsingFlatBuffers(a *A) []byte {
 func BenchmarkFlatbuffersMarshal(b *testing.B) {
 	b.StopTimer()
 	data := generate()
+	builder := flatbuffers.NewBuilder(0)
 	b.ReportAllocs()
 	b.StartTimer()
 
 	for i := 0; i < b.N; i++ {
-		serializeUsingFlatBuffers(data[rand.Intn(len(data))])
+		serializeUsingFlatBuffers(builder, data[rand.Intn(len(data))])
 	}
 }
 
 func BenchmarkFlatBuffersUnmarshal(b *testing.B) {
 	b.StopTimer()
+	builder := flatbuffers.NewBuilder(0)
 	data := generate()
 	ser := make([][]byte, len(data))
 	for i, d := range data {
-		ser[i] = serializeUsingFlatBuffers(d)
+		ser[i] = serializeUsingFlatBuffers(builder, d)
 	}
 
 	b.ReportAllocs()
