@@ -18,9 +18,9 @@ import (
 	flatbuffers "github.com/google/flatbuffers/go"
 	"github.com/philhofer/msgp/msgp"
 	"github.com/ugorji/go/codec"
-	vmihailenco "github.com/vmihailenco/msgpack"
 	vitessbson "github.com/youtube/vitess/go/bson"
 	"gopkg.in/mgo.v2/bson"
+	vmihailenco "gopkg.in/vmihailenco/msgpack.v2"
 )
 
 var (
