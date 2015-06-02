@@ -16,6 +16,7 @@ import (
 	"github.com/davecgh/go-xdr/xdr"
 	"github.com/gogo/protobuf/proto"
 	flatbuffers "github.com/google/flatbuffers/go"
+	"github.com/hprose/hprose-go/io"
 	"github.com/philhofer/msgp/msgp"
 	"github.com/ugorji/go/codec"
 	vitessbson "github.com/youtube/vitess/go/bson"
@@ -496,6 +497,87 @@ func BenchmarkGogoprotobufUnmarshal(b *testing.B) {
 	}
 }
 
+type ProtobufSerializer int
+
+func (m ProtobufSerializer) Marshal(o interface{}) []byte {
+	d, _ := protobuf.Encode(o)
+	return d
+}
+
+func (m ProtobufSerializer) Unmarshal(d []byte, o interface{}) error {
+	return protobuf.Decode(d, o)
+}
+
+func (j ProtobufSerializer) String() string {
+	return "protobuf"
+}
+
+func BenchmarkProtobufMarshal(b *testing.B) {
+	benchMarshal(b, ProtobufSerializer(0))
+}
+
+func BenchmarkProtobufUnmarshal(b *testing.B) {
+	benchUnmarshal(b, ProtobufSerializer(0))
+}
+
+func serializeUsingHprose(writer *hprose.Writer, a *A) []byte {
+	buf := writer.Stream().(*bytes.Buffer)
+	writer.WriteString(a.Name)
+	writer.WriteTime(a.BirthDay)
+	writer.WriteString(a.Phone)
+	writer.WriteInt64(int64(a.Siblings))
+	writer.WriteBool(a.Spouse)
+	writer.WriteFloat64(a.Money)
+	return buf.Bytes()
+}
+
+func BenchmarkHproseMarshal(b *testing.B) {
+	b.StopTimer()
+	data := generate()
+	buf := new(bytes.Buffer)
+	writer := hprose.NewWriter(buf, true)
+	b.ReportAllocs()
+	b.StartTimer()
+
+	for i := 0; i < b.N; i++ {
+		serializeUsingHprose(writer, data[rand.Intn(len(data))])
+	}
+}
+
+func BenchmarkHproseUnmarshal(b *testing.B) {
+	b.StopTimer()
+	buf := new(bytes.Buffer)
+	writer := hprose.NewWriter(buf, true)
+	data := generate()
+	ser := make([][]byte, len(data))
+	for i, d := range data {
+		ser[i] = serializeUsingHprose(writer, d)
+	}
+	b.ReportAllocs()
+	b.StartTimer()
+	for i := 0; i < b.N; i++ {
+		n := rand.Intn(len(ser))
+		sData := ser[n]
+		buf := hprose.NewBytesReader(sData)
+		reader := hprose.NewReader(buf, true)
+		o := &A{}
+		o.Name, _ = reader.ReadString()
+		o.BirthDay, _ = reader.ReadDateTime()
+		o.Phone, _ = reader.ReadString()
+		o.Siblings, _ = reader.ReadInt()
+		o.Spouse, _ = reader.ReadBool()
+		o.Money, _ = reader.ReadFloat64()
+		// Validate unmarshalled data.
+		if validate != "" {
+			i := data[n]
+			correct := o.Name == i.Name && o.Phone == i.Phone && o.Siblings == i.Siblings && o.Spouse == i.Spouse && o.Money == i.Money && o.BirthDay.String() == i.BirthDay.String() //&& cmpTags(o.Tags, i.Tags) && cmpAliases(o.Aliases, i.Aliases)
+			if !correct {
+				b.Fatalf("unmarshaled object differed:\n%v\n%v", i, o)
+			}
+		}
+	}
+}
+
 func serializeUsingFlatBuffers(builder *flatbuffers.Builder, a *A) []byte {
 	builder.Reset()
 
@@ -560,27 +642,4 @@ func BenchmarkFlatBuffersUnmarshal(b *testing.B) {
 			}
 		}
 	}
-}
-
-type ProtobufSerializer int
-
-func (m ProtobufSerializer) Marshal(o interface{}) []byte {
-	d, _ := protobuf.Encode(o)
-	return d
-}
-
-func (m ProtobufSerializer) Unmarshal(d []byte, o interface{}) error {
-	return protobuf.Decode(d, o)
-}
-
-func (j ProtobufSerializer) String() string {
-	return "protobuf"
-}
-
-func BenchmarkProtobufMarshal(b *testing.B) {
-	benchMarshal(b, ProtobufSerializer(0))
-}
-
-func BenchmarkProtobufUnmarshal(b *testing.B) {
-	benchUnmarshal(b, ProtobufSerializer(0))
 }
