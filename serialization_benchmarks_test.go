@@ -485,8 +485,8 @@ func BenchmarkGogoprotobufUnmarshal(b *testing.B) {
 		err := proto.Unmarshal(ser[n], o)
 		if err != nil {
 			b.Fatalf("goprotobuf failed to unmarshal: %s (%s)", err, ser[n])
+			// Validate unmarshalled data.
 		}
-		// Validate unmarshalled data.
 		if validate != "" {
 			i := data[n]
 			correct := o.Name == i.Name && o.Phone == i.Phone && o.Siblings == i.Siblings && o.Spouse == i.Spouse && o.Money == i.Money && o.BirthDay == i.BirthDay //&& cmpTags(o.Tags, i.Tags) && cmpAliases(o.Aliases, i.Aliases)
@@ -521,14 +521,15 @@ func BenchmarkProtobufUnmarshal(b *testing.B) {
 }
 
 func serializeUsingHprose(writer *hprose.Writer, a *A) []byte {
-	buf := writer.Stream().(*bytes.Buffer)
+	buf := writer.Stream.(*bytes.Buffer)
+	l := buf.Len()
 	writer.WriteString(a.Name)
 	writer.WriteTime(a.BirthDay)
 	writer.WriteString(a.Phone)
 	writer.WriteInt64(int64(a.Siblings))
 	writer.WriteBool(a.Spouse)
 	writer.WriteFloat64(a.Money)
-	return buf.Bytes()
+	return buf.Bytes()[l:]
 }
 
 func BenchmarkHproseMarshal(b *testing.B) {
@@ -553,13 +554,12 @@ func BenchmarkHproseUnmarshal(b *testing.B) {
 	for i, d := range data {
 		ser[i] = serializeUsingHprose(writer, d)
 	}
+	reader := hprose.NewReader(buf, true)
 	b.ReportAllocs()
 	b.StartTimer()
 	for i := 0; i < b.N; i++ {
 		n := rand.Intn(len(ser))
-		sData := ser[n]
-		buf := hprose.NewBytesReader(sData)
-		reader := hprose.NewReader(buf, true)
+		reader.Stream = &hprose.BytesReader{ser[n], 0}
 		o := &A{}
 		o.Name, _ = reader.ReadString()
 		o.BirthDay, _ = reader.ReadDateTime()
