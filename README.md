@@ -108,46 +108,8 @@ The benchmarks can also be run with validation enabled.
 VALIDATE=1 go test -bench='.*' ./
 ```
 
-Unfortunately, several of the serializers exhibit issues:
+For compatibility we round the birthdays on milliseconds.
 
 1. **(minor)** BSON drops sub-microsecond precision from `time.Time`.
 2. **(minor)** Vitess BSON drops sub-microsecond precision from `time.Time`.
 3. **(minor)** Ugorji Binc Codec drops the timezone name (eg. "EST" -> "-0500") from `time.Time`.
-
-```
-BenchmarkVmihailencoMsgpackMarshal   1000000          1770 ns/op         408 B/op          8 allocs/op
-BenchmarkVmihailencoMsgpackUnmarshal      500000          3073 ns/op         512 B/op         15 allocs/op
-BenchmarkJsonMarshal      500000          3292 ns/op         584 B/op          7 allocs/op
-BenchmarkJsonUnmarshal    200000          6077 ns/op         543 B/op         10 allocs/op
-BenchmarkBsonMarshal     1000000          2302 ns/op         504 B/op         19 allocs/op
-BenchmarkBsonUnmarshal  --- FAIL: BenchmarkBsonUnmarshal
-    serialization_benchmarks_test.go:299: unmarshaled object differed:
-        &{36f9dfc8311e1efd 2014-12-20 08:28:56.697060419 +1100 AEDT bce6c01982 0 true 0.9078469433531421}
-        &{36f9dfc8311e1efd 2014-12-20 08:28:56.697 +1100 AEDT bce6c01982 0 true 0.9078469433531421}
-BenchmarkVitessBsonMarshal   1000000          1644 ns/op        1168 B/op          4 allocs/op
-BenchmarkVitessBsonUnmarshal    --- FAIL: BenchmarkVitessBsonUnmarshal
-    serialization_benchmarks_test.go:299: unmarshaled object differed:
-        &{d22635208bfe823f 2014-12-20 08:28:58.370539555 +1100 AEDT 6c6e6d4ef8 2 true 0.2026063151373092}
-        &{d22635208bfe823f 2014-12-19 21:28:58.37 +0000 UTC 6c6e6d4ef8 2 true 0.2026063151373092}
-BenchmarkGobMarshal   200000          9770 ns/op        1688 B/op         35 allocs/op
-BenchmarkGobUnmarshal      30000         47695 ns/op       17590 B/op        379 allocs/op
-BenchmarkXdrMarshal   500000          2559 ns/op         519 B/op         24 allocs/op
-BenchmarkXdrUnmarshal     500000          3016 ns/op         352 B/op         14 allocs/op
-BenchmarkUgorjiCodecMsgpackMarshal    500000          3662 ns/op        1464 B/op         24 allocs/op
-BenchmarkUgorjiCodecMsgpackUnmarshal      300000          4533 ns/op        1232 B/op         29 allocs/op
-BenchmarkUgorjiCodecBincMarshal   500000          3745 ns/op        1480 B/op         24 allocs/op
-BenchmarkUgorjiCodecBincUnmarshal   --- FAIL: BenchmarkUgorjiCodecBincUnmarshal
-    serialization_benchmarks_test.go:299: unmarshaled object differed:
-        &{94fd6da7835a0346 2014-12-20 08:29:10.50608751 +1100 AEDT 7749978493 0 true 0.09633537464986415}
-        &{94fd6da7835a0346 2014-12-20 08:29:10.50608751 +1100 +1100 7749978493 0 true 0.09633537464986415}
-BenchmarkSerealMarshal    300000          4572 ns/op        1360 B/op         26 allocs/op
-BenchmarkSerealUnmarshal      300000          4950 ns/op        1068 B/op         39 allocs/op
-BenchmarkBinaryMarshal   1000000          2168 ns/op         408 B/op         19 allocs/op
-BenchmarkBinaryUnmarshal      500000          3249 ns/op         512 B/op         26 allocs/op
-BenchmarkGoprotobufMarshal   2000000           928 ns/op         312 B/op          4 allocs/op
-BenchmarkGoprotobufUnmarshal     1000000          1201 ns/op         432 B/op          9 allocs/op
-BenchmarkProtobufMarshal     1000000          1342 ns/op         232 B/op          9 allocs/op
-BenchmarkProtobufUnmarshal   1000000          2128 ns/op         288 B/op         12 allocs/op
-```
-
-All other fields are correct however.

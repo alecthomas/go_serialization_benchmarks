@@ -36,12 +36,25 @@ func randString(l int) string {
 	return fmt.Sprintf("%x", buf)[:l]
 }
 
+// randTime gets a UTC timestamp rounded to milliseconds.
+func randTime() time.Time {
+	s := int64(rand.Int31())
+	ns := rand.Int63n(9999) * 1000000
+	return time.Unix(s, ns).UTC()
+}
+
+func milliseconds(t time.Time) int64 {
+	ms := t.Unix() * 1000
+	ms += int64(t.Nanosecond()) / 1000000
+	return ms
+}
+
 func generate() []*A {
 	a := make([]*A, 0, 1000)
 	for i := 0; i < 1000; i++ {
 		a = append(a, &A{
 			Name:     randString(16),
-			BirthDay: time.Now(),
+			BirthDay: randTime(),
 			Phone:    randString(10),
 			Siblings: rand.Intn(5),
 			Spouse:   rand.Intn(2) == 1,
@@ -56,7 +69,7 @@ func generateProto() []*ProtoBufA {
 	for i := 0; i < 1000; i++ {
 		a = append(a, &ProtoBufA{
 			Name:     proto.String(randString(16)),
-			BirthDay: proto.Int64(time.Now().Unix()),
+			BirthDay: proto.Int64(milliseconds(randTime())),
 			Phone:    proto.String(randString(10)),
 			Siblings: proto.Int32(rand.Int31n(5)),
 			Spouse:   proto.Bool(rand.Intn(2) == 1),
@@ -71,7 +84,7 @@ func generateGogoProto() []*GogoProtoBufA {
 	for i := 0; i < 1000; i++ {
 		a = append(a, &GogoProtoBufA{
 			Name:     randString(16),
-			BirthDay: time.Now().Unix(),
+			BirthDay: milliseconds(randTime()),
 			Phone:    randString(10),
 			Siblings: rand.Int31n(5),
 			Spouse:   rand.Intn(2) == 1,
@@ -310,7 +323,7 @@ func benchUnmarshal(b *testing.B, s Serializer) {
 		// Validate unmarshalled data.
 		if validate != "" {
 			i := data[n]
-			correct := o.Name == i.Name && o.Phone == i.Phone && o.Siblings == i.Siblings && o.Spouse == i.Spouse && o.Money == i.Money && o.BirthDay.String() == i.BirthDay.String() //&& cmpTags(o.Tags, i.Tags) && cmpAliases(o.Aliases, i.Aliases)
+			correct := o.Name == i.Name && o.Phone == i.Phone && o.Siblings == i.Siblings && o.Spouse == i.Spouse && o.Money == i.Money && o.BirthDay.UTC() == i.BirthDay //&& cmpTags(o.Tags, i.Tags) && cmpAliases(o.Aliases, i.Aliases)
 			if !correct {
 				b.Fatalf("unmarshaled object differed:\n%v\n%v", i, o)
 			}
@@ -570,7 +583,7 @@ func BenchmarkHproseUnmarshal(b *testing.B) {
 		// Validate unmarshalled data.
 		if validate != "" {
 			i := data[n]
-			correct := o.Name == i.Name && o.Phone == i.Phone && o.Siblings == i.Siblings && o.Spouse == i.Spouse && o.Money == i.Money && o.BirthDay.String() == i.BirthDay.String() //&& cmpTags(o.Tags, i.Tags) && cmpAliases(o.Aliases, i.Aliases)
+			correct := o.Name == i.Name && o.Phone == i.Phone && o.Siblings == i.Siblings && o.Spouse == i.Spouse && o.Money == i.Money && o.BirthDay.UTC() == i.BirthDay //&& cmpTags(o.Tags, i.Tags) && cmpAliases(o.Aliases, i.Aliases)
 			if !correct {
 				b.Fatalf("unmarshaled object differed:\n%v\n%v", i, o)
 			}
@@ -636,7 +649,7 @@ func BenchmarkFlatBuffersUnmarshal(b *testing.B) {
 				int(o.Siblings()) == i.Siblings &&
 				spouseVal == i.Spouse &&
 				o.Money() == i.Money &&
-				o.BirthDay() == i.BirthDay.Unix()
+				o.BirthDay() == milliseconds(i.BirthDay)
 			if !correct {
 				b.Fatalf("unmarshaled object differed:\n%v\n%v", i, o)
 			}
