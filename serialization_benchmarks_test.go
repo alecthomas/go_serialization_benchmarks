@@ -22,6 +22,7 @@ import (
 	vitessbson "github.com/youtube/vitess/go/bson"
 	"gopkg.in/mgo.v2/bson"
 	vmihailenco "gopkg.in/vmihailenco/msgpack.v2"
+	"zombiezen.com/go/capnproto2"
 )
 
 var (
@@ -466,6 +467,49 @@ func BenchmarkFlatbuffersMarshal(b *testing.B) {
 
 func BenchmarkFlatBuffersUnmarshal(b *testing.B) {
 	benchUnmarshal(b, &FlatBufferSerializer{flatbuffers.NewBuilder(0)})
+}
+
+// zombiezen.com/go/capnproto2
+
+type CapNProtoSerializer struct{}
+
+func (x CapNProtoSerializer) Marshal(o interface{}) []byte {
+	a := o.(*A)
+	m, s, _ := capnp.NewMessage(capnp.SingleSegment(nil))
+	c, _ := NewRootCapnpA(s)
+	c.SetName(a.Name)
+	c.SetBirthDay(a.BirthDay.Unix())
+	c.SetPhone(a.Phone)
+	c.SetSiblings(int32(a.Siblings))
+	c.SetSpouse(a.Spouse)
+	c.SetMoney(a.Money)
+	b, _ := m.Marshal()
+	return b
+}
+
+func (x CapNProtoSerializer) Unmarshal(d []byte, i interface{}) error {
+	a := i.(*A)
+	m, _ := capnp.Unmarshal(d)
+	o, _ := ReadRootCapnpA(m)
+	a.Name, _ = o.Name()
+	a.BirthDay = time.Unix(o.BirthDay(), 0)
+	a.Phone, _ = o.Phone()
+	a.Siblings = int(o.Siblings())
+	a.Spouse = o.Spouse()
+	a.Money = o.Money()
+	return nil
+}
+
+func (x CapNProtoSerializer) String() string {
+	return "CapNProto"
+}
+
+func BenchmarkCapNProtoMarshal(b *testing.B) {
+	benchMarshal(b, CapNProtoSerializer{})
+}
+
+func BenchmarkCapNProtoUnmarshal(b *testing.B) {
+	benchUnmarshal(b, CapNProtoSerializer{})
 }
 
 // github.com/hprose/hprose-go/io
