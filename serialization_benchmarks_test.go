@@ -17,7 +17,7 @@ import (
 	"github.com/gogo/protobuf/proto"
 	flatbuffers "github.com/google/flatbuffers/go"
 	"github.com/hprose/hprose-go/io"
-	"github.com/philhofer/msgp/msgp"
+	"github.com/tinylib/msgp/msgp"
 	"github.com/ugorji/go/codec"
 	vitessbson "github.com/youtube/vitess/go/bson"
 	"gopkg.in/mgo.v2/bson"
@@ -631,8 +631,8 @@ func BenchmarkFlatBuffersUnmarshal(b *testing.B) {
 			i := data[n]
 			spouseVal := o.Spouse() == byte(1)
 
-			correct := o.Name() == i.Name &&
-				o.Phone() == i.Phone &&
+			correct := string(o.Name()) == i.Name &&
+				string(o.Phone()) == i.Phone &&
 				int(o.Siblings()) == i.Siblings &&
 				spouseVal == i.Spouse &&
 				o.Money() == i.Money &&
