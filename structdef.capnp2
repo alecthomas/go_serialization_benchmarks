@@ -1,10 +1,10 @@
-using Go = import "/github.com/glycerine/go-capnproto/go.capnp";
+using Go = import "/zombiezen.com/go/capnproto2/go.capnp";
 $Go.package("goserbench");
 $Go.import("github.com/alecthomas/go_serialization_benchmarks");
 
-@0x99ea7c74456111bd;
+@0xe18e32ede031d499;
 
-struct CapnpA {
+struct Capnp2A {
   name     @0   :Text;
   birthDay @1   :Int64;
   phone    @2   :Text;

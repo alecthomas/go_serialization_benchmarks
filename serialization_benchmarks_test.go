@@ -14,6 +14,7 @@ import (
 	"github.com/Sereal/Sereal/Go/sereal"
 	"github.com/alecthomas/binary"
 	"github.com/davecgh/go-xdr/xdr"
+	"github.com/glycerine/go-capnproto"
 	"github.com/gogo/protobuf/proto"
 	flatbuffers "github.com/google/flatbuffers/go"
 	"github.com/hprose/hprose-go/io"
@@ -469,14 +470,64 @@ func BenchmarkFlatBuffersUnmarshal(b *testing.B) {
 	benchUnmarshal(b, &FlatBufferSerializer{flatbuffers.NewBuilder(0)})
 }
 
+// github.com/glycerine/go-capnproto
+
+type CapNProtoSerializer struct {
+	buf []byte
+	out *bytes.Buffer
+}
+
+func (x *CapNProtoSerializer) Marshal(o interface{}) []byte {
+	a := o.(*A)
+	s := capn.NewBuffer(x.buf)
+	c := NewRootCapnpA(s)
+	c.SetName(a.Name)
+	c.SetBirthDay(a.BirthDay.Unix())
+	c.SetPhone(a.Phone)
+	c.SetSiblings(int32(a.Siblings))
+	c.SetSpouse(a.Spouse)
+	c.SetMoney(a.Money)
+	x.out.Reset()
+	s.WriteTo(x.out)
+	x.buf = []byte(s.Data)[:0]
+	return x.out.Bytes()
+}
+
+func (x *CapNProtoSerializer) Unmarshal(d []byte, i interface{}) error {
+	a := i.(*A)
+	s, _, _ := capn.ReadFromMemoryZeroCopy(d)
+	o := ReadRootCapnpA(s)
+	a.Name = string(o.Name())
+	a.BirthDay = time.Unix(o.BirthDay(), 0)
+	a.Phone = string(o.Phone())
+	a.Siblings = int(o.Siblings())
+	a.Spouse = o.Spouse()
+	a.Money = o.Money()
+	return nil
+}
+
+func (x *CapNProtoSerializer) String() string {
+	return "CapNProto"
+}
+
+func BenchmarkCapNProtoMarshal(b *testing.B) {
+	benchMarshal(b, &CapNProtoSerializer{nil, &bytes.Buffer{}})
+}
+
+func BenchmarkCapNProtoUnmarshal(b *testing.B) {
+	benchUnmarshal(b, &CapNProtoSerializer{nil, &bytes.Buffer{}})
+}
+
 // zombiezen.com/go/capnproto2
 
-type CapNProtoSerializer struct{}
+type CapNProto2Serializer struct {
+	arena capnp.Arena
+}
 
-func (x CapNProtoSerializer) Marshal(o interface{}) []byte {
+func (x *CapNProto2Serializer) Marshal(o interface{}) []byte {
 	a := o.(*A)
-	m, s, _ := capnp.NewMessage(capnp.SingleSegment(nil))
-	c, _ := NewRootCapnpA(s)
+	m, s, _ := capnp.NewMessage(x.arena)
+	c, _ := NewRootCapnp2A(s)
 	c.SetName(a.Name)
 	c.SetBirthDay(a.BirthDay.Unix())
 	c.SetPhone(a.Phone)
@@ -487,10 +538,10 @@ func (x CapNProtoSerializer) Marshal(o interface{}) []byte {
 	return b
 }
 
-func (x CapNProtoSerializer) Unmarshal(d []byte, i interface{}) error {
+func (x *CapNProto2Serializer) Unmarshal(d []byte, i interface{}) error {
 	a := i.(*A)
 	m, _ := capnp.Unmarshal(d)
-	o, _ := ReadRootCapnpA(m)
+	o, _ := ReadRootCapnp2A(m)
 	a.Name, _ = o.Name()
 	a.BirthDay = time.Unix(o.BirthDay(), 0)
 	a.Phone, _ = o.Phone()
@@ -500,16 +551,16 @@ func (x CapNProtoSerializer) Unmarshal(d []byte, i interface{}) error {
 	return nil
 }
 
-func (x CapNProtoSerializer) String() string {
-	return "CapNProto"
+func (x *CapNProto2Serializer) String() string {
+	return "CapNProto2"
 }
 
-func BenchmarkCapNProtoMarshal(b *testing.B) {
-	benchMarshal(b, CapNProtoSerializer{})
+func BenchmarkCapNProto2Marshal(b *testing.B) {
+	benchMarshal(b, &CapNProto2Serializer{capnp.SingleSegment(nil)})
 }
 
-func BenchmarkCapNProtoUnmarshal(b *testing.B) {
-	benchUnmarshal(b, CapNProtoSerializer{})
+func BenchmarkCapNProto2Unmarshal(b *testing.B) {
+	benchUnmarshal(b, &CapNProto2Serializer{capnp.SingleSegment(nil)})
 }
 
 // github.com/hprose/hprose-go/io

@@ -1,4 +1,4 @@
-all: FlatBufferA.go msgp_gen.go structdef-gogo.pb.go structdef.pb.go vitess_test.go structdef.capnp.go
+all: FlatBufferA.go msgp_gen.go structdef-gogo.pb.go structdef.pb.go vitess_test.go structdef.capnp.go structdef.capnp2.go
 
 FlatBufferA.go: flatbuffers-structdef.fbs
 	flatc -g flatbuffers-structdef.fbs
@@ -18,12 +18,17 @@ structdef.pb.go: structdef.proto
 vitess_test.go: structdef.go
 	bsongen -file=structdef.go -o=vitess_test.go -type=A
 
-structdef.capnp.go: structdef.capnp go.capnp
+structdef.capnp2.go: structdef.capnp2
+	go get -u zombiezen.com/go/capnproto2/...
+	capnp compile -I${GOPATH}/src -ogo structdef.capnp2
+
+structdef.capnp.go: structdef.capnp
+	go get -u github.com/glycerine/go-capnproto/capnpc-go
 	capnp compile -I${GOPATH}/src -ogo structdef.capnp
 
 .PHONY: clean
 clean:
-	rm -f FlatBufferA.go msgp_gen.go structdef-gogo.pb.go structdef.pb.go vitess_test.go structdef.capnp.go
+	rm -f FlatBufferA.go msgp_gen.go structdef-gogo.pb.go structdef.pb.go vitess_test.go structdef.capnp.go structdef.capnp2.go
 
 .PHONY: install
 install:
@@ -32,7 +37,6 @@ install:
 	go get -u github.com/golang/protobuf/protoc-gen-go
 	go get -u github.com/tinylib/msgp
 	go get -u github.com/youtube/vitess/go/cmd/bsongen
-	go get -u zombiezen.com/go/capnproto2/...
 
 	go get -u github.com/DeDiS/protobuf
 	go get -u github.com/Sereal/Sereal/Go/sereal
