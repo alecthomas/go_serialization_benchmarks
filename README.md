@@ -18,6 +18,9 @@ This is a test suite for benchmarking various Go serialization methods.
 - [github.com/gogo/protobuf](https://gogo.github.io/) (generated code, optimized version of `goprotobuf`)
 - [github.com/DeDiS/protobuf](https://github.com/DeDiS/protobuf) (reflection based)
 - [github.com/google/flatbuffers](https://github.com/google/flatbuffers)
+- [github.com/hprose/hprose-go/io](https://github.com/hprose/hprose-go)
+- [github.com/glycerine/go-capnproto](https://github.com/glycerine/go-capnproto)
+- [zombiezen.com/go/capnproto2](https://godoc.org/zombiezen.com/go/capnproto2)
 
 
 ## Running the benchmarks
