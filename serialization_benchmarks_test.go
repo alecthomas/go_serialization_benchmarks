@@ -433,7 +433,7 @@ func (s *FlatBufferSerializer) Marshal(o interface{}) []byte {
 	FlatBufferAStart(builder)
 	FlatBufferAAddName(builder, name)
 	FlatBufferAAddPhone(builder, phone)
-	FlatBufferAAddBirthDay(builder, a.BirthDay.Unix())
+	FlatBufferAAddBirthDay(builder, a.BirthDay.UnixNano())
 	FlatBufferAAddSiblings(builder, int32(a.Siblings))
 	var spouse byte
 	if a.Spouse {
@@ -482,7 +482,7 @@ func (x *CapNProtoSerializer) Marshal(o interface{}) []byte {
 	s := capn.NewBuffer(x.buf)
 	c := NewRootCapnpA(s)
 	c.SetName(a.Name)
-	c.SetBirthDay(a.BirthDay.Unix())
+	c.SetBirthDay(a.BirthDay.UnixNano())
 	c.SetPhone(a.Phone)
 	c.SetSiblings(int32(a.Siblings))
 	c.SetSpouse(a.Spouse)
@@ -497,9 +497,9 @@ func (x *CapNProtoSerializer) Unmarshal(d []byte, i interface{}) error {
 	a := i.(*A)
 	s, _, _ := capn.ReadFromMemoryZeroCopy(d)
 	o := ReadRootCapnpA(s)
-	a.Name = string(o.Name())
+	a.Name = string(o.NameBytes())
 	a.BirthDay = time.Unix(o.BirthDay(), 0)
-	a.Phone = string(o.Phone())
+	a.Phone = string(o.PhoneBytes())
 	a.Siblings = int(o.Siblings())
 	a.Spouse = o.Spouse()
 	a.Money = o.Money()
@@ -529,7 +529,7 @@ func (x *CapNProto2Serializer) Marshal(o interface{}) []byte {
 	m, s, _ := capnp.NewMessage(x.arena)
 	c, _ := NewRootCapnp2A(s)
 	c.SetName(a.Name)
-	c.SetBirthDay(a.BirthDay.Unix())
+	c.SetBirthDay(a.BirthDay.UnixNano())
 	c.SetPhone(a.Phone)
 	c.SetSiblings(int32(a.Siblings))
 	c.SetSpouse(a.Spouse)
@@ -647,7 +647,7 @@ func generateProto() []*ProtoBufA {
 	for i := 0; i < 1000; i++ {
 		a = append(a, &ProtoBufA{
 			Name:     proto.String(randString(16)),
-			BirthDay: proto.Int64(time.Now().Unix()),
+			BirthDay: proto.Int64(time.Now().UnixNano()),
 			Phone:    proto.String(randString(10)),
 			Siblings: proto.Int32(rand.Int31n(5)),
 			Spouse:   proto.Bool(rand.Intn(2) == 1),
@@ -701,7 +701,7 @@ func generateGogoProto() []*GogoProtoBufA {
 	for i := 0; i < 1000; i++ {
 		a = append(a, &GogoProtoBufA{
 			Name:     randString(16),
-			BirthDay: time.Now().Unix(),
+			BirthDay: time.Now().UnixNano(),
 			Phone:    randString(10),
 			Siblings: rand.Int31n(5),
 			Spouse:   rand.Intn(2) == 1,
