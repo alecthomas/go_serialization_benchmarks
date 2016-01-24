@@ -23,7 +23,6 @@ This is a test suite for benchmarking various Go serialization methods.
 - [zombiezen.com/go/capnproto2](https://godoc.org/zombiezen.com/go/capnproto2)
 - [github.com/andyleap/gencode](https://github.com/andyleap/gencode)
 
-
 ## Running the benchmarks
 
 ```bash
@@ -69,46 +68,45 @@ Results with Go 1.5 on a 2.6 GHz Intel Core i7 (MacBook Pro 15"):
 ```
 benchmark                                   iter           time/iter      bytes alloc               allocs
 ---------                                   ----           ---------      -----------               ------
-BenchmarkMsgpMarshal-8                      5000000        243 ns/op      128 B/op        1 allocs/op
-BenchmarkMsgpUnmarshal-8                    3000000        459 ns/op      112 B/op        3 allocs/op
-BenchmarkVmihailencoMsgpackMarshal-8        1000000       2347 ns/op      400 B/op        6 allocs/op
-BenchmarkVmihailencoMsgpackUnmarshal-8      1000000       2196 ns/op      400 B/op       13 allocs/op
-BenchmarkJsonMarshal-8                       500000       2817 ns/op      584 B/op        7 allocs/op
-BenchmarkJsonUnmarshal-8                     300000       4681 ns/op      463 B/op        8 allocs/op
-BenchmarkBsonMarshal-8                      1000000       1744 ns/op      416 B/op       10 allocs/op
-BenchmarkBsonUnmarshal-8                    1000000       2228 ns/op      416 B/op       21 allocs/op
-BenchmarkVitessBsonMarshal-8                1000000       1052 ns/op     1168 B/op        4 allocs/op
-BenchmarkVitessBsonUnmarshal-8              2000000        836 ns/op      224 B/op        4 allocs/op
-BenchmarkGobMarshal-8                       1000000       1108 ns/op       48 B/op        2 allocs/op
-BenchmarkGobUnmarshal-8                     1000000       1261 ns/op      160 B/op        6 allocs/op
-BenchmarkXdrMarshal-8                       1000000       2033 ns/op      592 B/op       21 allocs/op
-BenchmarkXdrUnmarshal-8                     1000000       1592 ns/op      287 B/op       11 allocs/op
-BenchmarkUgorjiCodecMsgpackMarshal-8         500000       2830 ns/op     2721 B/op        8 allocs/op
-BenchmarkUgorjiCodecMsgpackUnmarshal-8       500000       3172 ns/op     3104 B/op       12 allocs/op
-BenchmarkUgorjiCodecBincMarshal-8            500000       2855 ns/op     2753 B/op        8 allocs/op
-BenchmarkUgorjiCodecBincUnmarshal-8          500000       3367 ns/op     3264 B/op       15 allocs/op
-BenchmarkSerealMarshal-8                     300000       3839 ns/op      928 B/op       21 allocs/op
-BenchmarkSerealUnmarshal-8                   500000       3730 ns/op     1152 B/op       34 allocs/op
-BenchmarkBinaryMarshal-8                    1000000       1835 ns/op      352 B/op       16 allocs/op
-BenchmarkBinaryUnmarshal-8                  1000000       2019 ns/op      448 B/op       22 allocs/op
-BenchmarkFlatbuffersMarshal-8               5000000        387 ns/op        0 B/op        0 allocs/op
+BenchmarkMsgpMarshal-8                      5000000        240 ns/op      128 B/op        1 allocs/op
+BenchmarkMsgpUnmarshal-8                    3000000        444 ns/op      112 B/op        3 allocs/op
+BenchmarkVmihailencoMsgpackMarshal-8        1000000       2331 ns/op      400 B/op        6 allocs/op
+BenchmarkVmihailencoMsgpackUnmarshal-8      1000000       2038 ns/op      400 B/op       13 allocs/op
+BenchmarkJsonMarshal-8                       500000       2657 ns/op      584 B/op        7 allocs/op
+BenchmarkJsonUnmarshal-8                     300000       4241 ns/op      463 B/op        8 allocs/op
+BenchmarkBsonMarshal-8                      1000000       1816 ns/op      416 B/op       10 allocs/op
+BenchmarkBsonUnmarshal-8                    1000000       2240 ns/op      416 B/op       21 allocs/op
+BenchmarkVitessBsonMarshal-8                1000000       1085 ns/op     1168 B/op        4 allocs/op
+BenchmarkVitessBsonUnmarshal-8              2000000        808 ns/op      224 B/op        4 allocs/op
+BenchmarkGobMarshal-8                       1000000       1095 ns/op       48 B/op        2 allocs/op
+BenchmarkGobUnmarshal-8                     1000000       1231 ns/op      160 B/op        6 allocs/op
+BenchmarkXdrMarshal-8                       1000000       2068 ns/op      591 B/op       20 allocs/op
+BenchmarkXdrUnmarshal-8                     1000000       1583 ns/op      287 B/op       11 allocs/op
+BenchmarkUgorjiCodecMsgpackMarshal-8         500000       2832 ns/op     2721 B/op        8 allocs/op
+BenchmarkUgorjiCodecMsgpackUnmarshal-8       500000       3225 ns/op     3104 B/op       12 allocs/op
+BenchmarkUgorjiCodecBincMarshal-8            500000       2838 ns/op     2753 B/op        8 allocs/op
+BenchmarkUgorjiCodecBincUnmarshal-8          500000       3401 ns/op     3264 B/op       15 allocs/op
+BenchmarkSerealMarshal-8                     500000       4048 ns/op      928 B/op       21 allocs/op
+BenchmarkSerealUnmarshal-8                   500000       3801 ns/op     1152 B/op       34 allocs/op
+BenchmarkBinaryMarshal-8                    1000000       1792 ns/op      352 B/op       16 allocs/op
+BenchmarkBinaryUnmarshal-8                  1000000       1876 ns/op      448 B/op       22 allocs/op
+BenchmarkFlatbuffersMarshal-8               5000000        363 ns/op        0 B/op        0 allocs/op
 BenchmarkFlatBuffersUnmarshal-8             5000000        315 ns/op      112 B/op        3 allocs/op
-BenchmarkCapNProtoMarshal-8                 3000000        515 ns/op       64 B/op        2 allocs/op
-BenchmarkCapNProtoUnmarshal-8               3000000        476 ns/op      216 B/op        6 allocs/op
-BenchmarkCapNProto2Marshal-8                1000000       1820 ns/op      608 B/op       15 allocs/op
-BenchmarkCapNProto2Unmarshal-8              1000000       1740 ns/op      640 B/op       16 allocs/op
-BenchmarkHproseMarshal-8                    1000000       1201 ns/op      489 B/op        8 allocs/op
-BenchmarkHproseUnmarshal-8                  1000000       1317 ns/op      319 B/op       10 allocs/op
-BenchmarkProtobufMarshal-8                  1000000       1175 ns/op      224 B/op        7 allocs/op
-BenchmarkProtobufUnmarshal-8                2000000        998 ns/op      240 B/op       10 allocs/op
-BenchmarkGoprotobufMarshal-8                2000000        697 ns/op      320 B/op        4 allocs/op
-BenchmarkGoprotobufUnmarshal-8              2000000       1045 ns/op      432 B/op        9 allocs/op
-BenchmarkGogoprotobufMarshal-8             10000000        198 ns/op       64 B/op        1 allocs/op
-BenchmarkGogoprotobufUnmarshal-8            5000000        303 ns/op      112 B/op        3 allocs/op
+BenchmarkCapNProtoMarshal-8                 3000000        511 ns/op       64 B/op        2 allocs/op
+BenchmarkCapNProtoUnmarshal-8               3000000        461 ns/op      216 B/op        6 allocs/op
+BenchmarkCapNProto2Marshal-8                1000000       1709 ns/op      608 B/op       15 allocs/op
+BenchmarkCapNProto2Unmarshal-8              1000000       1669 ns/op      640 B/op       16 allocs/op
+BenchmarkHproseMarshal-8                    1000000       1103 ns/op      494 B/op        8 allocs/op
+BenchmarkHproseUnmarshal-8                  1000000       1323 ns/op      320 B/op       10 allocs/op
+BenchmarkProtobufMarshal-8                  1000000       1322 ns/op      224 B/op        7 allocs/op
+BenchmarkProtobufUnmarshal-8                2000000        913 ns/op      240 B/op       10 allocs/op
+BenchmarkGoprotobufMarshal-8                2000000        672 ns/op      320 B/op        4 allocs/op
+BenchmarkGoprotobufUnmarshal-8              2000000        911 ns/op      432 B/op        9 allocs/op
+BenchmarkGogoprotobufMarshal-8             10000000        183 ns/op       64 B/op        1 allocs/op
+BenchmarkGogoprotobufUnmarshal-8            5000000        290 ns/op      112 B/op        3 allocs/op
+BenchmarkGencodeMarshal-8                  10000000        187 ns/op       80 B/op        2 allocs/op
+BenchmarkGencodeUnmarshal-8                 5000000        235 ns/op      112 B/op        3 allocs/op
 ```
-
-**Note:** the gob results are not really representative of normal performance, as gob is designed for serializing streams or vectors of a single type, not individual values.
-
 
 ## Issues
 
