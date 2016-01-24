@@ -10,6 +10,8 @@ import (
 	"testing"
 	"time"
 
+	"zombiezen.com/go/capnproto2"
+
 	"github.com/DeDiS/protobuf"
 	"github.com/Sereal/Sereal/Go/sereal"
 	"github.com/alecthomas/binary"
@@ -17,13 +19,12 @@ import (
 	"github.com/glycerine/go-capnproto"
 	"github.com/gogo/protobuf/proto"
 	flatbuffers "github.com/google/flatbuffers/go"
-	"github.com/hprose/hprose-go/io"
+	"github.com/hprose/hprose-go"
 	"github.com/tinylib/msgp/msgp"
 	"github.com/ugorji/go/codec"
 	vitessbson "github.com/youtube/vitess/go/bson"
 	"gopkg.in/mgo.v2/bson"
 	vmihailenco "gopkg.in/vmihailenco/msgpack.v2"
-	"zombiezen.com/go/capnproto2"
 )
 
 var (
@@ -98,7 +99,10 @@ func benchUnmarshal(b *testing.B, s Serializer) {
 	data := generate()
 	ser := make([][]byte, len(data))
 	for i, d := range data {
-		ser[i] = []byte(string(s.Marshal(d)))
+		o := s.Marshal(d)
+		t := make([]byte, len(o))
+		copy(t, o)
+		ser[i] = t
 	}
 	b.ReportAllocs()
 	b.StartTimer()
@@ -255,22 +259,25 @@ func BenchmarkVitessBsonUnmarshal(b *testing.B) {
 
 // encoding/gob
 
-type GobSerializer struct{}
+type GobSerializer struct {
+	b   bytes.Buffer
+	enc *gob.Encoder
+	dec *gob.Decoder
+}
 
-func (g GobSerializer) Marshal(o interface{}) []byte {
-	b := &bytes.Buffer{}
-	e := gob.NewEncoder(b)
-	err := e.Encode(o)
+func (g *GobSerializer) Marshal(o interface{}) []byte {
+	g.b.Reset()
+	err := g.enc.Encode(o)
 	if err != nil {
 		panic(err)
 	}
-	return b.Bytes()
+	return g.b.Bytes()
 }
 
-func (g GobSerializer) Unmarshal(d []byte, o interface{}) error {
-	b := bytes.NewBuffer(d)
-	e := gob.NewDecoder(b)
-	err := e.Decode(o)
+func (g *GobSerializer) Unmarshal(d []byte, o interface{}) error {
+	g.b.Reset()
+	g.b.Write(d)
+	err := g.dec.Decode(o)
 	return err
 }
 
@@ -279,11 +286,37 @@ func (g GobSerializer) String() string {
 }
 
 func BenchmarkGobMarshal(b *testing.B) {
-	benchMarshal(b, GobSerializer{})
+	var s GobSerializer
+	s.enc = gob.NewEncoder(&s.b)
+	s.dec = gob.NewDecoder(&s.b)
+	// Decode and encode A once,
+	// so that type information is transmitted correctly.
+	err := s.enc.Encode(A{})
+	if err != nil {
+		panic(err)
+	}
+	var a A
+	err = s.dec.Decode(&a)
+	if err != nil {
+		panic(err)
+	}
+	benchMarshal(b, &s)
 }
 
 func BenchmarkGobUnmarshal(b *testing.B) {
-	benchUnmarshal(b, GobSerializer{})
+	var s GobSerializer
+	s.enc = gob.NewEncoder(&s.b)
+	s.dec = gob.NewDecoder(&s.b)
+	err := s.enc.Encode(A{})
+	if err != nil {
+		panic(err)
+	}
+	var a A
+	err = s.dec.Decode(&a)
+	if err != nil {
+		panic(err)
+	}
+	benchUnmarshal(b, &s)
 }
 
 // github.com/davecgh/go-xdr/xdr
