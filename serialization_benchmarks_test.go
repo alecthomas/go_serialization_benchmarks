@@ -285,12 +285,10 @@ func (g GobSerializer) String() string {
 	return "gob"
 }
 
-func BenchmarkGobMarshal(b *testing.B) {
-	var s GobSerializer
+func NewGobSerializer() *GobSerializer {
+	s := &GobSerializer{}
 	s.enc = gob.NewEncoder(&s.b)
 	s.dec = gob.NewDecoder(&s.b)
-	// Decode and encode A once,
-	// so that type information is transmitted correctly.
 	err := s.enc.Encode(A{})
 	if err != nil {
 		panic(err)
@@ -300,23 +298,17 @@ func BenchmarkGobMarshal(b *testing.B) {
 	if err != nil {
 		panic(err)
 	}
-	benchMarshal(b, &s)
+	return s
+}
+
+func BenchmarkGobMarshal(b *testing.B) {
+	s := NewGobSerializer()
+	benchMarshal(b, s)
 }
 
 func BenchmarkGobUnmarshal(b *testing.B) {
-	var s GobSerializer
-	s.enc = gob.NewEncoder(&s.b)
-	s.dec = gob.NewDecoder(&s.b)
-	err := s.enc.Encode(A{})
-	if err != nil {
-		panic(err)
-	}
-	var a A
-	err = s.dec.Decode(&a)
-	if err != nil {
-		panic(err)
-	}
-	benchUnmarshal(b, &s)
+	s := NewGobSerializer()
+	benchUnmarshal(b, s)
 }
 
 // github.com/davecgh/go-xdr/xdr
