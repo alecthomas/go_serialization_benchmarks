@@ -289,6 +289,8 @@ func BenchmarkGobMarshal(b *testing.B) {
 	var s GobSerializer
 	s.enc = gob.NewEncoder(&s.b)
 	s.dec = gob.NewDecoder(&s.b)
+	// Decode and encode A once,
+	// so that type information is transmitted correctly.
 	err := s.enc.Encode(A{})
 	if err != nil {
 		panic(err)
