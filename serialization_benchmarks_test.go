@@ -9,6 +9,7 @@ import (
 	"os"
 	"testing"
 	"time"
+	"unsafe"
 
 	"zombiezen.com/go/capnproto2"
 
@@ -518,16 +519,46 @@ func (x *CapNProtoSerializer) Marshal(o interface{}) []byte {
 	return x.out.Bytes()
 }
 
+// the multi.Segment[0] here can be safely reused on each Unmarshal
+var multi = capn.NewSingleSegmentMultiBuffer()
+
 func (x *CapNProtoSerializer) Unmarshal(d []byte, i interface{}) error {
 	a := i.(*A)
-	s, _, _ := capn.ReadFromMemoryZeroCopy(d)
+	capn.ReadFromMemoryZeroCopyNoAlloc(d, multi)
+	s := multi.Segments[0]
 	o := ReadRootCapnpA(s)
-	a.Name = string(o.NameBytes())
+
 	a.BirthDay = time.Unix(o.BirthDay(), 0)
-	a.Phone = string(o.PhoneBytes())
 	a.Siblings = int(o.Siblings())
 	a.Spouse = o.Spouse()
 	a.Money = o.Money()
+
+	// This is tuned for performance, to demonstrate how
+	// to do zero-allocation deserialization in CapNProto, which
+	// is the one of the big reasons CapNProto was created
+	// as an alternative to Protocol Buffers.
+	//
+	// In general you should only use unsafe if you can
+	// guarantee those bytes won't be changing
+	// out from under you (e.g. by being garbage collected)
+	// when they are accessed afterwards.
+	// Quite frequently this is possible if you own the
+	// []byte buffer, process each message in turn, and then
+	// never refer to the string again.
+
+	// 1st possible allocation: Avoided using unsafe; could
+	// also be avoided by storing Name as []byte instead
+	// of string in the first place
+	nameBytes := o.NameBytes()
+	a.Name = *(*string)(unsafe.Pointer(&nameBytes))
+	// a.Name = string(nameBytes) // would allocate for the string conversion.
+
+	// 2nd possible allocation: also a string -- same comments
+	// as above apply.
+	phoneBytes := o.PhoneBytes()
+	a.Phone = *(*string)(unsafe.Pointer(&phoneBytes))
+	// a.Phone = string(phoneBytes) // would allocate for the string conversion.
+
 	return nil
 }
 
@@ -539,8 +570,11 @@ func BenchmarkCapNProtoMarshal(b *testing.B) {
 	benchMarshal(b, &CapNProtoSerializer{nil, &bytes.Buffer{}})
 }
 
+var capnSer = &CapNProtoSerializer{nil, &bytes.Buffer{}}
+
 func BenchmarkCapNProtoUnmarshal(b *testing.B) {
-	benchUnmarshal(b, &CapNProtoSerializer{nil, &bytes.Buffer{}})
+	benchUnmarshalCapn(b, capnSer) // 0 allocations
+	// benchUnmarshal(b, capnSer) // costs 80 bytes allocated for the interface{}
 }
 
 // zombiezen.com/go/capnproto2
@@ -808,6 +842,7 @@ func BenchmarkGencodeUnmarshal(b *testing.B) {
 		ser[i], _ = d.Marshal(nil)
 	}
 	b.ReportAllocs()
+	b.ResetTimer()
 	b.StartTimer()
 	for i := 0; i < b.N; i++ {
 		n := rand.Intn(len(ser))
@@ -820,6 +855,41 @@ func BenchmarkGencodeUnmarshal(b *testing.B) {
 		if validate != "" {
 			i := data[n]
 			correct := o.Name == i.Name && o.Phone == i.Phone && o.Siblings == i.Siblings && o.Spouse == i.Spouse && o.Money == i.Money && o.BirthDay == i.BirthDay //&& cmpTags(o.Tags, i.Tags) && cmpAliases(o.Aliases, i.Aliases)
+			if !correct {
+				b.Fatalf("unmarshaled object differed:\n%v\n%v", i, o)
+			}
+		}
+	}
+}
+
+// the interface conversion in benchUnmarshal allocates 80 bytes; we
+// can avoid that overhead by avoiding the interface{} and
+// using the pointer s *CapNProtoSerializer directly.
+func benchUnmarshalCapn(b *testing.B, s *CapNProtoSerializer) {
+	b.StopTimer()
+	data := generate()
+	ser := make([][]byte, len(data))
+	for i, d := range data {
+		o := s.Marshal(d)
+		t := make([]byte, len(o))
+		copy(t, o)
+		ser[i] = t
+	}
+
+	o := &A{}
+	b.ReportAllocs()
+	b.ResetTimer()
+	b.StartTimer()
+	for i := 0; i < b.N; i++ {
+		n := rand.Intn(len(ser))
+		err := s.Unmarshal(ser[n], o)
+		if err != nil {
+			b.Fatalf("%s failed to unmarshal: %s (%s)", s, err, ser[n])
+		}
+		// Validate unmarshalled data.
+		if validate != "" {
+			i := data[n]
+			correct := o.Name == i.Name && o.Phone == i.Phone && o.Siblings == i.Siblings && o.Spouse == i.Spouse && o.Money == i.Money && o.BirthDay.String() == i.BirthDay.String() //&& cmpTags(o.Tags, i.Tags) && cmpAliases(o.Aliases, i.Aliases)
 			if !correct {
 				b.Fatalf("unmarshaled object differed:\n%v\n%v", i, o)
 			}
