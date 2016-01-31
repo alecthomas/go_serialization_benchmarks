@@ -18,12 +18,12 @@ func NewRootCapnpA(s *C.Segment) CapnpA  { return CapnpA(s.NewRootStruct(24, 2))
 func AutoNewCapnpA(s *C.Segment) CapnpA  { return CapnpA(s.NewStructAR(24, 2)) }
 func ReadRootCapnpA(s *C.Segment) CapnpA { return CapnpA(s.Root(0).ToStruct()) }
 func (s CapnpA) Name() string            { return C.Struct(s).GetObject(0).ToText() }
-func (s CapnpA) NameBytes() []byte       { return C.Struct(s).GetObject(0).ToData() }
+func (s CapnpA) NameBytes() []byte       { return C.Struct(s).GetObject(0).ToDataTrimLastByte() }
 func (s CapnpA) SetName(v string)        { C.Struct(s).SetObject(0, s.Segment.NewText(v)) }
 func (s CapnpA) BirthDay() int64         { return int64(C.Struct(s).Get64(0)) }
 func (s CapnpA) SetBirthDay(v int64)     { C.Struct(s).Set64(0, uint64(v)) }
 func (s CapnpA) Phone() string           { return C.Struct(s).GetObject(1).ToText() }
-func (s CapnpA) PhoneBytes() []byte      { return C.Struct(s).GetObject(1).ToData() }
+func (s CapnpA) PhoneBytes() []byte      { return C.Struct(s).GetObject(1).ToDataTrimLastByte() }
 func (s CapnpA) SetPhone(v string)       { C.Struct(s).SetObject(1, s.Segment.NewText(v)) }
 func (s CapnpA) Siblings() int32         { return int32(C.Struct(s).Get32(8)) }
 func (s CapnpA) SetSiblings(v int32)     { C.Struct(s).Set32(8, uint32(v)) }

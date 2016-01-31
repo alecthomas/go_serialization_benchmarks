@@ -540,8 +540,7 @@ func (x *CapNProtoSerializer) Unmarshal(d []byte, i interface{}) error {
 	//
 	// In general you should only use unsafe if you can
 	// guarantee those bytes won't be changing
-	// out from under you (e.g. by being garbage collected)
-	// when they are accessed afterwards.
+	// out from under you when they are accessed afterwards.
 	// Quite frequently this is possible if you own the
 	// []byte buffer, process each message in turn, and then
 	// never refer to the string again.
