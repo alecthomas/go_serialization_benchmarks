@@ -528,7 +528,7 @@ func (x *CapNProtoSerializer) Unmarshal(d []byte, i interface{}) error {
 	s := multi.Segments[0]
 	o := ReadRootCapnpA(s)
 
-	a.BirthDay = time.Unix(o.BirthDay(), 0)
+	a.BirthDay = time.Unix(0, o.BirthDay())
 	a.Siblings = int(o.Siblings())
 	a.Spouse = o.Spouse()
 	a.Money = o.Money()
@@ -602,7 +602,7 @@ func (x *CapNProto2Serializer) Unmarshal(d []byte, i interface{}) error {
 	m, _ := capnp.Unmarshal(d)
 	o, _ := ReadRootCapnp2A(m)
 	a.Name, _ = o.Name()
-	a.BirthDay = time.Unix(o.BirthDay(), 0)
+	a.BirthDay = time.Unix(0, o.BirthDay())
 	a.Phone, _ = o.Phone()
 	a.Siblings = int(o.Siblings())
 	a.Spouse = o.Spouse()
