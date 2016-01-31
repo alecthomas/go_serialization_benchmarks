@@ -63,49 +63,49 @@ type A struct {
 
 ## Results
 
-Results with Go 1.5 on a 2.6 GHz Intel Core i7 (MacBook Pro 15"):
+Results with Go 1.5.1 on a 3.1 GHz Intel Core i7 (MacBook Pro 13"):
 
 ```
 benchmark                                   iter           time/iter      bytes alloc               allocs
 ---------                                   ----           ---------      -----------               ------
-BenchmarkMsgpMarshal-8                      5000000        240 ns/op      128 B/op        1 allocs/op
-BenchmarkMsgpUnmarshal-8                    3000000        444 ns/op      112 B/op        3 allocs/op
-BenchmarkVmihailencoMsgpackMarshal-8        1000000       2331 ns/op      400 B/op        6 allocs/op
-BenchmarkVmihailencoMsgpackUnmarshal-8      1000000       2038 ns/op      400 B/op       13 allocs/op
-BenchmarkJsonMarshal-8                       500000       2657 ns/op      584 B/op        7 allocs/op
-BenchmarkJsonUnmarshal-8                     300000       4241 ns/op      463 B/op        8 allocs/op
-BenchmarkBsonMarshal-8                      1000000       1816 ns/op      416 B/op       10 allocs/op
-BenchmarkBsonUnmarshal-8                    1000000       2240 ns/op      416 B/op       21 allocs/op
-BenchmarkVitessBsonMarshal-8                1000000       1085 ns/op     1168 B/op        4 allocs/op
-BenchmarkVitessBsonUnmarshal-8              2000000        808 ns/op      224 B/op        4 allocs/op
-BenchmarkGobMarshal-8                       1000000       1095 ns/op       48 B/op        2 allocs/op
-BenchmarkGobUnmarshal-8                     1000000       1231 ns/op      160 B/op        6 allocs/op
-BenchmarkXdrMarshal-8                       1000000       2068 ns/op      591 B/op       20 allocs/op
-BenchmarkXdrUnmarshal-8                     1000000       1583 ns/op      287 B/op       11 allocs/op
-BenchmarkUgorjiCodecMsgpackMarshal-8         500000       2832 ns/op     2721 B/op        8 allocs/op
-BenchmarkUgorjiCodecMsgpackUnmarshal-8       500000       3225 ns/op     3104 B/op       12 allocs/op
-BenchmarkUgorjiCodecBincMarshal-8            500000       2838 ns/op     2753 B/op        8 allocs/op
-BenchmarkUgorjiCodecBincUnmarshal-8          500000       3401 ns/op     3264 B/op       15 allocs/op
-BenchmarkSerealMarshal-8                     500000       4048 ns/op      928 B/op       21 allocs/op
-BenchmarkSerealUnmarshal-8                   500000       3801 ns/op     1152 B/op       34 allocs/op
-BenchmarkBinaryMarshal-8                    1000000       1792 ns/op      352 B/op       16 allocs/op
-BenchmarkBinaryUnmarshal-8                  1000000       1876 ns/op      448 B/op       22 allocs/op
-BenchmarkFlatbuffersMarshal-8               5000000        363 ns/op        0 B/op        0 allocs/op
-BenchmarkFlatBuffersUnmarshal-8             5000000        315 ns/op      112 B/op        3 allocs/op
-BenchmarkCapNProtoMarshal-8                 3000000        511 ns/op       64 B/op        2 allocs/op
-BenchmarkCapNProtoUnmarshal-8               3000000        461 ns/op      216 B/op        6 allocs/op
-BenchmarkCapNProto2Marshal-8                1000000       1709 ns/op      608 B/op       15 allocs/op
-BenchmarkCapNProto2Unmarshal-8              1000000       1669 ns/op      640 B/op       16 allocs/op
-BenchmarkHproseMarshal-8                    1000000       1103 ns/op      494 B/op        8 allocs/op
-BenchmarkHproseUnmarshal-8                  1000000       1323 ns/op      320 B/op       10 allocs/op
-BenchmarkProtobufMarshal-8                  1000000       1322 ns/op      224 B/op        7 allocs/op
-BenchmarkProtobufUnmarshal-8                2000000        913 ns/op      240 B/op       10 allocs/op
-BenchmarkGoprotobufMarshal-8                2000000        672 ns/op      320 B/op        4 allocs/op
-BenchmarkGoprotobufUnmarshal-8              2000000        911 ns/op      432 B/op        9 allocs/op
-BenchmarkGogoprotobufMarshal-8             10000000        183 ns/op       64 B/op        1 allocs/op
-BenchmarkGogoprotobufUnmarshal-8            5000000        290 ns/op      112 B/op        3 allocs/op
-BenchmarkGencodeMarshal-8                  10000000        187 ns/op       80 B/op        2 allocs/op
-BenchmarkGencodeUnmarshal-8                 5000000        235 ns/op      112 B/op        3 allocs/op
+BenchmarkMsgpMarshal-4                	 5000000	       299 ns/op	     128 B/op	       1 allocs/op
+BenchmarkMsgpUnmarshal-4              	 3000000	       532 ns/op	     112 B/op	       3 allocs/op
+BenchmarkVmihailencoMsgpackMarshal-4  	  500000	      2597 ns/op	     400 B/op	       6 allocs/op
+BenchmarkVmihailencoMsgpackUnmarshal-4	  500000	      2381 ns/op	     400 B/op	      13 allocs/op
+BenchmarkJsonMarshal-4                	  500000	      3116 ns/op	     584 B/op	       7 allocs/op
+BenchmarkJsonUnmarshal-4              	  300000	      5344 ns/op	     463 B/op	       8 allocs/op
+BenchmarkBsonMarshal-4                	 1000000	      2078 ns/op	     416 B/op	      10 allocs/op
+BenchmarkBsonUnmarshal-4              	  500000	      2890 ns/op	     416 B/op	      21 allocs/op
+BenchmarkVitessBsonMarshal-4          	 1000000	      1485 ns/op	    1168 B/op	       4 allocs/op
+BenchmarkVitessBsonUnmarshal-4        	 1000000	      1014 ns/op	     224 B/op	       4 allocs/op
+BenchmarkGobMarshal-4                 	 1000000	      1292 ns/op	      48 B/op	       2 allocs/op
+BenchmarkGobUnmarshal-4               	 1000000	      1589 ns/op	     160 B/op	       6 allocs/op
+BenchmarkXdrMarshal-4                 	  500000	      2589 ns/op	     591 B/op	      20 allocs/op
+BenchmarkXdrUnmarshal-4               	 1000000	      1954 ns/op	     287 B/op	      11 allocs/op
+BenchmarkUgorjiCodecMsgpackMarshal-4  	  500000	      4036 ns/op	    2720 B/op	       8 allocs/op
+BenchmarkUgorjiCodecMsgpackUnmarshal-4	  300000	      4749 ns/op	    3104 B/op	      12 allocs/op
+BenchmarkUgorjiCodecBincMarshal-4     	  300000	      4732 ns/op	    2752 B/op	       8 allocs/op
+BenchmarkUgorjiCodecBincUnmarshal-4   	  300000	      4918 ns/op	    3264 B/op	      15 allocs/op
+BenchmarkSerealMarshal-4              	  300000	      5415 ns/op	     928 B/op	      21 allocs/op
+BenchmarkSerealUnmarshal-4            	  300000	      4894 ns/op	    1152 B/op	      34 allocs/op
+BenchmarkBinaryMarshal-4              	 1000000	      2203 ns/op	     352 B/op	      16 allocs/op
+BenchmarkBinaryUnmarshal-4            	 1000000	      2347 ns/op	     448 B/op	      22 allocs/op
+BenchmarkFlatbuffersMarshal-4         	 3000000	       475 ns/op	       0 B/op	       0 allocs/op
+BenchmarkFlatBuffersUnmarshal-4       	 3000000	       386 ns/op	     112 B/op	       3 allocs/op
+BenchmarkCapNProtoMarshal-4           	 2000000	       627 ns/op	      64 B/op	       2 allocs/op
+BenchmarkCapNProtoUnmarshal-4         	10000000	       229 ns/op	       0 B/op	       0 allocs/op
+BenchmarkCapNProto2Marshal-4          	 1000000	      2334 ns/op	     608 B/op	      15 allocs/op
+BenchmarkCapNProto2Unmarshal-4        	 1000000	      2191 ns/op	     640 B/op	      16 allocs/op
+BenchmarkHproseMarshal-4              	 1000000	      1514 ns/op	     495 B/op	       8 allocs/op
+BenchmarkHproseUnmarshal-4            	 1000000	      1625 ns/op	     319 B/op	      10 allocs/op
+BenchmarkProtobufMarshal-4            	 1000000	      1506 ns/op	     224 B/op	       7 allocs/op
+BenchmarkProtobufUnmarshal-4          	 1000000	      1286 ns/op	     240 B/op	      10 allocs/op
+BenchmarkGoprotobufMarshal-4          	 2000000	       963 ns/op	     320 B/op	       4 allocs/op
+BenchmarkGoprotobufUnmarshal-4        	 1000000	      1236 ns/op	     432 B/op	       9 allocs/op
+BenchmarkGogoprotobufMarshal-4        	 5000000	       249 ns/op	      64 B/op	       1 allocs/op
+BenchmarkGogoprotobufUnmarshal-4      	 5000000	       378 ns/op	     112 B/op	       3 allocs/op
+BenchmarkGencodeMarshal-4             	 5000000	       257 ns/op	      80 B/op	       2 allocs/op
+BenchmarkGencodeUnmarshal-4           	 5000000	       319 ns/op	     112 B/op	       3 allocs/op
 ```
 
 ## Issues
