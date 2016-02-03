@@ -27,13 +27,12 @@ var _ = fmt.Errorf
 var _ = math.Inf
 
 type GogoProtoBufA struct {
-	Name             string  `protobuf:"bytes,1,req,name=name" json:"name"`
-	BirthDay         int64   `protobuf:"varint,2,req,name=birthDay" json:"birthDay"`
-	Phone            string  `protobuf:"bytes,3,req,name=phone" json:"phone"`
-	Siblings         int32   `protobuf:"varint,4,req,name=siblings" json:"siblings"`
-	Spouse           bool    `protobuf:"varint,5,req,name=spouse" json:"spouse"`
-	Money            float64 `protobuf:"fixed64,6,req,name=money" json:"money"`
-	XXX_unrecognized []byte  `json:"-"`
+	Name     string  `protobuf:"bytes,1,req,name=name" json:"name"`
+	BirthDay int64   `protobuf:"varint,2,req,name=birthDay" json:"birthDay"`
+	Phone    string  `protobuf:"bytes,3,req,name=phone" json:"phone"`
+	Siblings int32   `protobuf:"varint,4,req,name=siblings" json:"siblings"`
+	Spouse   bool    `protobuf:"varint,5,req,name=spouse" json:"spouse"`
+	Money    float64 `protobuf:"fixed64,6,req,name=money" json:"money"`
 }
 
 func (m *GogoProtoBufA) Reset()         { *m = GogoProtoBufA{} }
@@ -124,10 +123,7 @@ func (m *GogoProtoBufA) MarshalTo(data []byte) (int, error) {
 	i++
 	data[i] = 0x31
 	i++
-	i = encodeFixed64StructdefGogo(data, i, uint64(math.Float64bits(m.Money)))
-	if m.XXX_unrecognized != nil {
-		i += copy(data[i:], m.XXX_unrecognized)
-	}
+	i = encodeFixed64StructdefGogo(data, i, uint64(math.Float64bits(float64(m.Money))))
 	return i, nil
 }
 
@@ -169,9 +165,6 @@ func (m *GogoProtoBufA) Size() (n int) {
 	n += 1 + sovStructdefGogo(uint64(m.Siblings))
 	n += 2
 	n += 9
-	if m.XXX_unrecognized != nil {
-		n += len(m.XXX_unrecognized)
-	}
 	return n
 }
 
@@ -370,7 +363,6 @@ func (m *GogoProtoBufA) Unmarshal(data []byte) error {
 			if (iNdEx + skippy) > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.XXX_unrecognized = append(m.XXX_unrecognized, data[iNdEx:iNdEx+skippy]...)
 			iNdEx += skippy
 		}
 	}
