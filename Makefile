@@ -10,7 +10,7 @@ msgp_gen.go: structdef.go
 	go generate
 
 structdef-gogo.pb.go: structdef-gogo.proto
-	protoc --gogo_out=. -I. -I${GOPATH}/src  -I${GOPATH}/src/github.com/gogo/protobuf/protobuf structdef-gogo.proto
+	protoc --gogofaster_out=. -I. -I${GOPATH}/src  -I${GOPATH}/src/github.com/gogo/protobuf/protobuf structdef-gogo.proto
 
 structdef.pb.go: structdef.proto
 	protoc --go_out=. structdef.proto
@@ -19,15 +19,14 @@ vitess_test.go: structdef.go
 	bsongen -file=structdef.go -o=vitess_test.go -type=A
 
 structdef.capnp2.go: structdef.capnp2
-	go get -u zombiezen.com/go/capnproto2/...
+	go get -u zombiezen.com/go/capnproto2/... # conflicts with go-capnproto
 	capnp compile -I${GOPATH}/src -ogo structdef.capnp2
 
 structdef.capnp.go: structdef.capnp
-	go get -u github.com/glycerine/go-capnproto/capnpc-go
+	go get -u github.com/glycerine/go-capnproto/capnpc-go # conflicts with capnproto2
 	capnp compile -I${GOPATH}/src -ogo structdef.capnp
 	
 gencode.schema.gen.go: gencode.schema
-	go get -u github.com/andyleap/gencode
 	gencode go -schema=gencode.schema -package=goserbench
 
 .PHONY: clean
@@ -36,7 +35,7 @@ clean:
 
 .PHONY: install
 install:
-	go get -u github.com/gogo/protobuf/protoc-gen-gogo
+	go get -u github.com/gogo/protobuf/protoc-gen-gogofaster
 	go get -u github.com/gogo/protobuf/gogoproto
 	go get -u github.com/golang/protobuf/protoc-gen-go
 	go get -u github.com/tinylib/msgp
