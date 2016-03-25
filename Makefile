@@ -9,6 +9,9 @@ FlatBufferA.go: flatbuffers-structdef.fbs
 msgp_gen.go: structdef.go
 	go generate
 
+structdef_easyjson.go: structdef.go
+    easyjson -all structdef.go
+
 structdef-gogo.pb.go: structdef-gogo.proto
 	protoc --gogofaster_out=. -I. -I${GOPATH}/src  -I${GOPATH}/src/github.com/gogo/protobuf/protobuf structdef-gogo.proto
 
@@ -39,7 +42,8 @@ install:
 	go get -u github.com/gogo/protobuf/gogoproto
 	go get -u github.com/golang/protobuf/protoc-gen-go
 	go get -u github.com/tinylib/msgp
-	go get -u github.com/andyleap/gencode
+#	go get -u github.com/andyleap/gencode
+	go get -u github.com/mailru/easyjson/...
 
 	go get -u github.com/DeDiS/protobuf
 	go get -u github.com/Sereal/Sereal/Go/sereal

@@ -206,6 +206,30 @@ func BenchmarkJsonUnmarshal(b *testing.B) {
 	benchUnmarshal(b, JsonSerializer{})
 }
 
+// github.com/mailru/easyjson
+
+type EasyJsonSerializer struct{}
+
+func (m EasyJsonSerializer) Marshal(o interface{}) []byte {
+	out, _ := o.(*A).MarshalJSON()
+	return out
+}
+
+func (m EasyJsonSerializer) Unmarshal(d []byte, o interface{}) error {
+	err := o.(*A).UnmarshalJSON(d)
+	return err
+}
+
+func (m EasyJsonSerializer) String() string { return "EasyJson" }
+
+func BenchmarkEasyJsonMarshal(b *testing.B) {
+	benchMarshal(b, EasyJsonSerializer{})
+}
+
+func BenchmarkEasyJsonUnmarshal(b *testing.B) {
+	benchUnmarshal(b, EasyJsonSerializer{})
+}
+
 // gopkg.in/mgo.v2/bson
 
 type BsonSerializer struct{}
