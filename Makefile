@@ -28,10 +28,13 @@ structdef.capnp.go: structdef.capnp
 	
 gencode.schema.gen.go: gencode.schema
 	gencode go -schema=gencode.schema -package=goserbench
+	
+gencode-unsafe.schema.gen.go: gencode-unsafe.schema
+	gencode go -schema=gencode-unsafe.schema -package=goserbench -unsafe
 
 .PHONY: clean
 clean:
-	rm -f FlatBufferA.go msgp_gen.go structdef-gogo.pb.go structdef.pb.go vitess_test.go structdef.capnp.go structdef.capnp2.go gencode.schema.gen.go
+	rm -f FlatBufferA.go msgp_gen.go structdef-gogo.pb.go structdef.pb.go vitess_test.go structdef.capnp.go structdef.capnp2.go gencode.schema.gen.go gencode-unsafe.schema.gen.go
 
 .PHONY: install
 install:
