@@ -39,7 +39,6 @@ install:
 	go get -u github.com/gogo/protobuf/gogoproto
 	go get -u github.com/golang/protobuf/protoc-gen-go
 	go get -u github.com/tinylib/msgp
-	go get -u github.com/youtube/vitess/go/cmd/bsongen
 	go get -u github.com/andyleap/gencode
 
 	go get -u github.com/DeDiS/protobuf
@@ -50,7 +49,6 @@ install:
 	go get -u github.com/google/flatbuffers/go
 	go get -u github.com/tinylib/msgp/msgp
 	go get -u github.com/ugorji/go/codec
-	go get -u github.com/youtube/vitess/go/bson
 	go get -u gopkg.in/mgo.v2/bson
 	go get -u gopkg.in/vmihailenco/msgpack.v2
 	go get -u github.com/golang/protobuf/proto
