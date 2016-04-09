@@ -22,7 +22,6 @@ import (
 	"github.com/hprose/hprose-go"
 	"github.com/tinylib/msgp/msgp"
 	"github.com/ugorji/go/codec"
-	vitessbson "github.com/youtube/vitess/go/bson"
 	"gopkg.in/mgo.v2/bson"
 	vmihailenco "gopkg.in/vmihailenco/msgpack.v2"
 )
@@ -207,6 +206,30 @@ func BenchmarkJsonUnmarshal(b *testing.B) {
 	benchUnmarshal(b, JsonSerializer{})
 }
 
+// github.com/mailru/easyjson
+
+type EasyJsonSerializer struct{}
+
+func (m EasyJsonSerializer) Marshal(o interface{}) []byte {
+	out, _ := o.(*A).MarshalJSON()
+	return out
+}
+
+func (m EasyJsonSerializer) Unmarshal(d []byte, o interface{}) error {
+	err := o.(*A).UnmarshalJSON(d)
+	return err
+}
+
+func (m EasyJsonSerializer) String() string { return "EasyJson" }
+
+func BenchmarkEasyJsonMarshal(b *testing.B) {
+	benchMarshal(b, EasyJsonSerializer{})
+}
+
+func BenchmarkEasyJsonUnmarshal(b *testing.B) {
+	benchUnmarshal(b, EasyJsonSerializer{})
+}
+
 // gopkg.in/mgo.v2/bson
 
 type BsonSerializer struct{}
@@ -230,31 +253,6 @@ func BenchmarkBsonMarshal(b *testing.B) {
 
 func BenchmarkBsonUnmarshal(b *testing.B) {
 	benchUnmarshal(b, BsonSerializer{})
-}
-
-// github.com/youtube/vitess/go/bson
-
-type VitessBsonSerializer struct{}
-
-func (m VitessBsonSerializer) Marshal(o interface{}) []byte {
-	d, _ := vitessbson.Marshal(o)
-	return d
-}
-
-func (m VitessBsonSerializer) Unmarshal(d []byte, o interface{}) error {
-	return vitessbson.Unmarshal(d, o)
-}
-
-func (j VitessBsonSerializer) String() string {
-	return "vitessbson"
-}
-
-func BenchmarkVitessBsonMarshal(b *testing.B) {
-	benchMarshal(b, VitessBsonSerializer{})
-}
-
-func BenchmarkVitessBsonUnmarshal(b *testing.B) {
-	benchUnmarshal(b, VitessBsonSerializer{})
 }
 
 // encoding/gob
