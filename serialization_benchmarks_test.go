@@ -812,7 +812,59 @@ func BenchmarkGencodeUnmarshal(b *testing.B) {
 		o := &GencodeA{}
 		_, err := o.Unmarshal(ser[n])
 		if err != nil {
-			b.Fatalf("goprotobuf failed to unmarshal: %s (%s)", err, ser[n])
+			b.Fatalf("gencode failed to unmarshal: %s (%s)", err, ser[n])
+		}
+		// Validate unmarshalled data.
+		if validate != "" {
+			i := data[n]
+			correct := o.Name == i.Name && o.Phone == i.Phone && o.Siblings == i.Siblings && o.Spouse == i.Spouse && o.Money == i.Money && o.BirthDay == i.BirthDay //&& cmpTags(o.Tags, i.Tags) && cmpAliases(o.Aliases, i.Aliases)
+			if !correct {
+				b.Fatalf("unmarshaled object differed:\n%v\n%v", i, o)
+			}
+		}
+	}
+}
+
+func generateGencodeUnsafe() []*GencodeUnsafeA {
+	a := make([]*GencodeUnsafeA, 0, 1000)
+	for i := 0; i < 1000; i++ {
+		a = append(a, &GencodeUnsafeA{
+			Name:     randString(16),
+			BirthDay: time.Now().UnixNano(),
+			Phone:    randString(10),
+			Siblings: rand.Int63n(5),
+			Spouse:   rand.Intn(2) == 1,
+			Money:    rand.Float64(),
+		})
+	}
+	return a
+}
+
+func BenchmarkGencodeUnsafeMarshal(b *testing.B) {
+	b.StopTimer()
+	data := generateGencodeUnsafe()
+	b.ReportAllocs()
+	b.StartTimer()
+	for i := 0; i < b.N; i++ {
+		data[rand.Intn(len(data))].Marshal(nil)
+	}
+}
+
+func BenchmarkGencodeUnsafeUnmarshal(b *testing.B) {
+	b.StopTimer()
+	data := generateGencodeUnsafe()
+	ser := make([][]byte, len(data))
+	for i, d := range data {
+		ser[i], _ = d.Marshal(nil)
+	}
+	b.ReportAllocs()
+	b.StartTimer()
+	for i := 0; i < b.N; i++ {
+		n := rand.Intn(len(ser))
+		o := &GencodeUnsafeA{}
+		_, err := o.Unmarshal(ser[n])
+		if err != nil {
+			b.Fatalf("gencode failed to unmarshal: %s (%s)", err, ser[n])
 		}
 		// Validate unmarshalled data.
 		if validate != "" {
