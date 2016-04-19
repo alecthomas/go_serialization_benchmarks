@@ -62,7 +62,7 @@ type A struct {
 
 ## Results
 
-Results with Go 1.6 on a 3.1 GHz Intel Core i7 (MacBook Pro (Retina, 13-inch, Early 2015)):
+Results with Go 1.6 on a 2.6 GHz Intel Core i7 (MacBook Pro Retina 15-inch, late 2013):
 
 ```
 benchmark                                   iter           time/iter      bytes alloc               allocs
