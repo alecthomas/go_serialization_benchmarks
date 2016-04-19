@@ -1,4 +1,7 @@
-all: FlatBufferA.go msgp_gen.go structdef-gogo.pb.go structdef.pb.go vitess_test.go structdef.capnp.go structdef.capnp2.go gencode.schema.gen.go
+# This is necessary due to the use of two conflicting generator commands for capnproto
+.NOTPARALLEL:
+
+all: FlatBufferA.go msgp_gen.go structdef-gogo.pb.go structdef.pb.go structdef.capnp.go structdef.capnp2.go gencode.schema.gen.go gencode-unsafe.schema.gen.go
 
 FlatBufferA.go: flatbuffers-structdef.fbs
 	flatc -g flatbuffers-structdef.fbs
@@ -10,16 +13,13 @@ msgp_gen.go: structdef.go
 	go generate
 
 structdef_easyjson.go: structdef.go
-    easyjson -all structdef.go
+	easyjson -all structdef.go
 
 structdef-gogo.pb.go: structdef-gogo.proto
 	protoc --gogofaster_out=. -I. -I${GOPATH}/src  -I${GOPATH}/src/github.com/gogo/protobuf/protobuf structdef-gogo.proto
 
 structdef.pb.go: structdef.proto
 	protoc --go_out=. structdef.proto
-
-vitess_test.go: structdef.go
-	bsongen -file=structdef.go -o=vitess_test.go -type=A
 
 structdef.capnp2.go: structdef.capnp2
 	go get -u zombiezen.com/go/capnproto2/... # conflicts with go-capnproto
@@ -37,7 +37,7 @@ gencode-unsafe.schema.gen.go: gencode-unsafe.schema
 
 .PHONY: clean
 clean:
-	rm -f FlatBufferA.go msgp_gen.go structdef-gogo.pb.go structdef.pb.go vitess_test.go structdef.capnp.go structdef.capnp2.go gencode.schema.gen.go gencode-unsafe.schema.gen.go
+	rm -f FlatBufferA.go msgp_gen.go structdef-gogo.pb.go structdef.pb.go structdef.capnp.go structdef.capnp2.go gencode.schema.gen.go gencode-unsafe.schema.gen.go
 
 .PHONY: install
 install:
@@ -45,9 +45,8 @@ install:
 	go get -u github.com/gogo/protobuf/gogoproto
 	go get -u github.com/golang/protobuf/protoc-gen-go
 	go get -u github.com/tinylib/msgp
-#	go get -u github.com/andyleap/gencode
+	go get -u github.com/andyleap/gencode
 	go get -u github.com/mailru/easyjson/...
-
 	go get -u github.com/DeDiS/protobuf
 	go get -u github.com/Sereal/Sereal/Go/sereal
 	go get -u github.com/alecthomas/binary

@@ -185,12 +185,12 @@ func BenchmarkVmihailencoMsgpackUnmarshal(b *testing.B) {
 
 type JsonSerializer struct{}
 
-func (m JsonSerializer) Marshal(o interface{}) []byte {
+func (j JsonSerializer) Marshal(o interface{}) []byte {
 	d, _ := json.Marshal(o)
 	return d
 }
 
-func (m JsonSerializer) Unmarshal(d []byte, o interface{}) error {
+func (j JsonSerializer) Unmarshal(d []byte, o interface{}) error {
 	return json.Unmarshal(d, o)
 }
 
@@ -208,26 +208,26 @@ func BenchmarkJsonUnmarshal(b *testing.B) {
 
 // github.com/mailru/easyjson
 
-type EasyJsonSerializer struct{}
+type EasyJSONSerializer struct{}
 
-func (m EasyJsonSerializer) Marshal(o interface{}) []byte {
+func (m EasyJSONSerializer) Marshal(o interface{}) []byte {
 	out, _ := o.(*A).MarshalJSON()
 	return out
 }
 
-func (m EasyJsonSerializer) Unmarshal(d []byte, o interface{}) error {
+func (m EasyJSONSerializer) Unmarshal(d []byte, o interface{}) error {
 	err := o.(*A).UnmarshalJSON(d)
 	return err
 }
 
-func (m EasyJsonSerializer) String() string { return "EasyJson" }
+func (m EasyJSONSerializer) String() string { return "EasyJson" }
 
 func BenchmarkEasyJsonMarshal(b *testing.B) {
-	benchMarshal(b, EasyJsonSerializer{})
+	benchMarshal(b, EasyJSONSerializer{})
 }
 
 func BenchmarkEasyJsonUnmarshal(b *testing.B) {
-	benchUnmarshal(b, EasyJsonSerializer{})
+	benchUnmarshal(b, EasyJSONSerializer{})
 }
 
 // gopkg.in/mgo.v2/bson
@@ -651,7 +651,7 @@ func (m ProtobufSerializer) Unmarshal(d []byte, o interface{}) error {
 	return protobuf.Decode(d, o)
 }
 
-func (j ProtobufSerializer) String() string {
+func (m ProtobufSerializer) String() string {
 	return "protobuf"
 }
 

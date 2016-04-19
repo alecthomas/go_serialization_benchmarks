@@ -4,9 +4,7 @@ package goserbench
 // MSGP CODE GENERATION TOOL (github.com/tinylib/msgp)
 // DO NOT EDIT
 
-import (
-	"github.com/tinylib/msgp/msgp"
-)
+import "github.com/tinylib/msgp/msgp"
 
 // MarshalMsg implements msgp.Marshaler
 func (z *A) MarshalMsg(b []byte) (o []byte, err error) {
@@ -37,13 +35,13 @@ func (z *A) MarshalMsg(b []byte) (o []byte, err error) {
 func (z *A) UnmarshalMsg(bts []byte) (o []byte, err error) {
 	var field []byte
 	_ = field
-	var isz uint32
-	isz, bts, err = msgp.ReadMapHeaderBytes(bts)
+	var xvk uint32
+	xvk, bts, err = msgp.ReadMapHeaderBytes(bts)
 	if err != nil {
 		return
 	}
-	for isz > 0 {
-		isz--
+	for xvk > 0 {
+		xvk--
 		field, bts, err = msgp.ReadMapKeyZC(bts)
 		if err != nil {
 			return

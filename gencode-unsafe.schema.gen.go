@@ -102,7 +102,7 @@ func (d *GencodeUnsafeA) Marshal(buf []byte) ([]byte, error) {
 	}
 	{
 
-		d.BirthDay = *(*int64)(unsafe.Pointer(&buf[i+0]))
+		*(*int64)(unsafe.Pointer(&buf[i+0])) = d.BirthDay
 
 	}
 	{
