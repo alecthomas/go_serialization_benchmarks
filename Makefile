@@ -1,7 +1,12 @@
 # This is necessary due to the use of two conflicting generator commands for capnproto
 .NOTPARALLEL:
 
-all: FlatBufferA.go msgp_gen.go structdef-gogo.pb.go structdef.pb.go structdef.capnp.go structdef.capnp2.go gencode.schema.gen.go gencode-unsafe.schema.gen.go
+all: Colfer.go FlatBufferA.go msgp_gen.go structdef-gogo.pb.go structdef.pb.go structdef.capnp.go structdef.capnp2.go gencode.schema.gen.go gencode-unsafe.schema.gen.go
+
+Colfer.go:
+	colf go
+	mv goserbench/Colfer.go .
+	rmdir goserbench
 
 FlatBufferA.go: flatbuffers-structdef.fbs
 	flatc -g flatbuffers-structdef.fbs
@@ -37,7 +42,7 @@ gencode-unsafe.schema.gen.go: gencode-unsafe.schema
 
 .PHONY: clean
 clean:
-	rm -f FlatBufferA.go msgp_gen.go structdef-gogo.pb.go structdef.pb.go structdef.capnp.go structdef.capnp2.go gencode.schema.gen.go gencode-unsafe.schema.gen.go
+	rm -f Colfer.go FlatBufferA.go msgp_gen.go structdef-gogo.pb.go structdef.pb.go structdef.capnp.go structdef.capnp2.go gencode.schema.gen.go gencode-unsafe.schema.gen.go
 
 .PHONY: install
 install:
@@ -59,3 +64,4 @@ install:
 	go get -u gopkg.in/vmihailenco/msgpack.v2
 	go get -u github.com/golang/protobuf/proto
 	go get -u github.com/hprose/hprose-go/io
+	go get -u github.com/pascaldekloe/colfer/cmd/colf

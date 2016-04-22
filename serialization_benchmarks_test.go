@@ -771,6 +771,64 @@ func BenchmarkGogoprotobufUnmarshal(b *testing.B) {
 	}
 }
 
+// github.com/pascaldekloe/colfer
+
+func generateColfer() []*ColferA {
+	a := make([]*ColferA, 0, 1000)
+	for i := 0; i < 1000; i++ {
+		a = append(a, &ColferA{
+			Name:     randString(16),
+			BirthDay: time.Now(),
+			Phone:    randString(10),
+			Siblings: rand.Int31n(5),
+			Spouse:   rand.Intn(2) == 1,
+			Money:    rand.Float64(),
+		})
+	}
+	return a
+}
+
+func BenchmarkColferMarshal(b *testing.B) {
+	data := generateColfer()
+	b.ReportAllocs()
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		n := rand.Intn(len(data))
+		_, err := data[n].MarshalBinary()
+		if err != nil {
+			b.Fatalf("Colfer failed to marshal %#v: %s (%s)", data[n], err)
+		}
+	}
+}
+
+func BenchmarkColferUnmarshal(b *testing.B) {
+	data := generateColfer()
+	ser := make([][]byte, len(data))
+	for i, d := range data {
+		var err error
+		ser[i], err = d.MarshalBinary()
+		if err != nil {
+			b.Fatal(err)
+		}
+	}
+	b.ReportAllocs()
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		n := rand.Intn(len(ser))
+		o := &ColferA{}
+		if err := o.UnmarshalBinary(ser[n]); err != nil {
+			b.Fatalf("Colfer failed to unmarshal %#v: %s (%s)", data[n], err)
+		}
+		if validate != "" {
+			i := data[n]
+			correct := o.Name == i.Name && o.Phone == i.Phone && o.Siblings == i.Siblings && o.Spouse == i.Spouse && o.Money == i.Money && o.BirthDay == i.BirthDay
+			if !correct {
+				b.Fatalf("unmarshaled object differed:\n%v\n%v", i, o)
+			}
+		}
+	}
+}
+
 // github.com/andyleap/gencode
 
 func generateGencode() []*GencodeA {
