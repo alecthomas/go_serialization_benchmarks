@@ -485,7 +485,7 @@ func (s *FlatBufferSerializer) String() string {
 	return "FlatBuffer"
 }
 
-func BenchmarkFlatbuffersMarshal(b *testing.B) {
+func BenchmarkFlatBuffersMarshal(b *testing.B) {
 	benchMarshal(b, &FlatBufferSerializer{flatbuffers.NewBuilder(0)})
 }
 
