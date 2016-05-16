@@ -1,7 +1,7 @@
 # This is necessary due to the use of two conflicting generator commands for capnproto
 .NOTPARALLEL:
 
-all: Colfer.go FlatBufferA.go msgp_gen.go structdef-gogo.pb.go structdef.pb.go structdef.capnp.go structdef.capnp2.go gencode.schema.gen.go gencode-unsafe.schema.gen.go
+all: Colfer.go FlatBufferA.go msgp_gen.go structdef-gogo.pb.go structdef.pb.go structdef.capnp.go structdef.capnp2.go gencode.schema.gen.go gencode-unsafe.schema.gen.go structdefxdr_generated.go
 
 Colfer.go:
 	colf go
@@ -33,16 +33,19 @@ structdef.capnp2.go: structdef.capnp2
 structdef.capnp.go: structdef.capnp
 	go get -u github.com/glycerine/go-capnproto/capnpc-go # conflicts with capnproto2
 	capnp compile -I${GOPATH}/src -ogo structdef.capnp
-	
+
 gencode.schema.gen.go: gencode.schema
 	gencode go -schema=gencode.schema -package=goserbench
-	
+
 gencode-unsafe.schema.gen.go: gencode-unsafe.schema
 	gencode go -schema=gencode-unsafe.schema -package=goserbench -unsafe
 
+structdefxdr_generated.go: structdefxdr.go
+	go generate
+
 .PHONY: clean
 clean:
-	rm -f Colfer.go FlatBufferA.go msgp_gen.go structdef-gogo.pb.go structdef.pb.go structdef.capnp.go structdef.capnp2.go gencode.schema.gen.go gencode-unsafe.schema.gen.go
+	rm -f Colfer.go FlatBufferA.go msgp_gen.go structdef-gogo.pb.go structdef.pb.go structdef.capnp.go structdef.capnp2.go gencode.schema.gen.go gencode-unsafe.schema.gen.go structdefxdr_generated.go
 
 .PHONY: install
 install:
@@ -65,3 +68,4 @@ install:
 	go get -u github.com/golang/protobuf/proto
 	go get -u github.com/hprose/hprose-go/io
 	go get -u github.com/pascaldekloe/colfer/cmd/colf
+	go get -u github.com/calmh/xdr
