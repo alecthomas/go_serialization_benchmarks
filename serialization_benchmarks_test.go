@@ -21,6 +21,7 @@ import (
 	"github.com/gogo/protobuf/proto"
 	flatbuffers "github.com/google/flatbuffers/go"
 	"github.com/hprose/hprose-go"
+	hprose2 "github.com/hprose/hprose-golang/io"
 	"github.com/tinylib/msgp/msgp"
 	"github.com/ugorji/go/codec"
 	"gopkg.in/mgo.v2/bson"
@@ -639,6 +640,54 @@ func BenchmarkHproseUnmarshal(b *testing.B) {
 	benchUnmarshal(b, &HproseSerializer{writer: writer, reader: reader})
 }
 
+// github.com/hprose/hprose-golang/io
+
+type Hprose2Serializer struct {
+	writer *hprose2.Writer
+	reader *hprose2.Reader
+}
+
+func (s Hprose2Serializer) Marshal(o interface{}) []byte {
+	a := o.(*A)
+	writer := s.writer
+	writer.Clear()
+	writer.WriteString(a.Name)
+	writer.WriteTime(&a.BirthDay)
+	writer.WriteString(a.Phone)
+	writer.WriteInt(int64(a.Siblings))
+	writer.WriteBool(a.Spouse)
+	writer.WriteFloat(a.Money, 64)
+	return writer.Bytes()
+}
+
+func (s Hprose2Serializer) Unmarshal(d []byte, i interface{}) error {
+	o := i.(*A)
+	reader := s.reader
+	reader.Init(d)
+	o.Name = reader.ReadString()
+	o.BirthDay = reader.ReadTime()
+	o.Phone = reader.ReadString()
+	o.Siblings = int(reader.ReadInt())
+	o.Spouse = reader.ReadBool()
+	o.Money = reader.ReadFloat64()
+	return nil
+}
+
+func (s Hprose2Serializer) String() string {
+	return "Hprose2"
+}
+
+func BenchmarkHprose2Marshal(b *testing.B) {
+	writer := hprose2.NewWriter(true)
+	benchMarshal(b, Hprose2Serializer{writer: writer})
+}
+
+func BenchmarkHprose2Unmarshal(b *testing.B) {
+	writer := hprose2.NewWriter(true)
+	reader := hprose2.NewReader(nil, true)
+	benchUnmarshal(b, &Hprose2Serializer{writer: writer, reader: reader})
+}
+
 // github.com/DeDiS/protobuf
 
 type ProtobufSerializer struct{}
@@ -939,54 +988,53 @@ func BenchmarkGencodeUnsafeUnmarshal(b *testing.B) {
 // github.com/calmh/xdr
 
 func generateXDR() []*XDRA {
-        a := make([]*XDRA, 0, 1000)
-        for i := 0; i < 1000; i++ {
-                a = append(a, &XDRA{
-                        Name:     randString(16),
-                        BirthDay: time.Now().UnixNano(),
-                        Phone:    randString(10),
-                        Siblings: rand.Int31n(5),
-                        Spouse:   rand.Intn(2) == 1,
-                        Money:    math.Float64bits(rand.Float64()),
-                })
-        }
-        return a
+	a := make([]*XDRA, 0, 1000)
+	for i := 0; i < 1000; i++ {
+		a = append(a, &XDRA{
+			Name:     randString(16),
+			BirthDay: time.Now().UnixNano(),
+			Phone:    randString(10),
+			Siblings: rand.Int31n(5),
+			Spouse:   rand.Intn(2) == 1,
+			Money:    math.Float64bits(rand.Float64()),
+		})
+	}
+	return a
 }
 
 func BenchmarkXDR2Marshal(b *testing.B) {
-        b.StopTimer()
-        data := generateXDR()
-        b.ReportAllocs()
-        b.StartTimer()
-        for i := 0; i < b.N; i++ {
-                data[rand.Intn(len(data))].MarshalXDR()
-        }
+	b.StopTimer()
+	data := generateXDR()
+	b.ReportAllocs()
+	b.StartTimer()
+	for i := 0; i < b.N; i++ {
+		data[rand.Intn(len(data))].MarshalXDR()
+	}
 }
 
 func BenchmarkXDR2Unmarshal(b *testing.B) {
-        b.StopTimer()
-        data := generateXDR()
-        ser := make([][]byte, len(data))
-        for i, d := range data {
-                ser[i] = d.MustMarshalXDR()
-        }
-        b.ReportAllocs()
-        b.StartTimer()
-        for i := 0; i < b.N; i++ {
-                n := rand.Intn(len(ser))
-                o := XDRA{}
-                err := o.UnmarshalXDR(ser[n])
-                if err != nil {
-                        b.Fatalf("xdr failed to unmarshal: %s (%s)", err, ser[n])
-                }
-                // Validate unmarshalled data.
-                if validate != "" {
-                        i := data[n]
-                        correct := o.Name == i.Name && o.Phone == i.Phone && o.Siblings == i.Siblings && o.Spouse == i.Spouse && o.Money == i.Money && o.BirthDay == i.BirthDay
-                        if !correct {
-                                b.Fatalf("unmarshaled object differed:\n%v\n%v", i, o)
-                        }
-                }
-        }
+	b.StopTimer()
+	data := generateXDR()
+	ser := make([][]byte, len(data))
+	for i, d := range data {
+		ser[i] = d.MustMarshalXDR()
+	}
+	b.ReportAllocs()
+	b.StartTimer()
+	for i := 0; i < b.N; i++ {
+		n := rand.Intn(len(ser))
+		o := XDRA{}
+		err := o.UnmarshalXDR(ser[n])
+		if err != nil {
+			b.Fatalf("xdr failed to unmarshal: %s (%s)", err, ser[n])
+		}
+		// Validate unmarshalled data.
+		if validate != "" {
+			i := data[n]
+			correct := o.Name == i.Name && o.Phone == i.Phone && o.Siblings == i.Siblings && o.Spouse == i.Spouse && o.Money == i.Money && o.BirthDay == i.BirthDay
+			if !correct {
+				b.Fatalf("unmarshaled object differed:\n%v\n%v", i, o)
+			}
+		}
+	}
 }
-
