@@ -990,3 +990,13 @@ func BenchmarkXDR2Unmarshal(b *testing.B) {
         }
 }
 
+// github.com/linkedin/goavro
+
+func BenchmarkGoAvroMarshal(b *testing.B) {
+	benchMarshal(b, NewAvroA())
+}
+
+func BenchmarkGoAvroUnmarshal(b *testing.B) {
+	benchUnmarshal(b, NewAvroA())
+}
+

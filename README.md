@@ -24,6 +24,7 @@ This is a test suite for benchmarking various Go serialization methods.
 - [zombiezen.com/go/capnproto2](https://godoc.org/zombiezen.com/go/capnproto2)
 - [github.com/andyleap/gencode](https://github.com/andyleap/gencode)
 - [github.com/pascaldekloe/colfer](https://github.com/pascaldekloe/colfer)
+- [github.com/linkedin/goavro](https://github.com/linkedin/goavro)
 
 ## Running the benchmarks
 
