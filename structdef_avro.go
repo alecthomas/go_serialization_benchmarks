@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"fmt"
 	"github.com/linkedin/goavro"
+	"time"
 )
 
 type AvroA struct {
@@ -63,9 +64,9 @@ func NewAvroA() *AvroA {
 }
 
 func (a *AvroA) Marshal(o interface{}) []byte {
-	object, _ := o.(*A)
+	object := o.(*A)
 	a.record.Set("name", object.Name)
-	a.record.Set("birthday", int64(object.BirthDay.Nanosecond()))
+	a.record.Set("birthday", int64(object.BirthDay.UnixNano()))
 	a.record.Set("phone", object.Phone)
 	a.record.Set("siblings", int32(object.Siblings))
 	a.record.Set("spouse", object.Spouse)
@@ -79,12 +80,26 @@ func (a *AvroA) Marshal(o interface{}) []byte {
 }
 
 func (a *AvroA) Unmarshal(d []byte, o interface{}) error {
+	object := o.(*A)
 	b := bytes.NewBuffer(d)
-	o, err := a.codec.Decode(b)
+	i, err := a.codec.Decode(b)
 	if err != nil {
 		fmt.Printf("Avro decoding error: %v\n", err)
 		return err
 	}
+	rec := i.(*goavro.Record)
+	temp, _ := rec.Get("name")
+	object.Name = temp.(string)
+	temp, _ = rec.Get("birthday")
+	object.BirthDay = time.Unix(0, temp.(int64))
+	temp, _ = rec.Get("phone")
+	object.Phone = temp.(string)
+	temp, _ = rec.Get("siblings")
+	object.Siblings = int(temp.(int32))
+	temp, _ = rec.Get("spouse")
+	object.Spouse = temp.(bool)
+	temp, _ = rec.Get("money")
+	object.Money = temp.(float64)
 	return nil
 }
 
