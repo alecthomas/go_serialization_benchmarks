@@ -21,6 +21,7 @@ import (
 	"github.com/gogo/protobuf/proto"
 	flatbuffers "github.com/google/flatbuffers/go"
 	"github.com/hprose/hprose-go"
+	jsoniter "github.com/json-iterator/go"
 	"github.com/tinylib/msgp/msgp"
 	"github.com/ugorji/go/codec"
 	"gopkg.in/mgo.v2/bson"
@@ -205,6 +206,31 @@ func BenchmarkJsonMarshal(b *testing.B) {
 
 func BenchmarkJsonUnmarshal(b *testing.B) {
 	benchUnmarshal(b, JsonSerializer{})
+}
+
+// github.com/json-iterator/go
+
+type JsonIterSerializer struct{}
+
+func (j JsonIterSerializer) Marshal(o interface{}) []byte {
+	d, _ := jsoniter.Marshal(o)
+	return d
+}
+
+func (j JsonIterSerializer) Unmarshal(d []byte, o interface{}) error {
+	return jsoniter.Unmarshal(d, o)
+}
+
+func (j JsonIterSerializer) String() string {
+	return "jsoniter"
+}
+
+func BenchmarkJsonIterMarshal(b *testing.B) {
+	benchMarshal(b, JsonIterSerializer{})
+}
+
+func BenchmarkJsonIterUnmarshal(b *testing.B) {
+	benchUnmarshal(b, JsonIterSerializer{})
 }
 
 // github.com/mailru/easyjson
