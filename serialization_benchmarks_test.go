@@ -939,58 +939,58 @@ func BenchmarkGencodeUnsafeUnmarshal(b *testing.B) {
 // github.com/calmh/xdr
 
 func generateXDR() []*XDRA {
-        a := make([]*XDRA, 0, 1000)
-        for i := 0; i < 1000; i++ {
-                a = append(a, &XDRA{
-                        Name:     randString(16),
-                        BirthDay: time.Now().UnixNano(),
-                        Phone:    randString(10),
-                        Siblings: rand.Int31n(5),
-                        Spouse:   rand.Intn(2) == 1,
-                        Money:    math.Float64bits(rand.Float64()),
-                })
-        }
-        return a
+	a := make([]*XDRA, 0, 1000)
+	for i := 0; i < 1000; i++ {
+		a = append(a, &XDRA{
+			Name:     randString(16),
+			BirthDay: time.Now().UnixNano(),
+			Phone:    randString(10),
+			Siblings: rand.Int31n(5),
+			Spouse:   rand.Intn(2) == 1,
+			Money:    math.Float64bits(rand.Float64()),
+		})
+	}
+	return a
 }
 
 func BenchmarkXDR2Marshal(b *testing.B) {
-        b.StopTimer()
-        data := generateXDR()
-        b.ReportAllocs()
-        b.StartTimer()
-        for i := 0; i < b.N; i++ {
-                data[rand.Intn(len(data))].MarshalXDR()
-        }
+	b.StopTimer()
+	data := generateXDR()
+	b.ReportAllocs()
+	b.StartTimer()
+	for i := 0; i < b.N; i++ {
+		data[rand.Intn(len(data))].MarshalXDR()
+	}
 }
 
 func BenchmarkXDR2Unmarshal(b *testing.B) {
-        b.StopTimer()
-        data := generateXDR()
-        ser := make([][]byte, len(data))
-        for i, d := range data {
-                ser[i] = d.MustMarshalXDR()
-        }
-        b.ReportAllocs()
-        b.StartTimer()
-        for i := 0; i < b.N; i++ {
-                n := rand.Intn(len(ser))
-                o := XDRA{}
-                err := o.UnmarshalXDR(ser[n])
-                if err != nil {
-                        b.Fatalf("xdr failed to unmarshal: %s (%s)", err, ser[n])
-                }
-                // Validate unmarshalled data.
-                if validate != "" {
-                        i := data[n]
-                        correct := o.Name == i.Name && o.Phone == i.Phone && o.Siblings == i.Siblings && o.Spouse == i.Spouse && o.Money == i.Money && o.BirthDay == i.BirthDay
-                        if !correct {
-                                b.Fatalf("unmarshaled object differed:\n%v\n%v", i, o)
-                        }
-                }
-        }
+	b.StopTimer()
+	data := generateXDR()
+	ser := make([][]byte, len(data))
+	for i, d := range data {
+		ser[i] = d.MustMarshalXDR()
+	}
+	b.ReportAllocs()
+	b.StartTimer()
+	for i := 0; i < b.N; i++ {
+		n := rand.Intn(len(ser))
+		o := XDRA{}
+		err := o.UnmarshalXDR(ser[n])
+		if err != nil {
+			b.Fatalf("xdr failed to unmarshal: %s (%s)", err, ser[n])
+		}
+		// Validate unmarshalled data.
+		if validate != "" {
+			i := data[n]
+			correct := o.Name == i.Name && o.Phone == i.Phone && o.Siblings == i.Siblings && o.Spouse == i.Spouse && o.Money == i.Money && o.BirthDay == i.BirthDay
+			if !correct {
+				b.Fatalf("unmarshaled object differed:\n%v\n%v", i, o)
+			}
+		}
+	}
 }
 
-// github.com/linkedin/goavro
+// gopkg.in/linkedin/goavro.v1
 
 func BenchmarkGoAvroMarshal(b *testing.B) {
 	benchMarshal(b, NewAvroA())
@@ -1000,3 +1000,20 @@ func BenchmarkGoAvroUnmarshal(b *testing.B) {
 	benchUnmarshal(b, NewAvroA())
 }
 
+// github.com/linkedin/goavro
+
+func BenchmarkGoAvro2TextMarshal(b *testing.B) {
+	benchMarshal(b, NewAvro2Txt())
+}
+
+func BenchmarkGoAvro2TextUnmarshal(b *testing.B) {
+	benchUnmarshal(b, NewAvro2Txt())
+}
+
+func BenchmarkGoAvro2BinaryMarshal(b *testing.B) {
+	benchMarshal(b, NewAvro2Bin())
+}
+
+func BenchmarkGoAvro2BinaryUnmarshal(b *testing.B) {
+	benchUnmarshal(b, NewAvro2Bin())
+}
