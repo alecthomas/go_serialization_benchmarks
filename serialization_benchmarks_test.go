@@ -23,6 +23,7 @@ import (
 	"github.com/hprose/hprose-go"
 	"github.com/tinylib/msgp/msgp"
 	"github.com/ugorji/go/codec"
+	"github.com/ikkerens/ikeapack"
 	"gopkg.in/mgo.v2/bson"
 	vmihailenco "gopkg.in/vmihailenco/msgpack.v2"
 )
@@ -1016,4 +1017,76 @@ func BenchmarkGoAvro2BinaryMarshal(b *testing.B) {
 
 func BenchmarkGoAvro2BinaryUnmarshal(b *testing.B) {
 	benchUnmarshal(b, NewAvro2Bin())
+}
+
+// github.com/ikkerens/ikeapack
+
+type IkeA struct {
+	Name     string
+	BirthDay int64
+	Phone    string
+	Siblings int32
+	Spouse   bool
+	Money    uint64
+}
+
+func generateIkeA() []*IkeA {
+	a := make([]*IkeA, 0, 1000)
+	for i := 0; i < 1000; i++ {
+		a = append(a, &IkeA{
+			Name:     randString(16),
+			BirthDay: time.Now().UnixNano(),
+			Phone:    randString(10),
+			Siblings: rand.Int31n(5),
+			Spouse:   rand.Intn(2) == 1,
+			Money:    math.Float64bits(rand.Float64()),
+		})
+	}
+	return a
+}
+
+func BenchmarkIkeaMarshal(b *testing.B) {
+	b.StopTimer()
+	buf := new(bytes.Buffer)
+	buf.Grow(100)
+	data := generateIkeA()
+	b.ReportAllocs()
+	b.StartTimer()
+	for i := 0; i < b.N; i++ {
+		ikea.Pack(buf, data[rand.Intn(len(data))])
+		buf.Reset()
+	}
+}
+
+func BenchmarkIkeaUnmarshal(b *testing.B) {
+	b.StopTimer()
+	data := generateIkeA()
+	ser := make([][]byte, len(data))
+	for i, d := range data {
+		buf := new(bytes.Buffer)
+		ikea.Pack(buf, d)
+		ser[i] = buf.Bytes()
+	}
+	buf := new(bytes.Buffer)
+	buf.Grow(100)
+	b.ReportAllocs()
+	b.StartTimer()
+	for i := 0; i < b.N; i++ {
+		n := rand.Intn(len(ser))
+		o := IkeA{}
+		buf.Reset()
+		buf.Write(ser[n])
+		err := ikea.Unpack(buf, &o)
+		if err != nil {
+			b.Fatalf("ikea failed to unmarshal: %s (%s)", err, ser[n])
+		}
+		// Validate unmarshalled data.
+		if validate != "" {
+			i := data[n]
+			correct := o.Name == i.Name && o.Phone == i.Phone && o.Siblings == i.Siblings && o.Spouse == i.Spouse && o.Money == i.Money && o.BirthDay == i.BirthDay
+			if !correct {
+				b.Fatalf("unmarshaled object differed:\n%v\n%v", i, o)
+			}
+		}
+	}
 }

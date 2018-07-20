@@ -25,6 +25,7 @@ This is a test suite for benchmarking various Go serialization methods.
 - [github.com/andyleap/gencode](https://github.com/andyleap/gencode)
 - [github.com/pascaldekloe/colfer](https://github.com/pascaldekloe/colfer)
 - [github.com/linkedin/goavro](https://github.com/linkedin/goavro)
+- [github.com/ikkerens/ikeapack](https://github.com/ikkerens/ikeapack)
 
 ## Running the benchmarks
 
@@ -152,5 +153,5 @@ Unfortunately, several of the serializers exhibit issues:
 
 All other fields are correct however.
 
-Additionally, while not a correctness issue, FlatBuffers, ProtoBuffers and Cap'N'Proto do not
+Additionally, while not a correctness issue, FlatBuffers, ProtoBuffers, Cap'N'Proto and ikeapack do not
 support time types directly. In the benchmarks an int64 value is used to hold a UnixNano timestamp.
