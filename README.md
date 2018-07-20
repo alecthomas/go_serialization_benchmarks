@@ -8,6 +8,7 @@ This is a test suite for benchmarking various Go serialization methods.
 
 - [encoding/gob](http://golang.org/pkg/encoding/gob/)
 - [encoding/json](http://golang.org/pkg/encoding/json/)
+- [github.com/json-iterator/go](https://github.com/json-iterator/go)
 - [github.com/alecthomas/binary](https://github.com/alecthomas/binary)
 - [github.com/davecgh/go-xdr/xdr](https://github.com/davecgh/go-xdr)
 - [github.com/Sereal/Sereal/Go/sereal](https://github.com/Sereal/Sereal)
