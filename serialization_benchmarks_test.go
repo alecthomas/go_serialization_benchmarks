@@ -20,6 +20,7 @@ import (
 	"github.com/gogo/protobuf/proto"
 	flatbuffers "github.com/google/flatbuffers/go"
 	"github.com/hprose/hprose-go"
+	hprose2 "github.com/hprose/hprose-golang/io"
 	jsoniter "github.com/json-iterator/go"
 	"github.com/ikkerens/ikeapack"
 	"github.com/tinylib/msgp/msgp"
@@ -665,6 +666,54 @@ func BenchmarkHproseUnmarshal(b *testing.B) {
 	bufw := new(bytes.Buffer)
 	writer := hprose.NewWriter(bufw, true)
 	benchUnmarshal(b, &HproseSerializer{writer: writer, reader: reader})
+}
+
+// github.com/hprose/hprose-golang/io
+
+type Hprose2Serializer struct {
+	writer *hprose2.Writer
+	reader *hprose2.Reader
+}
+
+func (s Hprose2Serializer) Marshal(o interface{}) []byte {
+	a := o.(*A)
+	writer := s.writer
+	writer.Clear()
+	writer.WriteString(a.Name)
+	writer.WriteTime(&a.BirthDay)
+	writer.WriteString(a.Phone)
+	writer.WriteInt(int64(a.Siblings))
+	writer.WriteBool(a.Spouse)
+	writer.WriteFloat(a.Money, 64)
+	return writer.Bytes()
+}
+
+func (s Hprose2Serializer) Unmarshal(d []byte, i interface{}) error {
+	o := i.(*A)
+	reader := s.reader
+	reader.Init(d)
+	o.Name = reader.ReadString()
+	o.BirthDay = reader.ReadTime()
+	o.Phone = reader.ReadString()
+	o.Siblings = int(reader.ReadInt())
+	o.Spouse = reader.ReadBool()
+	o.Money = reader.ReadFloat64()
+	return nil
+}
+
+func (s Hprose2Serializer) String() string {
+	return "Hprose2"
+}
+
+func BenchmarkHprose2Marshal(b *testing.B) {
+	writer := hprose2.NewWriter(true)
+	benchMarshal(b, Hprose2Serializer{writer: writer})
+}
+
+func BenchmarkHprose2Unmarshal(b *testing.B) {
+	writer := hprose2.NewWriter(true)
+	reader := hprose2.NewReader(nil, true)
+	benchUnmarshal(b, &Hprose2Serializer{writer: writer, reader: reader})
 }
 
 // github.com/DeDiS/protobuf
