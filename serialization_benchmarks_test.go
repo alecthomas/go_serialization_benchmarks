@@ -15,17 +15,18 @@ import (
 
 	"github.com/DeDiS/protobuf"
 	"github.com/Sereal/Sereal/Go/sereal"
-	"github.com/alecthomas/binary"
 	"github.com/davecgh/go-xdr/xdr"
 	"github.com/glycerine/go-capnproto"
 	"github.com/gogo/protobuf/proto"
 	flatbuffers "github.com/google/flatbuffers/go"
 	"github.com/hprose/hprose-go"
+	"github.com/ikkerens/ikeapack"
 	"github.com/tinylib/msgp/msgp"
 	"github.com/ugorji/go/codec"
-	"github.com/ikkerens/ikeapack"
 	"gopkg.in/mgo.v2/bson"
 	vmihailenco "gopkg.in/vmihailenco/msgpack.v2"
+
+	"github.com/alecthomas/binary"
 )
 
 var (
@@ -377,14 +378,14 @@ func BenchmarkUgorjiCodecMsgpackUnmarshal(b *testing.B) {
 
 func BenchmarkUgorjiCodecBincMarshal(b *testing.B) {
 	h := &codec.BincHandle{}
-	h.AsSymbols = codec.AsSymbolNone
+	h.AsSymbols = 0
 	s := NewUgorjiCodecSerializer("binc", h)
 	benchMarshal(b, s)
 }
 
 func BenchmarkUgorjiCodecBincUnmarshal(b *testing.B) {
 	h := &codec.BincHandle{}
-	h.AsSymbols = codec.AsSymbolNone
+	h.AsSymbols = 0
 	s := NewUgorjiCodecSerializer("binc", h)
 	benchUnmarshal(b, s)
 }
@@ -798,7 +799,7 @@ func BenchmarkColferMarshal(b *testing.B) {
 		n := rand.Intn(len(data))
 		_, err := data[n].MarshalBinary()
 		if err != nil {
-			b.Fatalf("Colfer failed to marshal %#v: %s (%s)", data[n], err)
+			b.Fatalf("Colfer failed to marshal %#v: %s", data[n], err)
 		}
 	}
 }
@@ -819,7 +820,7 @@ func BenchmarkColferUnmarshal(b *testing.B) {
 		n := rand.Intn(len(ser))
 		o := &ColferA{}
 		if err := o.UnmarshalBinary(ser[n]); err != nil {
-			b.Fatalf("Colfer failed to unmarshal %#v: %s (%s)", data[n], err)
+			b.Fatalf("Colfer failed to unmarshal %#v: %s", data[n], err)
 		}
 		if validate != "" {
 			i := data[n]
