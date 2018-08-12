@@ -33,6 +33,7 @@ import (
 
 var (
 	validate = os.Getenv("VALIDATE")
+	jsoniterFast = jsoniter.ConfigFastest
 )
 
 func randString(l int) string {
@@ -216,12 +217,12 @@ func BenchmarkJsonUnmarshal(b *testing.B) {
 type JsonIterSerializer struct{}
 
 func (j JsonIterSerializer) Marshal(o interface{}) []byte {
-	d, _ := jsoniter.Marshal(o)
+	d, _ := jsoniterFast.Marshal(o)
 	return d
 }
 
 func (j JsonIterSerializer) Unmarshal(d []byte, o interface{}) error {
-	return jsoniter.Unmarshal(d, o)
+	return jsoniterFast.Unmarshal(d, o)
 }
 
 func (j JsonIterSerializer) String() string {
@@ -241,12 +242,12 @@ func BenchmarkJsonIterUnmarshal(b *testing.B) {
 type EasyJSONSerializer struct{}
 
 func (m EasyJSONSerializer) Marshal(o interface{}) []byte {
-	out, _ := o.(*A).MarshalJSON()
+	out, _ := o.(*A).MarshalJSONEasyJSON()
 	return out
 }
 
 func (m EasyJSONSerializer) Unmarshal(d []byte, o interface{}) error {
-	err := o.(*A).UnmarshalJSON(d)
+	err := o.(*A).UnmarshalJSONEasyJSON(d)
 	return err
 }
 
