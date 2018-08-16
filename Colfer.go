@@ -28,12 +28,12 @@ func (i ColferError) Error() string {
 }
 
 type ColferA struct {
-	Name	string
-	BirthDay	time.Time
-	Phone	string
-	Siblings	int32
-	Spouse	bool
-	Money	float64
+	Name     string
+	BirthDay time.Time
+	Phone    string
+	Siblings int32
+	Spouse   bool
+	Money    float64
 }
 
 // MarshalTo encodes o as Colfer into buf and returns the number of bytes written.

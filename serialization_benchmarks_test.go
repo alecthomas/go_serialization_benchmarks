@@ -1060,7 +1060,7 @@ func generateGencodeUnsafe() []*GencodeUnsafeA {
 	for i := 0; i < 1000; i++ {
 		a = append(a, &GencodeUnsafeA{
 			Name:     randString(16),
-			BirthDay: time.Now(),
+			BirthDay: time.Now().UnixNano(),
 			Phone:    randString(10),
 			Siblings: rand.Int63n(5),
 			Spouse:   rand.Intn(2) == 1,
@@ -1099,7 +1099,7 @@ func BenchmarkGencodeUnsafeUnmarshal(b *testing.B) {
 		// Validate unmarshalled data.
 		if validate != "" {
 			i := data[n]
-			correct := o.Name == i.Name && o.Phone == i.Phone && o.Siblings == i.Siblings && o.Spouse == i.Spouse && o.Money == i.Money && o.BirthDay.Equal(i.BirthDay) //&& cmpTags(o.Tags, i.Tags) && cmpAliases(o.Aliases, i.Aliases)
+			correct := o.Name == i.Name && o.Phone == i.Phone && o.Siblings == i.Siblings && o.Spouse == i.Spouse && o.Money == i.Money && o.BirthDay == i.BirthDay //&& cmpTags(o.Tags, i.Tags) && cmpAliases(o.Aliases, i.Aliases)
 			if !correct {
 				b.Fatalf("unmarshaled object differed:\n%v\n%v", i, o)
 			}

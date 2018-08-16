@@ -6,9 +6,10 @@ import (
 	"bufio"
 	"bytes"
 	"encoding/json"
-	C "github.com/glycerine/go-capnproto"
 	"io"
 	"math"
+
+	C "github.com/glycerine/go-capnproto"
 )
 
 type CapnpA C.Struct

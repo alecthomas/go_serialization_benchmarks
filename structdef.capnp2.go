@@ -4,6 +4,7 @@ package goserbench
 
 import (
 	math "math"
+
 	capnp "zombiezen.com/go/capnproto2"
 )
 
