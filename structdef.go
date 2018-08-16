@@ -14,3 +14,12 @@ type A struct {
 	Spouse   bool
 	Money    float64
 }
+
+type NoTimeA struct {
+	Name     string
+	BirthDay int64
+	Phone    string
+	Siblings int
+	Spouse   bool
+	Money    float64
+}
