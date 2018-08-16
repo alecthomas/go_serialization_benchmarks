@@ -8,9 +8,11 @@ import (
 	"math"
 	"math/rand"
 	"os"
+	"reflect"
 	"testing"
 	"time"
 
+	"github.com/niubaoshu/gotiny"
 	"zombiezen.com/go/capnproto2"
 
 	"github.com/DeDiS/protobuf"
@@ -18,11 +20,11 @@ import (
 	"github.com/davecgh/go-xdr/xdr"
 	"github.com/glycerine/go-capnproto"
 	"github.com/gogo/protobuf/proto"
-	flatbuffers "github.com/google/flatbuffers/go"
+	"github.com/google/flatbuffers/go"
 	"github.com/hprose/hprose-go"
 	hprose2 "github.com/hprose/hprose-golang/io"
-	jsoniter "github.com/json-iterator/go"
 	"github.com/ikkerens/ikeapack"
+	"github.com/json-iterator/go"
 	"github.com/tinylib/msgp/msgp"
 	"github.com/ugorji/go/codec"
 	"gopkg.in/mgo.v2/bson"
@@ -32,7 +34,7 @@ import (
 )
 
 var (
-	validate = os.Getenv("VALIDATE")
+	validate     = os.Getenv("VALIDATE")
 	jsoniterFast = jsoniter.ConfigFastest
 )
 
@@ -121,7 +123,7 @@ func benchUnmarshal(b *testing.B, s Serializer) {
 		// Validate unmarshalled data.
 		if validate != "" {
 			i := data[n]
-			correct := o.Name == i.Name && o.Phone == i.Phone && o.Siblings == i.Siblings && o.Spouse == i.Spouse && o.Money == i.Money && o.BirthDay.String() == i.BirthDay.String() //&& cmpTags(o.Tags, i.Tags) && cmpAliases(o.Aliases, i.Aliases)
+			correct := o.Name == i.Name && o.Phone == i.Phone && o.Siblings == i.Siblings && o.Spouse == i.Spouse && o.Money == i.Money && o.BirthDay.Equal(i.BirthDay) //&& cmpTags(o.Tags, i.Tags) && cmpAliases(o.Aliases, i.Aliases)
 			if !correct {
 				b.Fatalf("unmarshaled object differed:\n%v\n%v", i, o)
 			}
@@ -136,6 +138,97 @@ A test suite for benchmarking various Go serialization methods.
 See README.md for details on running the benchmarks.
 `)
 
+}
+
+// github.com/niubaoshu/gotiny
+
+type GotinySerializer struct {
+	enc *gotiny.Encoder
+	dec *gotiny.Decoder
+}
+
+func (g GotinySerializer) Marshal(o interface{}) []byte {
+	return g.enc.Encode(o)
+}
+
+func (g GotinySerializer) Unmarshal(d []byte, o interface{}) error {
+	g.dec.Decode(d, o)
+	return nil
+}
+
+func (GotinySerializer) String() string { return "gotiny" }
+
+func NewGotinySerializer(o interface{}) Serializer {
+	ot := reflect.TypeOf(o)
+	return GotinySerializer{
+		enc: gotiny.NewEncoderWithType(ot),
+		dec: gotiny.NewDecoderWithType(ot),
+	}
+}
+
+func BenchmarkGotinyMarshal(b *testing.B) {
+	benchMarshal(b, NewGotinySerializer(A{}))
+}
+
+func BenchmarkGotinyUnmarshal(b *testing.B) {
+	benchUnmarshal(b, NewGotinySerializer(A{}))
+}
+
+func generateNoTimeA() []*NoTimeA {
+	a := make([]*NoTimeA, 0, 1000)
+	for i := 0; i < 1000; i++ {
+		a = append(a, &NoTimeA{
+			Name:     randString(16),
+			BirthDay: time.Now().UnixNano(),
+			Phone:    randString(10),
+			Siblings: rand.Intn(5),
+			Spouse:   rand.Intn(2) == 1,
+			Money:    rand.Float64(),
+		})
+	}
+	return a
+}
+
+func BenchmarkGotinyNoTimeMarshal(b *testing.B) {
+	b.StopTimer()
+	s := NewGotinySerializer(NoTimeA{})
+	data := generateNoTimeA()
+	b.ReportAllocs()
+	b.StartTimer()
+	for i := 0; i < b.N; i++ {
+		s.Marshal(data[rand.Intn(len(data))])
+	}
+}
+
+func BenchmarkGotinyNoTimeUnmarshal(b *testing.B) {
+	b.StopTimer()
+	s := NewGotinySerializer(NoTimeA{})
+	data := generateNoTimeA()
+	ser := make([][]byte, len(data))
+	for i, d := range data {
+		o := s.Marshal(d)
+		t := make([]byte, len(o))
+		copy(t, o)
+		ser[i] = t
+	}
+	b.ReportAllocs()
+	b.StartTimer()
+	for i := 0; i < b.N; i++ {
+		n := rand.Intn(len(ser))
+		o := &NoTimeA{}
+		err := s.Unmarshal(ser[n], o)
+		if err != nil {
+			b.Fatalf("%s failed to unmarshal: %s (%s)", s, err, ser[n])
+		}
+		// Validate unmarshalled data.
+		if validate != "" {
+			i := data[n]
+			correct := o.Name == i.Name && o.Phone == i.Phone && o.Siblings == i.Siblings && o.Spouse == i.Spouse && o.Money == i.Money && o.BirthDay == i.BirthDay //&& cmpTags(o.Tags, i.Tags) && cmpAliases(o.Aliases, i.Aliases)
+			if !correct {
+				b.Fatalf("unmarshaled object differed:\n%v\n%v", i, o)
+			}
+		}
+	}
 }
 
 // github.com/tinylib/msgp
@@ -504,7 +597,7 @@ func (s *FlatBufferSerializer) Unmarshal(d []byte, i interface{}) error {
 	o := FlatBufferA{}
 	o.Init(d, flatbuffers.GetUOffsetT(d))
 	a.Name = string(o.Name())
-	a.BirthDay = time.Unix(o.BirthDay(), 0)
+	a.BirthDay = time.Unix(0, o.BirthDay())
 	a.Phone = string(o.Phone())
 	a.Siblings = int(o.Siblings())
 	a.Spouse = o.Spouse() == byte(1)
@@ -552,7 +645,7 @@ func (x *CapNProtoSerializer) Unmarshal(d []byte, i interface{}) error {
 	s, _, _ := capn.ReadFromMemoryZeroCopy(d)
 	o := ReadRootCapnpA(s)
 	a.Name = string(o.NameBytes())
-	a.BirthDay = time.Unix(o.BirthDay(), 0)
+	a.BirthDay = time.Unix(0, o.BirthDay())
 	a.Phone = string(o.PhoneBytes())
 	a.Siblings = int(o.Siblings())
 	a.Spouse = o.Spouse()
@@ -597,7 +690,7 @@ func (x *CapNProto2Serializer) Unmarshal(d []byte, i interface{}) error {
 	m, _ := capnp.Unmarshal(d)
 	o, _ := ReadRootCapnp2A(m)
 	a.Name, _ = o.Name()
-	a.BirthDay = time.Unix(o.BirthDay(), 0)
+	a.BirthDay = time.Unix(0, o.BirthDay())
 	a.Phone, _ = o.Phone()
 	a.Siblings = int(o.Siblings())
 	a.Spouse = o.Spouse()
@@ -900,7 +993,7 @@ func BenchmarkColferUnmarshal(b *testing.B) {
 		}
 		if validate != "" {
 			i := data[n]
-			correct := o.Name == i.Name && o.Phone == i.Phone && o.Siblings == i.Siblings && o.Spouse == i.Spouse && o.Money == i.Money && o.BirthDay == i.BirthDay
+			correct := o.Name == i.Name && o.Phone == i.Phone && o.Siblings == i.Siblings && o.Spouse == i.Spouse && o.Money == i.Money && o.BirthDay.Equal(i.BirthDay)
 			if !correct {
 				b.Fatalf("unmarshaled object differed:\n%v\n%v", i, o)
 			}
@@ -954,7 +1047,7 @@ func BenchmarkGencodeUnmarshal(b *testing.B) {
 		// Validate unmarshalled data.
 		if validate != "" {
 			i := data[n]
-			correct := o.Name == i.Name && o.Phone == i.Phone && o.Siblings == i.Siblings && o.Spouse == i.Spouse && o.Money == i.Money && o.BirthDay == i.BirthDay //&& cmpTags(o.Tags, i.Tags) && cmpAliases(o.Aliases, i.Aliases)
+			correct := o.Name == i.Name && o.Phone == i.Phone && o.Siblings == i.Siblings && o.Spouse == i.Spouse && o.Money == i.Money && o.BirthDay.Equal(i.BirthDay) //&& cmpTags(o.Tags, i.Tags) && cmpAliases(o.Aliases, i.Aliases)
 			if !correct {
 				b.Fatalf("unmarshaled object differed:\n%v\n%v", i, o)
 			}

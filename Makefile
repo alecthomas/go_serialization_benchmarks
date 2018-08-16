@@ -69,3 +69,4 @@ install:
 	go get -u github.com/hprose/hprose-go/io
 	go get -u github.com/pascaldekloe/colfer/cmd/colf
 	go get -u github.com/calmh/xdr
+	go get -u github.com/niubaoshu/gotiny
