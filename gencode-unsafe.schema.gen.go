@@ -30,7 +30,7 @@ func (d *GencodeUnsafeA) Size() (s uint64) {
 
 			t := l
 			for t >= 0x80 {
-				t <<= 7
+				t >>= 7
 				s++
 			}
 			s++
@@ -45,7 +45,7 @@ func (d *GencodeUnsafeA) Size() (s uint64) {
 
 			t := l
 			for t >= 0x80 {
-				t <<= 7
+				t >>= 7
 				s++
 			}
 			s++
@@ -61,7 +61,7 @@ func (d *GencodeUnsafeA) Size() (s uint64) {
 			t = ^t
 		}
 		for t >= 0x80 {
-			t <<= 7
+			t >>= 7
 			s++
 		}
 		s++
