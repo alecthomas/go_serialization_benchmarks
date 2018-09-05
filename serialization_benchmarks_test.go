@@ -34,8 +34,7 @@ import (
 )
 
 var (
-	validate     = os.Getenv("VALIDATE")
-	jsoniterFast = jsoniter.ConfigFastest
+	validate = os.Getenv("VALIDATE")
 )
 
 func randString(l int) string {
@@ -65,6 +64,7 @@ type Serializer interface {
 	Marshal(o interface{}) []byte
 	Unmarshal(d []byte, o interface{}) error
 	String() string
+	//NeedGeneratingCode() bool
 }
 
 func benchMarshal(b *testing.B, s Serializer) {
@@ -75,30 +75,6 @@ func benchMarshal(b *testing.B, s Serializer) {
 	for i := 0; i < b.N; i++ {
 		s.Marshal(data[rand.Intn(len(data))])
 	}
-}
-
-func cmpTags(a, b map[string]string) bool {
-	if len(a) != len(b) {
-		return false
-	}
-	for k, v := range a {
-		if bv, ok := b[k]; !ok || bv != v {
-			return false
-		}
-	}
-	return true
-}
-
-func cmpAliases(a, b []string) bool {
-	if len(a) != len(b) {
-		return false
-	}
-	for i, v := range a {
-		if b[i] != v {
-			return false
-		}
-	}
-	return true
 }
 
 func benchUnmarshal(b *testing.B, s Serializer) {
@@ -156,7 +132,8 @@ func (g GotinySerializer) Unmarshal(d []byte, o interface{}) error {
 	return nil
 }
 
-func (GotinySerializer) String() string { return "gotiny" }
+func (GotinySerializer) String() string           { return "gotiny" }
+func (GotinySerializer) NeedGeneratingCode() bool { return false }
 
 func NewGotinySerializer(o interface{}) Serializer {
 	ot := reflect.TypeOf(o)
@@ -235,17 +212,18 @@ func BenchmarkGotinyNoTimeUnmarshal(b *testing.B) {
 
 type MsgpSerializer struct{}
 
-func (m MsgpSerializer) Marshal(o interface{}) []byte {
+func (MsgpSerializer) Marshal(o interface{}) []byte {
 	out, _ := o.(msgp.Marshaler).MarshalMsg(nil)
 	return out
 }
 
-func (m MsgpSerializer) Unmarshal(d []byte, o interface{}) error {
+func (MsgpSerializer) Unmarshal(d []byte, o interface{}) error {
 	_, err := o.(msgp.Unmarshaler).UnmarshalMsg(d)
 	return err
 }
 
-func (m MsgpSerializer) String() string { return "Msgp" }
+func (MsgpSerializer) String() string           { return "Msgp" }
+func (MsgpSerializer) NeedGeneratingCode() bool { return false }
 
 func BenchmarkMsgpMarshal(b *testing.B) {
 	benchMarshal(b, MsgpSerializer{})
@@ -310,12 +288,12 @@ func BenchmarkJsonUnmarshal(b *testing.B) {
 type JsonIterSerializer struct{}
 
 func (j JsonIterSerializer) Marshal(o interface{}) []byte {
-	d, _ := jsoniterFast.Marshal(o)
+	d, _ := jsoniter.ConfigFastest.Marshal(o)
 	return d
 }
 
 func (j JsonIterSerializer) Unmarshal(d []byte, o interface{}) error {
-	return jsoniterFast.Unmarshal(d, o)
+	return jsoniter.ConfigFastest.Unmarshal(d, o)
 }
 
 func (j JsonIterSerializer) String() string {
