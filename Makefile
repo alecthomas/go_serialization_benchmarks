@@ -27,12 +27,12 @@ structdef.pb.go: structdef.proto
 	protoc --go_out=. structdef.proto
 
 structdef.capnp2.go: structdef.capnp2
-	go get -u zombiezen.com/go/capnproto2/... # conflicts with go-capnproto
-	capnp compile -I${GOPATH}/src -ogo structdef.capnp2
+	go install zombiezen.com/go/capnproto2/capnpc-go
+	capnp compile -I${GOPATH}/src/zombiezen.com/go/capnproto2/std -ogo structdef.capnp2
 
 structdef.capnp.go: structdef.capnp
-	go get -u github.com/glycerine/go-capnproto/capnpc-go # conflicts with capnproto2
-	capnp compile -I${GOPATH}/src -ogo structdef.capnp
+	go install github.com/glycerine/go-capnproto/capnpc-go # conflicts with capnproto2
+	capnp compile -I${GOPATH}/src -ogo:${GOPATH}/src/ structdef.capnp
 
 gencode.schema.gen.go: gencode.schema
 	gencode go -schema=gencode.schema -package=goserbench
@@ -70,3 +70,5 @@ install:
 	go get -u github.com/pascaldekloe/colfer/cmd/colf
 	go get -u github.com/calmh/xdr
 	go get -u github.com/niubaoshu/gotiny
+	go get -u zombiezen.com/go/capnproto2/...
+	go get -u github.com/glycerine/go-capnproto/capnpc-go

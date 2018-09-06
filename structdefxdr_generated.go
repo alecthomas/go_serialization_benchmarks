@@ -27,7 +27,9 @@ XDRA Structure:
 \                 Phone (length + padded data)                  \
 /                                                               /
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-|                           Siblings                            |
+/                                                               /
+\                         int Structure                         \
+/                                                               /
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 |                      Spouse (V=0 or 1)                      |V|
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
@@ -50,7 +52,7 @@ struct XDRA {
 
 func (o XDRA) XDRSize() int {
 	return 4 + len(o.Name) + xdr.Padding(len(o.Name)) + 8 +
-		4 + len(o.Phone) + xdr.Padding(len(o.Phone)) + 4 + 4 + 8
+		4 + len(o.Phone) + xdr.Padding(len(o.Phone)) + 8 + 4 + 8
 }
 
 func (o XDRA) MarshalXDR() ([]byte, error) {
@@ -71,7 +73,7 @@ func (o XDRA) MarshalXDRInto(m *xdr.Marshaller) error {
 	m.MarshalString(o.Name)
 	m.MarshalUint64(uint64(o.BirthDay))
 	m.MarshalString(o.Phone)
-	m.MarshalUint32(uint32(o.Siblings))
+	m.MarshalUint64(uint64(o.Siblings))
 	m.MarshalBool(o.Spouse)
 	m.MarshalUint64(o.Money)
 	return m.Error
@@ -85,7 +87,7 @@ func (o *XDRA) UnmarshalXDRFrom(u *xdr.Unmarshaller) error {
 	o.Name = u.UnmarshalString()
 	o.BirthDay = int64(u.UnmarshalUint64())
 	o.Phone = u.UnmarshalString()
-	o.Siblings = int32(u.UnmarshalUint32())
+	o.Siblings = int(u.UnmarshalUint64())
 	o.Spouse = u.UnmarshalBool()
 	o.Money = u.UnmarshalUint64()
 	return u.Error

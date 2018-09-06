@@ -6,32 +6,30 @@ import (
 	"time"
 )
 
-//go:generate -command genxdr go run ../../calmh/xdr/cmd/genxdr/main.go
-//go:generate genxdr -o structdefxdr_generated.go structdefxdr.go
-type XDRA struct {
+type NoTimeA struct {
 	Name     string
 	BirthDay int64
 	Phone    string
 	Siblings int
 	Spouse   bool
-	Money    uint64
+	Money    float64
 }
 
-func NewXDRA() Object {
-	return &XDRA{
+func NewNoTimeA() Object {
+	return &NoTimeA{
 		Name:     randString(16),
 		BirthDay: time.Now().Unix(),
 		Phone:    randString(10),
 		Siblings: rand.Intn(5),
 		Spouse:   rand.Intn(2) == 1,
-		Money:    rand.Uint64(),
+		Money:    rand.Float64(),
 	}
 }
 
-func (a *XDRA) Reset() { *a = XDRA{} }
+func (a *NoTimeA) Reset() { *a = NoTimeA{} }
 
-func (a *XDRA) AssertEqual(i interface{}) (bool, error) {
-	o, ok := i.(*XDRA)
+func (a *NoTimeA) AssertEqual(i interface{}) (bool, error) {
+	o, ok := i.(*NoTimeA)
 	if !ok {
 		return false, errors.New("not A type")
 	}

@@ -1,4 +1,4 @@
-using Go = import "/zombiezen.com/go/capnproto2/go.capnp";
+using Go = import "/go.capnp";
 $Go.package("goserbench");
 $Go.import("github.com/alecthomas/go_serialization_benchmarks");
 
