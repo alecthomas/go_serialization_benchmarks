@@ -64,7 +64,7 @@ type A struct {
 
 ## Results
 
-2018-08-19 Results with Go 1.10 on a 2.5 GHz Intel Core i7 MacBook Pro (Retina, 15-inch, Mid 2015):
+2018-09-06 Results with Go 1.11 on a 2.5 GHz Intel Core i7 MacBook Pro (Retina, 15-inch, Mid 2015):
 
 ```
 goos: darwin
