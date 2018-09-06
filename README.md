@@ -197,23 +197,21 @@ GoAvro-Unmarshal-8         		      6166 ns/op	   47 byte	    3357 B/op	     86 a
 The benchmarks can also be run with validation enabled.
 
 ```bash
-VALIDATE=1 go test -bench='.*' ./
+./stats.sh -v true
 ```
 
 Unfortunately, several of the serializers exhibit issues:
 
-1. **(minor)** BSON drops sub-microsecond precision from `time.Time`.
-3. **(minor)** Ugorji Binc Codec drops the timezone name (eg. "EST" -> "-0500") from `time.Time`.
+1. **(minor)** jsoniter and BSON drops sub-microsecond precision from `time.Time`.
 
 ```
---- FAIL: BenchmarkBsonUnmarshal-8
-    serialization_benchmarks_test.go:115: unmarshaled object differed:
-        &{20b999e3621bd773 2016-01-19 14:05:02.469416459 -0800 PST f017c8e9de 4 true 0.20887343719329818}
-        &{20b999e3621bd773 2016-01-19 14:05:02.469 -0800 PST f017c8e9de 4 true 0.20887343719329818}
---- FAIL: BenchmarkUgorjiCodecBincUnmarshal-8
-    serialization_benchmarks_test.go:115: unmarshaled object differed:
-        &{20a1757ced6b488e 2016-01-19 14:05:15.69474534 -0800 PST 71f3bf4233 0 false 0.8712180830484527}
-        &{20a1757ced6b488e 2016-01-19 14:05:15.69474534 -0800 -0800 71f3bf4233 0 false 0.8712180830484527}
+jsoniter-Unmarshal-8       		jsoniter failed to unmarshal:
+goserbench.A{Name:"2b145700ee085c5c", BirthDay:time.Time{wall:0xbedc602990d96a60, ext:19416389206, loc:(*time.Location)(0x20a7140)}, Phone:"5d8380add8", Siblings:0, Spouse:true, Money:0.2866014238392746}
+goserbench.A{Name:"2b145700ee085c5c", BirthDay:time.Time{wall:0x10d96a60, ext:63671828518, loc:(*time.Location)(0x20a7140)}, Phone:"5d8380add8", Siblings:0, Spouse:true, Money:0.286601}
+
+bson-Unmarshal-8           		bson failed to unmarshal:
+goserbench.A{Name:"8eb41b4e77e92e72", BirthDay:time.Time{wall:0xbedc602a9bb58180, ext:23598716142, loc:(*time.Location)(0x20a7140)}, Phone:"69d31132da", Siblings:3, Spouse:false, Money:0.9095698793778496}
+goserbench.A{Name:"8eb41b4e77e92e72", BirthDay:time.Time{wall:0x1ba81400, ext:63671828522, loc:(*time.Location)(0x20a7140)}, Phone:"69d31132da", Siblings:3, Spouse:false, Money:0.9095698793778496}
 ```
 
 All other fields are correct however.
