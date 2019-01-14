@@ -25,6 +25,7 @@ import (
 	hprose2 "github.com/hprose/hprose-golang/io"
 	"github.com/ikkerens/ikeapack"
 	"github.com/json-iterator/go"
+	shamaton "github.com/shamaton/msgpack"
 	"github.com/tinylib/msgp/msgp"
 	"github.com/ugorji/go/codec"
 	"gopkg.in/mgo.v2/bson"
@@ -1259,4 +1260,55 @@ func BenchmarkIkeaUnmarshal(b *testing.B) {
 			}
 		}
 	}
+}
+
+
+// github.com/shamaton/msgpack - as map
+
+type ShamatonMapMsgpackSerializer struct{}
+
+func (m ShamatonMapMsgpackSerializer) Marshal(o interface{}) []byte {
+	d, _ := shamaton.EncodeStructAsMap(o)
+	return d
+}
+
+func (m ShamatonMapMsgpackSerializer) Unmarshal(d []byte, o interface{}) error {
+	return shamaton.DecodeStructAsMap(d, o)
+}
+
+func (m ShamatonMapMsgpackSerializer) String() string {
+	return "shamaton-map-msgpack"
+}
+
+func BenchmarkShamatonMapMsgpackMarshal(b *testing.B) {
+	benchMarshal(b, ShamatonMapMsgpackSerializer{})
+}
+
+func BenchmarkShamatonMapMsgpackUnmarshal(b *testing.B) {
+	benchUnmarshal(b, ShamatonMapMsgpackSerializer{})
+}
+
+// github.com/shamaton/msgpack - as array
+
+type ShamatonArrayMsgpackSerializer struct{}
+
+func (m ShamatonArrayMsgpackSerializer) Marshal(o interface{}) []byte {
+	d, _ := shamaton.EncodeStructAsArray(o)
+	return d
+}
+
+func (m ShamatonArrayMsgpackSerializer) Unmarshal(d []byte, o interface{}) error {
+	return shamaton.DecodeStructAsArray(d, o)
+}
+
+func (m ShamatonArrayMsgpackSerializer) String() string {
+	return "shamaton-array-msgpack"
+}
+
+func BenchmarkShamatonArrayMsgpackMarshal(b *testing.B) {
+	benchMarshal(b, ShamatonArrayMsgpackSerializer{})
+}
+
+func BenchmarkShamatonArrayMsgpackUnmarshal(b *testing.B) {
+	benchUnmarshal(b, ShamatonArrayMsgpackSerializer{})
 }
