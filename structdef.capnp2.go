@@ -141,7 +141,7 @@ func (s Capnp2A) SetMoney(v float64) {
 // Capnp2A_List is a list of Capnp2A.
 type Capnp2A_List struct{ capnp.List }
 
-// NewCapnp2A creates a new list of Capnp2A.
+// NewCapnp2A_List creates a new list of Capnp2A.
 func NewCapnp2A_List(s *capnp.Segment, sz int32) (Capnp2A_List, error) {
 	l, err := capnp.NewCompositeList(s, capnp.ObjectSize{DataSize: 24, PointerCount: 2}, sz)
 	if err != nil {
