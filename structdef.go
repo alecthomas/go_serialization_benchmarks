@@ -23,3 +23,12 @@ type NoTimeA struct {
 	Spouse   bool
 	Money    float64
 }
+
+type NoTimeNoStringNoFloatA struct {
+	Name     []byte
+	BirthDay uint64
+	Phone    []byte
+	Siblings uint32
+	Spouse   bool
+	Money    uint64
+}

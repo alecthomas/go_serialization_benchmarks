@@ -13,18 +13,18 @@ import (
 	"time"
 
 	"github.com/niubaoshu/gotiny"
-	"zombiezen.com/go/capnproto2"
+	capnp "zombiezen.com/go/capnproto2"
 
 	"github.com/DeDiS/protobuf"
 	"github.com/Sereal/Sereal/Go/sereal"
 	"github.com/davecgh/go-xdr/xdr"
-	"github.com/glycerine/go-capnproto"
+	capn "github.com/glycerine/go-capnproto"
 	"github.com/gogo/protobuf/proto"
-	"github.com/google/flatbuffers/go"
-	"github.com/hprose/hprose-go"
+	flatbuffers "github.com/google/flatbuffers/go"
+	hprose "github.com/hprose/hprose-go"
 	hprose2 "github.com/hprose/hprose-golang/io"
-	"github.com/ikkerens/ikeapack"
-	"github.com/json-iterator/go"
+	ikea "github.com/ikkerens/ikeapack"
+	jsoniter "github.com/json-iterator/go"
 	shamaton "github.com/shamaton/msgpack"
 	"github.com/tinylib/msgp/msgp"
 	"github.com/ugorji/go/codec"
@@ -32,6 +32,7 @@ import (
 	vmihailenco "gopkg.in/vmihailenco/msgpack.v2"
 
 	"github.com/alecthomas/binary"
+	ssz "github.com/prysmaticlabs/go-ssz"
 )
 
 var (
@@ -1262,7 +1263,6 @@ func BenchmarkIkeaUnmarshal(b *testing.B) {
 	}
 }
 
-
 // github.com/shamaton/msgpack - as map
 
 type ShamatonMapMsgpackSerializer struct{}
@@ -1311,4 +1311,61 @@ func BenchmarkShamatonArrayMsgpackMarshal(b *testing.B) {
 
 func BenchmarkShamatonArrayMsgpackUnmarshal(b *testing.B) {
 	benchUnmarshal(b, ShamatonArrayMsgpackSerializer{})
+}
+
+// github.com/prysmaticlabs/go-ssz
+
+func generateNoTimeNoStringNoFloatA() []*NoTimeNoStringNoFloatA {
+	a := make([]*NoTimeNoStringNoFloatA, 0, 1000)
+	for i := 0; i < 1000; i++ {
+		a = append(a, &NoTimeNoStringNoFloatA{
+			Name:     []byte(randString(16)),
+			BirthDay: uint64(time.Now().UnixNano()),
+			Phone:    []byte(randString(10)),
+			Siblings: uint32(rand.Intn(5)),
+			Spouse:   rand.Intn(2) == 1,
+			Money:    math.Float64bits(rand.Float64()),
+		})
+	}
+	return a
+}
+
+func BenchmarkSSZNoTimeNoStringNoFloatAMarshal(b *testing.B) {
+	b.StopTimer()
+	data := generateNoTimeNoStringNoFloatA()
+	b.ReportAllocs()
+	b.StartTimer()
+	for i := 0; i < b.N; i++ {
+		ssz.Marshal(data[rand.Intn(len(data))])
+	}
+}
+
+func BenchmarkSSZNoTimeNoStringNoFloatAUnmarshal(b *testing.B) {
+	b.StopTimer()
+	data := generateNoTimeNoStringNoFloatA()
+	ser := make([][]byte, len(data))
+	for i, d := range data {
+		o, _ := ssz.Marshal(d)
+		t := make([]byte, len(o))
+		copy(t, o)
+		ser[i] = t
+	}
+	b.ReportAllocs()
+	b.StartTimer()
+	for i := 0; i < b.N; i++ {
+		n := rand.Intn(len(ser))
+		o := &NoTimeNoStringNoFloatA{}
+		err := ssz.Unmarshal(ser[n], o)
+		if err != nil {
+			b.Fatalf("%s failed to unmarshal: %s (%s)", "ssz", err, ser[n])
+		}
+		// Validate unmarshalled data.
+		if validate != "" {
+			i := data[n]
+			correct := bytes.Equal(o.Name, i.Name) && bytes.Equal(o.Phone, i.Phone) && o.Siblings == i.Siblings && o.Spouse == i.Spouse && o.Money == i.Money && o.BirthDay == i.BirthDay //&& cmpTags(o.Tags, i.Tags) && cmpAliases(o.Aliases, i.Aliases)
+			if !correct {
+				b.Fatalf("unmarshaled object differed:\n%v\n%v", i, o)
+			}
+		}
+	}
 }
