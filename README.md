@@ -70,12 +70,10 @@ type A struct {
 
 ## Results
 
-2019-07-30 Results with Go version 1.12.7 linux/amd64 on a google cloud n1-standard-1 (1 vCPU, 3.75 GB memory):
+2019-07-30 Results with Go 1.12.7 linux/amd64 on a google cloud n1-standard-1 (1 vCPU, 3.75 GB memory):
 
 ```
-benchmark                                      iter    time/iter   bytes/op     allocs/op  tt.time   tt.bytes       time/alloc
----------                                      ----    ---------   --------     ---------  -------   --------       ----------
-BenchmarkGotinyMarshal                          10000000               128 ns/op               0 B/op          0 allocs/op
+benchmark                                           iter               time/iter             bytes/op            allocs/op ---------                                       --------               ---------             --------          ----------- BenchmarkGotinyMarshal                          10000000               128 ns/op               0 B/op          0 allocs/op
 BenchmarkGotinyUnmarshal                         5000000               271 ns/op             112 B/op          3 allocs/op
 BenchmarkGotinyNoTimeMarshal                    10000000               127 ns/op               0 B/op          0 allocs/op
 BenchmarkGotinyNoTimeUnmarshal                   5000000               250 ns/op              96 B/op          3 allocs/op
