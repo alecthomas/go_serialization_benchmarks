@@ -13,23 +13,23 @@ import (
 	"time"
 
 	"github.com/niubaoshu/gotiny"
-	"zombiezen.com/go/capnproto2"
+	capnp "zombiezen.com/go/capnproto2"
 
 	"github.com/DeDiS/protobuf"
 	"github.com/Sereal/Sereal/Go/sereal"
 	"github.com/davecgh/go-xdr/xdr"
-	"github.com/glycerine/go-capnproto"
+	capn "github.com/glycerine/go-capnproto"
 	"github.com/gogo/protobuf/proto"
-	"github.com/google/flatbuffers/go"
+	flatbuffers "github.com/google/flatbuffers/go"
 	"github.com/hprose/hprose-go"
 	hprose2 "github.com/hprose/hprose-golang/io"
-	"github.com/ikkerens/ikeapack"
-	"github.com/json-iterator/go"
+	ikea "github.com/ikkerens/ikeapack"
+	jsoniter "github.com/json-iterator/go"
 	shamaton "github.com/shamaton/msgpack"
 	"github.com/tinylib/msgp/msgp"
 	"github.com/ugorji/go/codec"
+	vmihailenco "github.com/vmihailenco/msgpack"
 	"gopkg.in/mgo.v2/bson"
-	vmihailenco "gopkg.in/vmihailenco/msgpack.v2"
 
 	"github.com/alecthomas/binary"
 )
@@ -256,7 +256,7 @@ func BenchmarkMsgpUnmarshal(b *testing.B) {
 	benchUnmarshal(b, MsgpSerializer{})
 }
 
-// gopkg.in/vmihailenco/msgpack.v2
+// github.com/vmihailenco/msgpack
 
 type VmihailencoMsgpackSerializer struct{}
 
@@ -1261,7 +1261,6 @@ func BenchmarkIkeaUnmarshal(b *testing.B) {
 		}
 	}
 }
-
 
 // github.com/shamaton/msgpack - as map
 
