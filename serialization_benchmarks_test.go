@@ -21,15 +21,15 @@ import (
 	capn "github.com/glycerine/go-capnproto"
 	"github.com/gogo/protobuf/proto"
 	flatbuffers "github.com/google/flatbuffers/go"
-	hprose "github.com/hprose/hprose-go"
+	"github.com/hprose/hprose-go"
 	hprose2 "github.com/hprose/hprose-golang/io"
 	ikea "github.com/ikkerens/ikeapack"
 	jsoniter "github.com/json-iterator/go"
 	shamaton "github.com/shamaton/msgpack"
 	"github.com/tinylib/msgp/msgp"
 	"github.com/ugorji/go/codec"
+	vmihailenco "github.com/vmihailenco/msgpack"
 	"gopkg.in/mgo.v2/bson"
-	vmihailenco "gopkg.in/vmihailenco/msgpack.v2"
 
 	"github.com/alecthomas/binary"
 	ssz "github.com/prysmaticlabs/go-ssz"
@@ -257,7 +257,7 @@ func BenchmarkMsgpUnmarshal(b *testing.B) {
 	benchUnmarshal(b, MsgpSerializer{})
 }
 
-// gopkg.in/vmihailenco/msgpack.v2
+// github.com/vmihailenco/msgpack
 
 type VmihailencoMsgpackSerializer struct{}
 
