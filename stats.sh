@@ -8,16 +8,16 @@ fi
 
 go test -bench="${benchFuncs}" ./ |  awk -F' ' '
 BEGIN {
-	print "benchmark                                      iter    time/iter   bytes/op     allocs/op  tt.time   tt.bytes       time/alloc"
-	print "---------                                      ----    ---------   --------     ---------  -------   --------       ----------"
+	print "benchmark                                    | iter  | time/iter | bytes/op  |  allocs/op |tt.time | tt.bytes     | time/alloc"
+	print "---------------------------------------------|-------|-----------|-----------|------------|--------|--------------|-----------"
 }
 
 /Benchmark/ {
 	gsub(/ +/," ",$0)
 	if ($7 != 0) {
-	    printf "%-40s %10d %6d %s %5d %s %3d %s %6.2f s %7d KB %7.2f ns/alloc\n",$1,$2,$3,$4,$5,$6,$7,$8,$2*$3/1000000000,$2*$5/10000,$3/$7
+	    printf "%-40s | %10d | %6d %s | %5d %s | %3d %s | %6.2f s | %7d KB | %7.2f ns/alloc\n",$1,$2,$3,$4,$5,$6,$7,$8,$2*$3/1000000000,$2*$5/10000,$3/$7
 	}else{
-	    printf "%-40s %10d %6d %s %5d %s %3d %s %6.2f s %7d KB %7.2f ns/alloc\n",$1,$2,$3,$4,$5,$6,$7,$8,$2*$3/1000000000,$2*$5/10000,0
+	    printf "%-40s | %10d | %6d %s | %5d %s | %3d %s | %6.2f s | %7d KB | %7.2f ns/alloc\n",$1,$2,$3,$4,$5,$6,$7,$8,$2*$3/1000000000,$2*$5/10000,0
 	}
 	gsub(/(Unm|M)arshal/,"",$1)
 	pname[$1]=$1
@@ -46,10 +46,13 @@ function arr_sort(arr,number) {
 }
 
 END {
+	print "\n"
 	print "---\ntotals:"
+	print "benchmark                                    | iter  | time/iter | bytes/op  |  allocs/op |tt.time | tt.bytes     | time/alloc"
+	print "---------------------------------------------|-------|-----------|-----------|------------|--------|--------------|-----------"
 	for (p in pname) {
 		pr=pname[p]
-	    arry[proto[pr,3]] = sprintf("%-40s %10d %6d %s %5d %s %3d %s %6.2f s %7d KB %7.2f ns/alloc",pr,proto[pr,2],proto[pr,3],proto[pr,4],proto[pr,5],proto[pr,6],proto[pr,7],
+	    arry[proto[pr,3]] = sprintf("%-40s | %10d | %6d %s | %5d %s | %3d %s | %6.2f s | %7d KB | %7.2f ns/alloc",pr,proto[pr,2],proto[pr,3],proto[pr,4],proto[pr,5],proto[pr,6],proto[pr,7],
 			proto[pr,8],proto[pr,2]*proto[pr,3]/1000000000,proto[pr,2]*proto[pr,5]/10000,proto[pr,3]/proto[pr,7])
 	}
     arr_sort(arry,keys)
