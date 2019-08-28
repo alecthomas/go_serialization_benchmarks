@@ -15,7 +15,7 @@ import (
 	"github.com/niubaoshu/gotiny"
 	capnp "zombiezen.com/go/capnproto2"
 
-	"github.com/DeDiS/protobuf"
+	"go.dedis.ch/protobuf"
 	"github.com/Sereal/Sereal/Go/sereal"
 	"github.com/davecgh/go-xdr/xdr"
 	capn "github.com/glycerine/go-capnproto"
@@ -812,7 +812,7 @@ func BenchmarkHprose2Unmarshal(b *testing.B) {
 	benchUnmarshal(b, &Hprose2Serializer{writer: writer, reader: reader})
 }
 
-// github.com/DeDiS/protobuf
+// go.dedis.ch/protobuf
 
 type ProtobufSerializer struct{}
 

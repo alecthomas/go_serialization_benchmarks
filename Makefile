@@ -55,7 +55,7 @@ install:
 	go get -u github.com/tinylib/msgp
 	go get -u github.com/andyleap/gencode
 	go get -u github.com/mailru/easyjson/...
-	go get -u github.com/DeDiS/protobuf
+	go get -u go.dedis.ch/protobuf
 	go get -u github.com/Sereal/Sereal/Go/sereal
 	go get -u github.com/alecthomas/binary
 	go get -u github.com/davecgh/go-xdr/xdr
