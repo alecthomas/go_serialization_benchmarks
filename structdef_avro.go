@@ -2,7 +2,6 @@ package goserbench
 
 import (
 	"bytes"
-	"fmt"
 	"time"
 
 	goavro2 "github.com/linkedin/goavro"
@@ -62,18 +61,16 @@ var (
 func NewAvroA() *AvroA {
 	rec, err := goavro.NewRecord(goavro.RecordSchema(avroSchemaJSON))
 	if err != nil {
-		fmt.Printf("Avro record initialization error: %v\n", err)
-		return nil
+		panic(err)
 	}
 	codec, err := goavro.NewCodec(avroSchemaJSON)
 	if err != nil {
-		fmt.Printf("Avro codec initialization error: %v\n", err)
-		return nil
+		panic(err)
 	}
 	return &AvroA{record: rec, codec: codec}
 }
 
-func (a *AvroA) Marshal(o interface{}) []byte {
+func (a *AvroA) Marshal(o interface{}) ([]byte, error) {
 	object := o.(*A)
 	a.record.Set("name", object.Name)
 	a.record.Set("birthday", int64(object.BirthDay.UnixNano()))
@@ -83,10 +80,9 @@ func (a *AvroA) Marshal(o interface{}) []byte {
 	a.record.Set("money", object.Money)
 	b := new(bytes.Buffer)
 	if err := a.codec.Encode(b, a.record); err != nil {
-		fmt.Printf("Avro encoding error: %v\n", err)
-		return []byte("")
+		return nil, err
 	}
-	return b.Bytes()
+	return b.Bytes(), nil
 }
 
 func (a *AvroA) Unmarshal(d []byte, o interface{}) error {
@@ -94,7 +90,6 @@ func (a *AvroA) Unmarshal(d []byte, o interface{}) error {
 	b := bytes.NewBuffer(d)
 	i, err := a.codec.Decode(b)
 	if err != nil {
-		fmt.Printf("Avro decoding error: %v\n", err)
 		return err
 	}
 	rec := i.(*goavro.Record)
@@ -117,9 +112,9 @@ func (a *AvroA) String() string {
 	return "GoAvro"
 }
 
-func avroMarshal(o interface{}, marshalFunc func([]byte, interface{}) ([]byte, error)) []byte {
+func avroMarshal(o interface{}, marshalFunc func([]byte, interface{}) ([]byte, error)) ([]byte, error) {
 	object := o.(*A)
-	b, err := marshalFunc(nil, map[string]interface{}{
+	return marshalFunc(nil, map[string]interface{}{
 		"name":     object.Name,
 		"birthday": int64(object.BirthDay.UnixNano()),
 		"phone":    object.Phone,
@@ -127,18 +122,12 @@ func avroMarshal(o interface{}, marshalFunc func([]byte, interface{}) ([]byte, e
 		"spouse":   object.Spouse,
 		"money":    object.Money,
 	})
-	if err != nil {
-		fmt.Printf("Avro2 encoding error: %v\n", err)
-		return []byte("")
-	}
-	return b
 }
 
 func avroUnmarshal(d []byte, o interface{}, unmarshalFunc func([]byte) (interface{}, []byte, error)) error {
 	object := o.(*A)
 	r, _, err := unmarshalFunc(d)
 	if err != nil {
-		fmt.Printf("Avro2 decoding error: %v\n", err)
 		return err
 	}
 	m := r.(map[string]interface{})
@@ -154,13 +143,12 @@ func avroUnmarshal(d []byte, o interface{}, unmarshalFunc func([]byte) (interfac
 func NewAvro2Txt() *Avro2Txt {
 	codec, err := goavro2.NewCodec(avroSchemaJSON)
 	if err != nil {
-		fmt.Printf("Avro2Txt codec initialization error: %v\n", err)
-		return nil
+		panic(err)
 	}
 	return &Avro2Txt{codec: codec}
 }
 
-func (a *Avro2Txt) Marshal(o interface{}) []byte {
+func (a *Avro2Txt) Marshal(o interface{}) ([]byte, error) {
 	return avroMarshal(o, a.codec.TextualFromNative)
 }
 
@@ -175,13 +163,12 @@ func (a *Avro2Txt) String() string {
 func NewAvro2Bin() *Avro2Bin {
 	codec, err := goavro2.NewCodec(avroSchemaJSON)
 	if err != nil {
-		fmt.Printf("Avro2Bin codec initialization error: %v\n", err)
-		return nil
+		panic(err)
 	}
 	return &Avro2Bin{codec: codec}
 }
 
-func (a *Avro2Bin) Marshal(o interface{}) []byte {
+func (a *Avro2Bin) Marshal(o interface{}) ([]byte, error) {
 	return avroMarshal(o, a.codec.BinaryFromNative)
 }
 
