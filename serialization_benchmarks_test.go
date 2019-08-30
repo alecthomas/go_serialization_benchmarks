@@ -355,12 +355,11 @@ func BenchmarkJsonIterUnmarshal(b *testing.B) {
 type EasyJSONSerializer struct{}
 
 func (m EasyJSONSerializer) Marshal(o interface{}) ([]byte, error) {
-	return o.(*A).MarshalJSONEasyJSON()
+	return o.(*A).MarshalJSON()
 }
 
 func (m EasyJSONSerializer) Unmarshal(d []byte, o interface{}) error {
-	err := o.(*A).UnmarshalJSONEasyJSON(d)
-	return err
+	return o.(*A).UnmarshalJSON(d)
 }
 
 func (m EasyJSONSerializer) String() string { return "EasyJson" }
