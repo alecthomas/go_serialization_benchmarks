@@ -17,108 +17,7 @@ var (
 	_ easyjson.Marshaler
 )
 
-func easyjsonB0f55b16DecodeGithubComAlecthomasGoSerializationBenchmarks(in *jlexer.Lexer, out *XDRA) {
-	isTopLevel := in.IsStart()
-	if in.IsNull() {
-		if isTopLevel {
-			in.Consumed()
-		}
-		in.Skip()
-		return
-	}
-	in.Delim('{')
-	for !in.IsDelim('}') {
-		key := in.UnsafeString()
-		in.WantColon()
-		if in.IsNull() {
-			in.Skip()
-			in.WantComma()
-			continue
-		}
-		switch key {
-		case "Name":
-			out.Name = string(in.String())
-		case "BirthDay":
-			out.BirthDay = int64(in.Int64())
-		case "Phone":
-			out.Phone = string(in.String())
-		case "Siblings":
-			out.Siblings = int32(in.Int32())
-		case "Spouse":
-			out.Spouse = bool(in.Bool())
-		case "Money":
-			out.Money = uint64(in.Uint64())
-		default:
-			in.SkipRecursive()
-		}
-		in.WantComma()
-	}
-	in.Delim('}')
-	if isTopLevel {
-		in.Consumed()
-	}
-}
-func easyjsonB0f55b16EncodeGithubComAlecthomasGoSerializationBenchmarks(out *jwriter.Writer, in XDRA) {
-	out.RawByte('{')
-	first := true
-	_ = first
-	{
-		const prefix string = ",\"Name\":"
-		out.RawString(prefix[1:])
-		out.String(string(in.Name))
-	}
-	{
-		const prefix string = ",\"BirthDay\":"
-		out.RawString(prefix)
-		out.Int64(int64(in.BirthDay))
-	}
-	{
-		const prefix string = ",\"Phone\":"
-		out.RawString(prefix)
-		out.String(string(in.Phone))
-	}
-	{
-		const prefix string = ",\"Siblings\":"
-		out.RawString(prefix)
-		out.Int32(int32(in.Siblings))
-	}
-	{
-		const prefix string = ",\"Spouse\":"
-		out.RawString(prefix)
-		out.Bool(bool(in.Spouse))
-	}
-	{
-		const prefix string = ",\"Money\":"
-		out.RawString(prefix)
-		out.Uint64(uint64(in.Money))
-	}
-	out.RawByte('}')
-}
-
-// MarshalJSON supports json.Marshaler interface
-func (v XDRA) MarshalJSON() ([]byte, error) {
-	w := jwriter.Writer{}
-	easyjsonB0f55b16EncodeGithubComAlecthomasGoSerializationBenchmarks(&w, v)
-	return w.Buffer.BuildBytes(), w.Error
-}
-
-// MarshalEasyJSON supports easyjson.Marshaler interface
-func (v XDRA) MarshalEasyJSON(w *jwriter.Writer) {
-	easyjsonB0f55b16EncodeGithubComAlecthomasGoSerializationBenchmarks(w, v)
-}
-
-// UnmarshalJSON supports json.Unmarshaler interface
-func (v *XDRA) UnmarshalJSON(data []byte) error {
-	r := jlexer.Lexer{Data: data}
-	easyjsonB0f55b16DecodeGithubComAlecthomasGoSerializationBenchmarks(&r, v)
-	return r.Error()
-}
-
-// UnmarshalEasyJSON supports easyjson.Unmarshaler interface
-func (v *XDRA) UnmarshalEasyJSON(l *jlexer.Lexer) {
-	easyjsonB0f55b16DecodeGithubComAlecthomasGoSerializationBenchmarks(l, v)
-}
-func easyjsonB0f55b16DecodeGithubComAlecthomasGoSerializationBenchmarks1(in *jlexer.Lexer, out *NoTimeNoStringNoFloatA) {
+func easyjsonB0f55b16DecodeGithubComAlecthomasGoSerializationBenchmarks(in *jlexer.Lexer, out *NoTimeNoStringNoFloatA) {
 	isTopLevel := in.IsStart()
 	if in.IsNull() {
 		if isTopLevel {
@@ -169,7 +68,7 @@ func easyjsonB0f55b16DecodeGithubComAlecthomasGoSerializationBenchmarks1(in *jle
 		in.Consumed()
 	}
 }
-func easyjsonB0f55b16EncodeGithubComAlecthomasGoSerializationBenchmarks1(out *jwriter.Writer, in NoTimeNoStringNoFloatA) {
+func easyjsonB0f55b16EncodeGithubComAlecthomasGoSerializationBenchmarks(out *jwriter.Writer, in NoTimeNoStringNoFloatA) {
 	out.RawByte('{')
 	first := true
 	_ = first
@@ -209,27 +108,27 @@ func easyjsonB0f55b16EncodeGithubComAlecthomasGoSerializationBenchmarks1(out *jw
 // MarshalJSON supports json.Marshaler interface
 func (v NoTimeNoStringNoFloatA) MarshalJSON() ([]byte, error) {
 	w := jwriter.Writer{}
-	easyjsonB0f55b16EncodeGithubComAlecthomasGoSerializationBenchmarks1(&w, v)
+	easyjsonB0f55b16EncodeGithubComAlecthomasGoSerializationBenchmarks(&w, v)
 	return w.Buffer.BuildBytes(), w.Error
 }
 
 // MarshalEasyJSON supports easyjson.Marshaler interface
 func (v NoTimeNoStringNoFloatA) MarshalEasyJSON(w *jwriter.Writer) {
-	easyjsonB0f55b16EncodeGithubComAlecthomasGoSerializationBenchmarks1(w, v)
+	easyjsonB0f55b16EncodeGithubComAlecthomasGoSerializationBenchmarks(w, v)
 }
 
 // UnmarshalJSON supports json.Unmarshaler interface
 func (v *NoTimeNoStringNoFloatA) UnmarshalJSON(data []byte) error {
 	r := jlexer.Lexer{Data: data}
-	easyjsonB0f55b16DecodeGithubComAlecthomasGoSerializationBenchmarks1(&r, v)
+	easyjsonB0f55b16DecodeGithubComAlecthomasGoSerializationBenchmarks(&r, v)
 	return r.Error()
 }
 
 // UnmarshalEasyJSON supports easyjson.Unmarshaler interface
 func (v *NoTimeNoStringNoFloatA) UnmarshalEasyJSON(l *jlexer.Lexer) {
-	easyjsonB0f55b16DecodeGithubComAlecthomasGoSerializationBenchmarks1(l, v)
+	easyjsonB0f55b16DecodeGithubComAlecthomasGoSerializationBenchmarks(l, v)
 }
-func easyjsonB0f55b16DecodeGithubComAlecthomasGoSerializationBenchmarks2(in *jlexer.Lexer, out *NoTimeA) {
+func easyjsonB0f55b16DecodeGithubComAlecthomasGoSerializationBenchmarks1(in *jlexer.Lexer, out *NoTimeA) {
 	isTopLevel := in.IsStart()
 	if in.IsNull() {
 		if isTopLevel {
@@ -270,7 +169,7 @@ func easyjsonB0f55b16DecodeGithubComAlecthomasGoSerializationBenchmarks2(in *jle
 		in.Consumed()
 	}
 }
-func easyjsonB0f55b16EncodeGithubComAlecthomasGoSerializationBenchmarks2(out *jwriter.Writer, in NoTimeA) {
+func easyjsonB0f55b16EncodeGithubComAlecthomasGoSerializationBenchmarks1(out *jwriter.Writer, in NoTimeA) {
 	out.RawByte('{')
 	first := true
 	_ = first
@@ -310,27 +209,27 @@ func easyjsonB0f55b16EncodeGithubComAlecthomasGoSerializationBenchmarks2(out *jw
 // MarshalJSON supports json.Marshaler interface
 func (v NoTimeA) MarshalJSON() ([]byte, error) {
 	w := jwriter.Writer{}
-	easyjsonB0f55b16EncodeGithubComAlecthomasGoSerializationBenchmarks2(&w, v)
+	easyjsonB0f55b16EncodeGithubComAlecthomasGoSerializationBenchmarks1(&w, v)
 	return w.Buffer.BuildBytes(), w.Error
 }
 
 // MarshalEasyJSON supports easyjson.Marshaler interface
 func (v NoTimeA) MarshalEasyJSON(w *jwriter.Writer) {
-	easyjsonB0f55b16EncodeGithubComAlecthomasGoSerializationBenchmarks2(w, v)
+	easyjsonB0f55b16EncodeGithubComAlecthomasGoSerializationBenchmarks1(w, v)
 }
 
 // UnmarshalJSON supports json.Unmarshaler interface
 func (v *NoTimeA) UnmarshalJSON(data []byte) error {
 	r := jlexer.Lexer{Data: data}
-	easyjsonB0f55b16DecodeGithubComAlecthomasGoSerializationBenchmarks2(&r, v)
+	easyjsonB0f55b16DecodeGithubComAlecthomasGoSerializationBenchmarks1(&r, v)
 	return r.Error()
 }
 
 // UnmarshalEasyJSON supports easyjson.Unmarshaler interface
 func (v *NoTimeA) UnmarshalEasyJSON(l *jlexer.Lexer) {
-	easyjsonB0f55b16DecodeGithubComAlecthomasGoSerializationBenchmarks2(l, v)
+	easyjsonB0f55b16DecodeGithubComAlecthomasGoSerializationBenchmarks1(l, v)
 }
-func easyjsonB0f55b16DecodeGithubComAlecthomasGoSerializationBenchmarks3(in *jlexer.Lexer, out *A) {
+func easyjsonB0f55b16DecodeGithubComAlecthomasGoSerializationBenchmarks2(in *jlexer.Lexer, out *A) {
 	isTopLevel := in.IsStart()
 	if in.IsNull() {
 		if isTopLevel {
@@ -373,7 +272,7 @@ func easyjsonB0f55b16DecodeGithubComAlecthomasGoSerializationBenchmarks3(in *jle
 		in.Consumed()
 	}
 }
-func easyjsonB0f55b16EncodeGithubComAlecthomasGoSerializationBenchmarks3(out *jwriter.Writer, in A) {
+func easyjsonB0f55b16EncodeGithubComAlecthomasGoSerializationBenchmarks2(out *jwriter.Writer, in A) {
 	out.RawByte('{')
 	first := true
 	_ = first
@@ -413,23 +312,23 @@ func easyjsonB0f55b16EncodeGithubComAlecthomasGoSerializationBenchmarks3(out *jw
 // MarshalJSON supports json.Marshaler interface
 func (v A) MarshalJSON() ([]byte, error) {
 	w := jwriter.Writer{}
-	easyjsonB0f55b16EncodeGithubComAlecthomasGoSerializationBenchmarks3(&w, v)
+	easyjsonB0f55b16EncodeGithubComAlecthomasGoSerializationBenchmarks2(&w, v)
 	return w.Buffer.BuildBytes(), w.Error
 }
 
 // MarshalEasyJSON supports easyjson.Marshaler interface
 func (v A) MarshalEasyJSON(w *jwriter.Writer) {
-	easyjsonB0f55b16EncodeGithubComAlecthomasGoSerializationBenchmarks3(w, v)
+	easyjsonB0f55b16EncodeGithubComAlecthomasGoSerializationBenchmarks2(w, v)
 }
 
 // UnmarshalJSON supports json.Unmarshaler interface
 func (v *A) UnmarshalJSON(data []byte) error {
 	r := jlexer.Lexer{Data: data}
-	easyjsonB0f55b16DecodeGithubComAlecthomasGoSerializationBenchmarks3(&r, v)
+	easyjsonB0f55b16DecodeGithubComAlecthomasGoSerializationBenchmarks2(&r, v)
 	return r.Error()
 }
 
 // UnmarshalEasyJSON supports easyjson.Unmarshaler interface
 func (v *A) UnmarshalEasyJSON(l *jlexer.Lexer) {
-	easyjsonB0f55b16DecodeGithubComAlecthomasGoSerializationBenchmarks3(l, v)
+	easyjsonB0f55b16DecodeGithubComAlecthomasGoSerializationBenchmarks2(l, v)
 }
