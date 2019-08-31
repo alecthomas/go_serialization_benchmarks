@@ -1053,7 +1053,7 @@ func generateGencode() []*GencodeA {
 			Name:     randString(16),
 			BirthDay: time.Now(),
 			Phone:    randString(10),
-			Siblings: rand.Int63n(5),
+			Siblings: rand.Int31n(5),
 			Spouse:   rand.Intn(2) == 1,
 			Money:    rand.Float64(),
 		})
@@ -1118,7 +1118,7 @@ func generateGencodeUnsafe() []*GencodeUnsafeA {
 			Name:     randString(16),
 			BirthDay: time.Now().UnixNano(),
 			Phone:    randString(10),
-			Siblings: rand.Int63n(5),
+			Siblings: rand.Int31n(5),
 			Spouse:   rand.Intn(2) == 1,
 			Money:    rand.Float64(),
 		})

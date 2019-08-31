@@ -2,7 +2,7 @@ struct GencodeA {
     Name     string
     BirthDay time
     Phone    string
-    Siblings vint64
+    Siblings vint32
     Spouse   bool
     Money    float64
 }

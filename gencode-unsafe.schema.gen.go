@@ -16,7 +16,7 @@ type GencodeUnsafeA struct {
 	Name     string
 	BirthDay int64
 	Phone    string
-	Siblings int64
+	Siblings int32
 	Spouse   bool
 	Money    float64
 }
@@ -55,7 +55,7 @@ func (d *GencodeUnsafeA) Size() (s uint64) {
 	}
 	{
 
-		t := uint64(d.Siblings)
+		t := uint32(d.Siblings)
 		t <<= 1
 		if d.Siblings < 0 {
 			t = ^t
@@ -126,7 +126,7 @@ func (d *GencodeUnsafeA) Marshal(buf []byte) ([]byte, error) {
 	}
 	{
 
-		t := uint64(d.Siblings)
+		t := uint32(d.Siblings)
 
 		t <<= 1
 		if d.Siblings < 0 {
@@ -208,15 +208,15 @@ func (d *GencodeUnsafeA) Unmarshal(buf []byte) (uint64, error) {
 	{
 
 		bs := uint8(7)
-		t := uint64(buf[i+8] & 0x7F)
+		t := uint32(buf[i+8] & 0x7F)
 		for buf[i+8]&0x80 == 0x80 {
 			i++
-			t |= uint64(buf[i+8]&0x7F) << bs
+			t |= uint32(buf[i+8]&0x7F) << bs
 			bs += 7
 		}
 		i++
 
-		d.Siblings = int64(t >> 1)
+		d.Siblings = int32(t >> 1)
 		if t&1 != 0 {
 			d.Siblings = ^d.Siblings
 		}
