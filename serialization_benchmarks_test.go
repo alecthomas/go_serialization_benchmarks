@@ -449,27 +449,27 @@ func BenchmarkGobUnmarshal(b *testing.B) {
 
 // github.com/davecgh/go-xdr/xdr
 
-type XdrSerializer struct{}
+type XDRSerializer struct{}
 
-func (x XdrSerializer) Marshal(o interface{}) ([]byte, error) {
+func (x XDRSerializer) Marshal(o interface{}) ([]byte, error) {
 	return xdr.Marshal(o)
 }
 
-func (x XdrSerializer) Unmarshal(d []byte, o interface{}) error {
+func (x XDRSerializer) Unmarshal(d []byte, o interface{}) error {
 	_, err := xdr.Unmarshal(d, o)
 	return err
 }
 
-func (x XdrSerializer) String() string {
+func (x XDRSerializer) String() string {
 	return "xdr"
 }
 
-func BenchmarkXdrMarshal(b *testing.B) {
-	benchMarshal(b, XdrSerializer{})
+func BenchmarkXDRMarshal(b *testing.B) {
+	benchMarshal(b, XDRSerializer{})
 }
 
-func BenchmarkXdrUnmarshal(b *testing.B) {
-	benchUnmarshal(b, XdrSerializer{})
+func BenchmarkXDRUnmarshal(b *testing.B) {
+	benchUnmarshal(b, XDRSerializer{})
 }
 
 // github.com/ugorji/go/codec
