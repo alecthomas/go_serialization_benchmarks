@@ -4,7 +4,7 @@
 all: Colfer.go FlatBufferA.go msgp_gen.go structdef-gogo.pb.go structdef.pb.go structdef.capnp.go structdef.capnp2.go gencode.schema.gen.go gencode-unsafe.schema.gen.go structdefxdr_generated.go
 
 Colfer.go:
-	colf go
+	go run github.com/pascaldekloe/colfer/cmd/colf go
 	mv goserbench/Colfer.go .
 	rmdir goserbench
 
@@ -15,10 +15,10 @@ FlatBufferA.go: flatbuffers-structdef.fbs
 	sed -i '' 's/flatbuffersmodels/goserbench/' FlatBufferA.go
 
 msgp_gen.go: structdef.go
-	go generate
+	go run github.com/tinylib/msgp -o msgp_gen.go -file structdef.go -io=false -tests=false
 
 structdef_easyjson.go: structdef.go
-	easyjson -all structdef.go
+	go run github.com/mailru/easyjson/easyjson -all structdef.go
 
 structdef-gogo.pb.go: structdef-gogo.proto
 	protoc --gogofaster_out=. -I. -I${GOPATH}/src  -I${GOPATH}/src/github.com/gogo/protobuf/protobuf structdef-gogo.proto
@@ -35,13 +35,13 @@ structdef.capnp.go: structdef.capnp
 	capnp compile -I${GOPATH}/src -ogo structdef.capnp
 
 gencode.schema.gen.go: gencode.schema
-	gencode go -schema=gencode.schema -package=goserbench
+	go run github.com/andyleap/gencode go -schema=gencode.schema -package=goserbench
 
 gencode-unsafe.schema.gen.go: gencode-unsafe.schema
-	gencode go -schema=gencode-unsafe.schema -package=goserbench -unsafe
+	go run github.com/andyleap/gencode go -schema=gencode-unsafe.schema -package=goserbench -unsafe
 
 structdefxdr_generated.go: structdefxdr.go
-	go generate
+	go run github.com/calmh/xdr/cmd/genxdr -o structdefxdr_generated.go structdefxdr.go
 
 .PHONY: clean
 clean:
