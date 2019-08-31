@@ -605,11 +605,14 @@ func (x *CapNProtoSerializer) Marshal(o interface{}) ([]byte, error) {
 
 func (x *CapNProtoSerializer) Unmarshal(d []byte, i interface{}) error {
 	a := i.(*A)
-	s, _, _ := capn.ReadFromMemoryZeroCopy(d)
+	s, _, err := capn.ReadFromMemoryZeroCopy(d)
+	if err != nil {
+		return err
+	}
 	o := ReadRootCapnpA(s)
-	a.Name = string(o.NameBytes())
+	a.Name = o.Name()
 	a.BirthDay = time.Unix(0, o.BirthDay())
-	a.Phone = string(o.PhoneBytes())
+	a.Phone = o.Phone()
 	a.Siblings = int(o.Siblings())
 	a.Spouse = o.Spouse()
 	a.Money = o.Money()
@@ -640,6 +643,9 @@ func (x *CapNProto2Serializer) Marshal(o interface{}) ([]byte, error) {
 		return nil, err
 	}
 	c, err := NewRootCapnp2A(s)
+	if err != nil {
+		return nil, err
+	}
 	c.SetName(a.Name)
 	c.SetBirthDay(a.BirthDay.UnixNano())
 	c.SetPhone(a.Phone)
@@ -651,11 +657,23 @@ func (x *CapNProto2Serializer) Marshal(o interface{}) ([]byte, error) {
 
 func (x *CapNProto2Serializer) Unmarshal(d []byte, i interface{}) error {
 	a := i.(*A)
-	m, _ := capnp.Unmarshal(d)
-	o, _ := ReadRootCapnp2A(m)
-	a.Name, _ = o.Name()
+	m, err := capnp.Unmarshal(d)
+	if err != nil {
+		return err
+	}
+	o, err := ReadRootCapnp2A(m)
+	if err != nil {
+		return err
+	}
+	a.Name, err = o.Name()
+	if err != nil {
+		return err
+	}
 	a.BirthDay = time.Unix(0, o.BirthDay())
-	a.Phone, _ = o.Phone()
+	a.Phone, err = o.Phone()
+	if err != nil {
+		return err
+	}
 	a.Siblings = int(o.Siblings())
 	a.Spouse = o.Spouse()
 	a.Money = o.Money()
@@ -691,17 +709,32 @@ func (s *HproseSerializer) Marshal(o interface{}) ([]byte, error) {
 	return buf.Bytes()[l:], nil
 }
 
-func (s *HproseSerializer) Unmarshal(d []byte, i interface{}) error {
+func (s *HproseSerializer) Unmarshal(d []byte, i interface{}) (err error) {
 	o := i.(*A)
 	reader := s.reader
 	reader.Stream = &hprose.BytesReader{Bytes: d, Pos: 0}
-	o.Name, _ = reader.ReadString()
-	o.BirthDay, _ = reader.ReadDateTime()
-	o.Phone, _ = reader.ReadString()
-	o.Siblings, _ = reader.ReadInt()
-	o.Spouse, _ = reader.ReadBool()
-	o.Money, _ = reader.ReadFloat64()
-	return nil
+	o.Name, err = reader.ReadString()
+	if err != nil {
+		return err
+	}
+	o.BirthDay, err = reader.ReadDateTime()
+	if err != nil {
+		return err
+	}
+	o.Phone, err = reader.ReadString()
+	if err != nil {
+		return err
+	}
+	o.Siblings, err = reader.ReadInt()
+	if err != nil {
+		return err
+	}
+	o.Spouse, err = reader.ReadBool()
+	if err != nil {
+		return err
+	}
+	o.Money, err = reader.ReadFloat64()
+	return err
 }
 
 func BenchmarkHproseMarshal(b *testing.B) {
@@ -887,7 +920,11 @@ func BenchmarkGogoprotobufUnmarshal(b *testing.B) {
 	ser := make([][]byte, len(data))
 	var serialSize int
 	for i, d := range data {
-		ser[i], _ = proto.Marshal(d)
+		var err error
+		ser[i], err = proto.Marshal(d)
+		if err != nil {
+			b.Fatal(err)
+		}
 		serialSize += len(ser[i])
 	}
 	b.ReportMetric(float64(serialSize)/float64(len(data)), "B/serial")
