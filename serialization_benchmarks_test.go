@@ -12,10 +12,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/niubaoshu/gotiny"
-	capnp "zombiezen.com/go/capnproto2"
-
 	"github.com/Sereal/Sereal/Go/sereal"
+	"github.com/alecthomas/binary"
 	"github.com/davecgh/go-xdr/xdr"
 	capn "github.com/glycerine/go-capnproto"
 	"github.com/gogo/protobuf/proto"
@@ -24,15 +22,15 @@ import (
 	hprose2 "github.com/hprose/hprose-golang/io"
 	ikea "github.com/ikkerens/ikeapack"
 	jsoniter "github.com/json-iterator/go"
+	"github.com/niubaoshu/gotiny"
+	ssz "github.com/prysmaticlabs/go-ssz"
 	shamaton "github.com/shamaton/msgpack"
 	"github.com/tinylib/msgp/msgp"
 	"github.com/ugorji/go/codec"
 	vmihailenco "github.com/vmihailenco/msgpack"
 	"go.dedis.ch/protobuf"
 	"gopkg.in/mgo.v2/bson"
-
-	"github.com/alecthomas/binary"
-	ssz "github.com/prysmaticlabs/go-ssz"
+	capnp "zombiezen.com/go/capnproto2"
 )
 
 var (
@@ -66,10 +64,10 @@ func generate() []*A {
 type Serializer interface {
 	Marshal(o interface{}) ([]byte, error)
 	Unmarshal(d []byte, o interface{}) error
-	String() string
 }
 
 func benchMarshal(b *testing.B, s Serializer) {
+	b.Helper()
 	data := generate()
 	b.ReportAllocs()
 	b.ResetTimer()
@@ -109,6 +107,7 @@ func cmpAliases(a, b []string) bool {
 }
 
 func benchUnmarshal(b *testing.B, s Serializer) {
+	b.Helper()
 	b.StopTimer()
 	data := generate()
 	ser := make([][]byte, len(data))
@@ -131,7 +130,7 @@ func benchUnmarshal(b *testing.B, s Serializer) {
 		o := &A{}
 		err := s.Unmarshal(ser[n], o)
 		if err != nil {
-			b.Fatalf("%s failed to unmarshal: %s (%s)", s, err, ser[n])
+			b.Fatal(err)
 		}
 		// Validate unmarshalled data.
 		if validate != "" {
@@ -168,8 +167,6 @@ func (g GotinySerializer) Unmarshal(d []byte, o interface{}) error {
 	g.dec.Decode(d, o)
 	return nil
 }
-
-func (GotinySerializer) String() string { return "gotiny" }
 
 func NewGotinySerializer(o interface{}) Serializer {
 	ot := reflect.TypeOf(o)
@@ -268,8 +265,6 @@ func (m MsgpSerializer) Unmarshal(d []byte, o interface{}) error {
 	return err
 }
 
-func (m MsgpSerializer) String() string { return "Msgp" }
-
 func BenchmarkMsgpMarshal(b *testing.B) {
 	benchMarshal(b, MsgpSerializer{})
 }
@@ -288,10 +283,6 @@ func (m VmihailencoMsgpackSerializer) Marshal(o interface{}) ([]byte, error) {
 
 func (m VmihailencoMsgpackSerializer) Unmarshal(d []byte, o interface{}) error {
 	return vmihailenco.Unmarshal(d, o)
-}
-
-func (m VmihailencoMsgpackSerializer) String() string {
-	return "vmihailenco-msgpack"
 }
 
 func BenchmarkVmihailencoMsgpackMarshal(b *testing.B) {
@@ -314,10 +305,6 @@ func (j JsonSerializer) Unmarshal(d []byte, o interface{}) error {
 	return json.Unmarshal(d, o)
 }
 
-func (j JsonSerializer) String() string {
-	return "json"
-}
-
 func BenchmarkJsonMarshal(b *testing.B) {
 	benchMarshal(b, JsonSerializer{})
 }
@@ -336,10 +323,6 @@ func (j JsonIterSerializer) Marshal(o interface{}) ([]byte, error) {
 
 func (j JsonIterSerializer) Unmarshal(d []byte, o interface{}) error {
 	return jsoniterFast.Unmarshal(d, o)
-}
-
-func (j JsonIterSerializer) String() string {
-	return "jsoniter"
 }
 
 func BenchmarkJsonIterMarshal(b *testing.B) {
@@ -362,8 +345,6 @@ func (m EasyJSONSerializer) Unmarshal(d []byte, o interface{}) error {
 	return o.(*A).UnmarshalJSON(d)
 }
 
-func (m EasyJSONSerializer) String() string { return "EasyJson" }
-
 func BenchmarkEasyJsonMarshal(b *testing.B) {
 	benchMarshal(b, EasyJSONSerializer{})
 }
@@ -382,10 +363,6 @@ func (m BsonSerializer) Marshal(o interface{}) ([]byte, error) {
 
 func (m BsonSerializer) Unmarshal(d []byte, o interface{}) error {
 	return bson.Unmarshal(d, o)
-}
-
-func (j BsonSerializer) String() string {
-	return "bson"
 }
 
 func BenchmarkBsonMarshal(b *testing.B) {
@@ -415,10 +392,6 @@ func (g *GobSerializer) Unmarshal(d []byte, o interface{}) error {
 	g.b.Write(d)
 	err := g.dec.Decode(o)
 	return err
-}
-
-func (g GobSerializer) String() string {
-	return "gob"
 }
 
 func NewGobSerializer() *GobSerializer {
@@ -460,10 +433,6 @@ func (x XDRSerializer) Unmarshal(d []byte, o interface{}) error {
 	return err
 }
 
-func (x XDRSerializer) String() string {
-	return "xdr"
-}
-
 func BenchmarkXDRMarshal(b *testing.B) {
 	benchMarshal(b, XDRSerializer{})
 }
@@ -493,10 +462,6 @@ func (u *UgorjiCodecSerializer) Marshal(o interface{}) ([]byte, error) {
 
 func (u *UgorjiCodecSerializer) Unmarshal(d []byte, o interface{}) error {
 	return codec.NewDecoderBytes(d, u.h).Decode(o)
-}
-
-func (u *UgorjiCodecSerializer) String() string {
-	return "ugorjicodec-" + u.name
 }
 
 func BenchmarkUgorjiCodecMsgpackMarshal(b *testing.B) {
@@ -536,10 +501,6 @@ func (s SerealSerializer) Unmarshal(d []byte, o interface{}) error {
 	return err
 }
 
-func (s SerealSerializer) String() string {
-	return "sereal"
-}
-
 func BenchmarkSerealMarshal(b *testing.B) {
 	benchMarshal(b, SerealSerializer{})
 }
@@ -558,10 +519,6 @@ func (b BinarySerializer) Marshal(o interface{}) ([]byte, error) {
 
 func (b BinarySerializer) Unmarshal(d []byte, o interface{}) error {
 	return binary.Unmarshal(d, o)
-}
-
-func (b BinarySerializer) String() string {
-	return "binary"
 }
 
 func BenchmarkBinaryMarshal(b *testing.B) {
@@ -615,10 +572,6 @@ func (s *FlatBufferSerializer) Unmarshal(d []byte, i interface{}) error {
 	return nil
 }
 
-func (s *FlatBufferSerializer) String() string {
-	return "FlatBuffer"
-}
-
 func BenchmarkFlatBuffersMarshal(b *testing.B) {
 	benchMarshal(b, &FlatBufferSerializer{flatbuffers.NewBuilder(0)})
 }
@@ -661,10 +614,6 @@ func (x *CapNProtoSerializer) Unmarshal(d []byte, i interface{}) error {
 	a.Spouse = o.Spouse()
 	a.Money = o.Money()
 	return nil
-}
-
-func (x *CapNProtoSerializer) String() string {
-	return "CapNProto"
 }
 
 func BenchmarkCapNProtoMarshal(b *testing.B) {
@@ -713,10 +662,6 @@ func (x *CapNProto2Serializer) Unmarshal(d []byte, i interface{}) error {
 	return nil
 }
 
-func (x *CapNProto2Serializer) String() string {
-	return "CapNProto2"
-}
-
 func BenchmarkCapNProto2Marshal(b *testing.B) {
 	benchMarshal(b, &CapNProto2Serializer{capnp.SingleSegment(nil)})
 }
@@ -757,10 +702,6 @@ func (s *HproseSerializer) Unmarshal(d []byte, i interface{}) error {
 	o.Spouse, _ = reader.ReadBool()
 	o.Money, _ = reader.ReadFloat64()
 	return nil
-}
-
-func (s *HproseSerializer) String() string {
-	return "Hprose"
 }
 
 func BenchmarkHproseMarshal(b *testing.B) {
@@ -810,10 +751,6 @@ func (s Hprose2Serializer) Unmarshal(d []byte, i interface{}) error {
 	return nil
 }
 
-func (s Hprose2Serializer) String() string {
-	return "Hprose2"
-}
-
 func BenchmarkHprose2Marshal(b *testing.B) {
 	writer := hprose2.NewWriter(true)
 	benchMarshal(b, Hprose2Serializer{writer: writer})
@@ -835,10 +772,6 @@ func (m ProtobufSerializer) Marshal(o interface{}) ([]byte, error) {
 
 func (m ProtobufSerializer) Unmarshal(d []byte, o interface{}) error {
 	return protobuf.Decode(d, o)
-}
-
-func (m ProtobufSerializer) String() string {
-	return "protobuf"
 }
 
 func BenchmarkProtobufMarshal(b *testing.B) {
@@ -1357,10 +1290,6 @@ func (m ShamatonMapMsgpackSerializer) Unmarshal(d []byte, o interface{}) error {
 	return shamaton.DecodeStructAsMap(d, o)
 }
 
-func (m ShamatonMapMsgpackSerializer) String() string {
-	return "shamaton-map-msgpack"
-}
-
 func BenchmarkShamatonMapMsgpackMarshal(b *testing.B) {
 	benchMarshal(b, ShamatonMapMsgpackSerializer{})
 }
@@ -1379,10 +1308,6 @@ func (m ShamatonArrayMsgpackSerializer) Marshal(o interface{}) ([]byte, error) {
 
 func (m ShamatonArrayMsgpackSerializer) Unmarshal(d []byte, o interface{}) error {
 	return shamaton.DecodeStructAsArray(d, o)
-}
-
-func (m ShamatonArrayMsgpackSerializer) String() string {
-	return "shamaton-array-msgpack"
 }
 
 func BenchmarkShamatonArrayMsgpackMarshal(b *testing.B) {
