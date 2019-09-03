@@ -2,7 +2,7 @@ struct GencodeUnsafeA {
     Name     string
     BirthDay int64
     Phone    string
-    Siblings vint64
+    Siblings vint32
     Spouse   bool
     Money    float64
 }
