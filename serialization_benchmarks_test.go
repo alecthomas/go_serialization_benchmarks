@@ -73,9 +73,10 @@ func benchMarshal(b *testing.B, s Serializer) {
 	b.ResetTimer()
 	var serialSize int
 	for i := 0; i < b.N; i++ {
-		bytes, err := s.Marshal(data[rand.Intn(len(data))])
+		o := data[rand.Intn(len(data))]
+		bytes, err := s.Marshal(o)
 		if err != nil {
-			b.Fatal(err)
+			b.Fatalf("marshal error %s for %#v", err, o)
 		}
 		serialSize += len(bytes)
 	}
@@ -130,7 +131,7 @@ func benchUnmarshal(b *testing.B, s Serializer) {
 		o := &A{}
 		err := s.Unmarshal(ser[n], o)
 		if err != nil {
-			b.Fatal(err)
+			b.Fatalf("unmarshal error %s for %#x / %q", err, ser[n], ser[n])
 		}
 		// Validate unmarshalled data.
 		if validate != "" {
