@@ -445,48 +445,36 @@ func BenchmarkXDRUnmarshal(b *testing.B) {
 // github.com/ugorji/go/codec
 
 type UgorjiCodecSerializer struct {
-	name string
-	h    codec.Handle
-}
-
-func NewUgorjiCodecSerializer(name string, h codec.Handle) *UgorjiCodecSerializer {
-	return &UgorjiCodecSerializer{
-		name: name,
-		h:    h,
-	}
+	codec.Handle
 }
 
 func (u *UgorjiCodecSerializer) Marshal(o interface{}) ([]byte, error) {
 	var bs []byte
-	return bs, codec.NewEncoderBytes(&bs, u.h).Encode(o)
+	return bs, codec.NewEncoderBytes(&bs, u.Handle).Encode(o)
 }
 
 func (u *UgorjiCodecSerializer) Unmarshal(d []byte, o interface{}) error {
-	return codec.NewDecoderBytes(d, u.h).Decode(o)
+	return codec.NewDecoderBytes(d, u.Handle).Decode(o)
 }
 
 func BenchmarkUgorjiCodecMsgpackMarshal(b *testing.B) {
-	s := NewUgorjiCodecSerializer("msgpack", &codec.MsgpackHandle{})
-	benchMarshal(b, s)
+	benchMarshal(b, &UgorjiCodecSerializer{&codec.MsgpackHandle{}})
 }
 
 func BenchmarkUgorjiCodecMsgpackUnmarshal(b *testing.B) {
-	s := NewUgorjiCodecSerializer("msgpack", &codec.MsgpackHandle{})
-	benchUnmarshal(b, s)
+	benchUnmarshal(b, &UgorjiCodecSerializer{&codec.MsgpackHandle{}})
 }
 
 func BenchmarkUgorjiCodecBincMarshal(b *testing.B) {
 	h := &codec.BincHandle{}
 	h.AsSymbols = 0
-	s := NewUgorjiCodecSerializer("binc", h)
-	benchMarshal(b, s)
+	benchMarshal(b, &UgorjiCodecSerializer{h})
 }
 
 func BenchmarkUgorjiCodecBincUnmarshal(b *testing.B) {
 	h := &codec.BincHandle{}
 	h.AsSymbols = 0
-	s := NewUgorjiCodecSerializer("binc", h)
-	benchUnmarshal(b, s)
+	benchUnmarshal(b, &UgorjiCodecSerializer{h})
 }
 
 // github.com/Sereal/Sereal/Go/sereal
