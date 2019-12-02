@@ -22,6 +22,7 @@ import (
 	hprose2 "github.com/hprose/hprose-golang/io"
 	ikea "github.com/ikkerens/ikeapack"
 	jsoniter "github.com/json-iterator/go"
+	easyjson "github.com/mailru/easyjson"
 	"github.com/niubaoshu/gotiny"
 	ssz "github.com/prysmaticlabs/go-ssz"
 	shamaton "github.com/shamaton/msgpack"
@@ -339,11 +340,11 @@ func BenchmarkJsonIterUnmarshal(b *testing.B) {
 type EasyJSONSerializer struct{}
 
 func (m EasyJSONSerializer) Marshal(o interface{}) ([]byte, error) {
-	return o.(*A).MarshalJSON()
+	return easyjson.Marshal(o.(easyjson.Marshaler))
 }
 
 func (m EasyJSONSerializer) Unmarshal(d []byte, o interface{}) error {
-	return o.(*A).UnmarshalJSON(d)
+	return easyjson.Unmarshal(d, o.(*A))
 }
 
 func BenchmarkEasyJsonMarshal(b *testing.B) {
