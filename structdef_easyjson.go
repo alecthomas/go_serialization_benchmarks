@@ -105,23 +105,9 @@ func easyjsonB0f55b16EncodeGithubComAlecthomasGoSerializationBenchmarks(out *jwr
 	out.RawByte('}')
 }
 
-// MarshalJSON supports json.Marshaler interface
-func (v NoTimeNoStringNoFloatA) MarshalJSON() ([]byte, error) {
-	w := jwriter.Writer{}
-	easyjsonB0f55b16EncodeGithubComAlecthomasGoSerializationBenchmarks(&w, v)
-	return w.Buffer.BuildBytes(), w.Error
-}
-
 // MarshalEasyJSON supports easyjson.Marshaler interface
 func (v NoTimeNoStringNoFloatA) MarshalEasyJSON(w *jwriter.Writer) {
 	easyjsonB0f55b16EncodeGithubComAlecthomasGoSerializationBenchmarks(w, v)
-}
-
-// UnmarshalJSON supports json.Unmarshaler interface
-func (v *NoTimeNoStringNoFloatA) UnmarshalJSON(data []byte) error {
-	r := jlexer.Lexer{Data: data}
-	easyjsonB0f55b16DecodeGithubComAlecthomasGoSerializationBenchmarks(&r, v)
-	return r.Error()
 }
 
 // UnmarshalEasyJSON supports easyjson.Unmarshaler interface
@@ -206,23 +192,9 @@ func easyjsonB0f55b16EncodeGithubComAlecthomasGoSerializationBenchmarks1(out *jw
 	out.RawByte('}')
 }
 
-// MarshalJSON supports json.Marshaler interface
-func (v NoTimeA) MarshalJSON() ([]byte, error) {
-	w := jwriter.Writer{}
-	easyjsonB0f55b16EncodeGithubComAlecthomasGoSerializationBenchmarks1(&w, v)
-	return w.Buffer.BuildBytes(), w.Error
-}
-
 // MarshalEasyJSON supports easyjson.Marshaler interface
 func (v NoTimeA) MarshalEasyJSON(w *jwriter.Writer) {
 	easyjsonB0f55b16EncodeGithubComAlecthomasGoSerializationBenchmarks1(w, v)
-}
-
-// UnmarshalJSON supports json.Unmarshaler interface
-func (v *NoTimeA) UnmarshalJSON(data []byte) error {
-	r := jlexer.Lexer{Data: data}
-	easyjsonB0f55b16DecodeGithubComAlecthomasGoSerializationBenchmarks1(&r, v)
-	return r.Error()
 }
 
 // UnmarshalEasyJSON supports easyjson.Unmarshaler interface
@@ -309,23 +281,9 @@ func easyjsonB0f55b16EncodeGithubComAlecthomasGoSerializationBenchmarks2(out *jw
 	out.RawByte('}')
 }
 
-// MarshalJSON supports json.Marshaler interface
-func (v A) MarshalJSON() ([]byte, error) {
-	w := jwriter.Writer{}
-	easyjsonB0f55b16EncodeGithubComAlecthomasGoSerializationBenchmarks2(&w, v)
-	return w.Buffer.BuildBytes(), w.Error
-}
-
 // MarshalEasyJSON supports easyjson.Marshaler interface
 func (v A) MarshalEasyJSON(w *jwriter.Writer) {
 	easyjsonB0f55b16EncodeGithubComAlecthomasGoSerializationBenchmarks2(w, v)
-}
-
-// UnmarshalJSON supports json.Unmarshaler interface
-func (v *A) UnmarshalJSON(data []byte) error {
-	r := jlexer.Lexer{Data: data}
-	easyjsonB0f55b16DecodeGithubComAlecthomasGoSerializationBenchmarks2(&r, v)
-	return r.Error()
 }
 
 // UnmarshalEasyJSON supports easyjson.Unmarshaler interface

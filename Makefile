@@ -18,7 +18,7 @@ msgp_gen.go: structdef.go
 	go run github.com/tinylib/msgp -o msgp_gen.go -file structdef.go -io=false -tests=false
 
 structdef_easyjson.go: structdef.go
-	go run github.com/mailru/easyjson/easyjson -all structdef.go
+	go run github.com/mailru/easyjson/easyjson -no_std_marshalers -all structdef.go
 
 structdef-gogo.pb.go: structdef-gogo.proto
 	protoc --gogofaster_out=. -I. -I${GOPATH}/src  -I${GOPATH}/src/github.com/gogo/protobuf/protobuf structdef-gogo.proto
