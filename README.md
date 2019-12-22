@@ -13,7 +13,7 @@ This is a test suite for benchmarking various Go serialization methods.
 - [github.com/davecgh/go-xdr/xdr](https://github.com/davecgh/go-xdr)
 - [github.com/Sereal/Sereal/Go/sereal](https://github.com/Sereal/Sereal)
 - [github.com/ugorji/go/codec](https://github.com/ugorji/go/tree/master/codec)
-- [gopkg.in/vmihailenco/msgpack.v2](https://github.com/vmihailenco/msgpack)
+- [github.com/vmihailenco/msgpack/v4](https://github.com/vmihailenco/msgpack)
 - [labix.org/v2/mgo/bson](https://labix.org/v2/mgo/bson)
 - [github.com/tinylib/msgp](https://github.com/tinylib/msgp) *(code generator for msgpack)*
 - [github.com/golang/protobuf](https://github.com/golang/protobuf) (generated code)
