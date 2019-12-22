@@ -64,7 +64,7 @@ install:
 	go get -u github.com/tinylib/msgp/msgp
 	go get -u github.com/ugorji/go/codec
 	go get -u gopkg.in/mgo.v2/bson
-	go get -u gopkg.in/vmihailenco/msgpack.v2
+	go get -u github.com/vmihailenco/msgpack/v4
 	go get -u github.com/golang/protobuf/proto
 	go get -u github.com/hprose/hprose-go/io
 	go get -u github.com/pascaldekloe/colfer/cmd/colf
