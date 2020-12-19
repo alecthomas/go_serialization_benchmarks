@@ -1411,3 +1411,14 @@ func BenchmarkSSZNoTimeNoStringNoFloatAUnmarshal(b *testing.B) {
 		}
 	}
 }
+
+// github.com/itsmontoya/mum
+func BenchmarkMumMarshal(b *testing.B) {
+	s := newMumSerializer()
+	benchMarshal(b, s)
+}
+
+func BenchmarkMumUnmarshal(b *testing.B) {
+	s := newMumSerializer()
+	benchUnmarshal(b, s)
+}
