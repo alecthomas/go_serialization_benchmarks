@@ -20,7 +20,7 @@ require (
 	github.com/hprose/hprose-go v0.0.0-20161031134501-83de97da5004
 	github.com/hprose/hprose-golang v2.0.4+incompatible
 	github.com/ikkerens/ikeapack v1.5.1
-	github.com/itsmontoya/mum v0.2.0
+	github.com/itsmontoya/mum v0.3.0
 	github.com/json-iterator/go v1.1.7
 	github.com/kr/pretty v0.1.0 // indirect
 	github.com/linkedin/goavro v2.1.0+incompatible

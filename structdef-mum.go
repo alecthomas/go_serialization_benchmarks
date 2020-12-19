@@ -47,7 +47,7 @@ func (m *mumSerializer) Unmarshal(bs []byte, value interface{}) (err error) {
 }
 
 // MarshalMum is an encoding helper func
-func (a *A) MarshalMum(enc *mum.Encoder) {
+func (a *A) MarshalMum(enc *mum.Encoder) (err error) {
 	enc.String(a.Name)
 	enc.Int64(a.BirthDay.UnixNano())
 	enc.String(a.Phone)
