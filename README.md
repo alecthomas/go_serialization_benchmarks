@@ -29,6 +29,7 @@ This is a test suite for benchmarking various Go serialization methods.
 - [github.com/ikkerens/ikeapack](https://github.com/ikkerens/ikeapack)
 - [github.com/niubaoshu/gotiny](https://github.com/niubaoshu/gotiny)
 - [github.com/prysmaticlabs/go-ssz](https://github.com/prysmaticlabs/go-ssz)
+- [github.com/200sc/bebop](https://github.com/200sc/bebop) (generated code)
 
 ## Running the benchmarks
 

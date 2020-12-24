@@ -1423,3 +1423,66 @@ func BenchmarkMumUnmarshal(b *testing.B) {
 	s := newMumSerializer()
 	benchUnmarshal(b, s)
 }
+
+// github.com/200sc/bebop
+
+func generateBebopA() []*BebopBufA {
+	a := make([]*BebopBufA, 0, 1000)
+	for i := 0; i < 1000; i++ {
+		a = append(a, &BebopBufA{
+			Name: randString(16),
+			// bebop does support times, but as 100-nanosecond ticks, losing some precision
+			BirthDay: uint64(time.Now().UnixNano()),
+			Phone:    randString(10),
+			Siblings: rand.Int31n(5),
+			Spouse:   rand.Intn(2) == 1,
+			Money:    rand.Float64(),
+		})
+	}
+	return a
+}
+
+func BenchmarkBebopaMarshal(b *testing.B) {
+	data := generateBebopA()
+	b.ReportAllocs()
+	b.ResetTimer()
+	var serialSize int
+	for i := 0; i < b.N; i++ {
+		out := data[rand.Intn(len(data))].MarshalBebop()
+		serialSize += len(out)
+	}
+	b.ReportMetric(float64(serialSize)/float64(b.N), "B/serial")
+}
+
+func BenchmarkBebopaUnmarshal(b *testing.B) {
+	b.StopTimer()
+	data := generateBebopA()
+	ser := make([][]byte, len(data))
+	var serialSize int
+	for i, d := range data {
+		ser[i] = d.MarshalBebop()
+		serialSize += len(ser[i])
+	}
+	b.ReportMetric(float64(serialSize)/float64(len(data)), "B/serial")
+	buf := new(bytes.Buffer)
+	buf.Grow(100)
+	b.ReportAllocs()
+	b.StartTimer()
+
+	for i := 0; i < b.N; i++ {
+		n := rand.Intn(len(ser))
+		o := BebopBufA{}
+		err := o.UnmarshalBebop(ser[n])
+		if err != nil {
+			b.Fatalf("bebop failed to unmarshal: %s (%s)", err, ser[n])
+		}
+		// Validate unmarshalled data.
+		if validate != "" {
+			i := data[n]
+			correct := o.Name == i.Name && o.Phone == i.Phone && o.Siblings == i.Siblings && o.Spouse == i.Spouse && o.Money == i.Money && o.BirthDay == i.BirthDay
+			if !correct {
+				b.Fatalf("unmarshaled object differed:\n%v\n%v", i, o)
+			}
+		}
+	}
+}
