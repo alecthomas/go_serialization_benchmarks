@@ -1442,7 +1442,7 @@ func generateBebopA() []*BebopBufA {
 	return a
 }
 
-func BenchmarkBebopaMarshal(b *testing.B) {
+func BenchmarkBebopMarshal(b *testing.B) {
 	data := generateBebopA()
 	b.ReportAllocs()
 	b.ResetTimer()
@@ -1454,7 +1454,7 @@ func BenchmarkBebopaMarshal(b *testing.B) {
 	b.ReportMetric(float64(serialSize)/float64(b.N), "B/serial")
 }
 
-func BenchmarkBebopaUnmarshal(b *testing.B) {
+func BenchmarkBebopUnmarshal(b *testing.B) {
 	b.StopTimer()
 	data := generateBebopA()
 	ser := make([][]byte, len(data))
