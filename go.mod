@@ -4,6 +4,8 @@ go 1.13
 
 require (
 	github.com/Hatch1fy/errors v0.1.0 // indirect
+	github.com/200sc/bebop v0.0.8
+	github.com/DataDog/zstd v1.4.5 // indirect
 	github.com/Sereal/Sereal v0.0.0-20190618215532-0b8ac451a863
 	github.com/alecthomas/binary v0.0.0-20171101084825-6e8df1b1fb9d
 	github.com/andyleap/gencode v0.0.0-20171124163308-e1423834d4b4 // indirect
