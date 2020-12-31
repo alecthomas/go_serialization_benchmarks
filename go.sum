@@ -1,3 +1,5 @@
+github.com/Hatch1fy/errors v0.1.0 h1:O0eV+wlv/uF++/IQFxPaTVQOCHxzEXFFX0cMrIs8GSs=
+github.com/Hatch1fy/errors v0.1.0/go.mod h1:ghvTU0wQ49AH7DcAfdKmWjBDjgEOoc1ltdPhDlGPz7w=
 github.com/Sereal/Sereal v0.0.0-20190618215532-0b8ac451a863 h1:BRrxwOZBolJN4gIwvZMJY1tzqBvQgpaZiQRuIDD40jM=
 github.com/Sereal/Sereal v0.0.0-20190618215532-0b8ac451a863/go.mod h1:D0JMgToj/WdxCgd30Kc1UcA9E+WdZoJqeVOuYW7iTBM=
 github.com/alecthomas/binary v0.0.0-20171101084825-6e8df1b1fb9d h1:ndgr53uGotk3W0l6njh0jusaJw8+ZwZn8EKnx8QauJk=
@@ -34,6 +36,16 @@ github.com/hprose/hprose-golang v2.0.4+incompatible h1:xUZLSShgv5+KCfK3RCsac8DyW
 github.com/hprose/hprose-golang v2.0.4+incompatible/go.mod h1:FfwwCUQFF3f5t03SrzdSghXVZkC01uEJS6Xwzcz0NOo=
 github.com/ikkerens/ikeapack v1.5.1 h1:1fW1eazVsY4/ZTvP14JVxzllfeeRGMBrFEbkhJpxRD0=
 github.com/ikkerens/ikeapack v1.5.1/go.mod h1:LeFYIQ/VyvJZrwLoDZ46NJTiUrjjlo/4T0bRmxUS20I=
+github.com/itsmontoya/mum v0.1.1 h1:EY7x3jamv9hoInopOtANpV3dBOQ8B+IVYODzmlV+BgI=
+github.com/itsmontoya/mum v0.1.1/go.mod h1:TwPOHgiVpDvdtWgSQmW9J0ISlRSwW1J9RnmKEkGQZIY=
+github.com/itsmontoya/mum v0.2.0 h1:iNne+bcglhdLp4Vvg3oLATChwumB0K41vrVrZzsejic=
+github.com/itsmontoya/mum v0.2.0/go.mod h1:ARRdX1nkNu/x+wPNQNcX4UGPQPl0b33+gFFUhk2a1Oo=
+github.com/itsmontoya/mum v0.3.0 h1:ISw2jiTGt9ozSKSQSNw2TcHj7/ocgDtTowJ30Y833GE=
+github.com/itsmontoya/mum v0.3.0/go.mod h1:ARRdX1nkNu/x+wPNQNcX4UGPQPl0b33+gFFUhk2a1Oo=
+github.com/itsmontoya/mum v0.3.1 h1:Jpd9EpQ7RcUAwOVzHeVM30BgIoNGwQutLPW9DxaqZII=
+github.com/itsmontoya/mum v0.3.1/go.mod h1:ARRdX1nkNu/x+wPNQNcX4UGPQPl0b33+gFFUhk2a1Oo=
+github.com/itsmontoya/mum v0.3.2 h1:yCU2K1tJ74CFtZ1aC/hY5qSYMUYO6vXWv326pHPNhhs=
+github.com/itsmontoya/mum v0.3.2/go.mod h1:ARRdX1nkNu/x+wPNQNcX4UGPQPl0b33+gFFUhk2a1Oo=
 github.com/json-iterator/go v1.1.7 h1:KfgG9LzI+pYjr4xvmz/5H4FXjokeP+rlHLhv3iH62Fo=
 github.com/json-iterator/go v1.1.7/go.mod h1:KdQUCv79m/52Kvf8AW2vK1V8akMuk1QjK/uOdHXbAo4=
 github.com/kisielk/errcheck v1.1.0/go.mod h1:EZBBE59ingxPouuu3KfxchcWSUPOHkagtvWXihfKN4Q=

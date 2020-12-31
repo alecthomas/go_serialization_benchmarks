@@ -3,6 +3,7 @@ module github.com/alecthomas/go_serialization_benchmarks
 go 1.13
 
 require (
+	github.com/Hatch1fy/errors v0.1.0 // indirect
 	github.com/Sereal/Sereal v0.0.0-20190618215532-0b8ac451a863
 	github.com/alecthomas/binary v0.0.0-20171101084825-6e8df1b1fb9d
 	github.com/andyleap/gencode v0.0.0-20171124163308-e1423834d4b4 // indirect
@@ -19,6 +20,7 @@ require (
 	github.com/hprose/hprose-go v0.0.0-20161031134501-83de97da5004
 	github.com/hprose/hprose-golang v2.0.4+incompatible
 	github.com/ikkerens/ikeapack v1.5.1
+	github.com/itsmontoya/mum v0.3.2
 	github.com/json-iterator/go v1.1.7
 	github.com/kr/pretty v0.1.0 // indirect
 	github.com/linkedin/goavro v2.1.0+incompatible
