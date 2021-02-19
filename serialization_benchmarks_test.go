@@ -25,7 +25,7 @@ import (
 	easyjson "github.com/mailru/easyjson"
 	"github.com/niubaoshu/gotiny"
 	ssz "github.com/prysmaticlabs/go-ssz"
-	shamaton "github.com/shamaton/msgpack"
+	shamaton "github.com/shamaton/msgpack/v2"
 	"github.com/tinylib/msgp/msgp"
 	"github.com/ugorji/go/codec"
 	vmihailenco "github.com/vmihailenco/msgpack/v4"
@@ -1310,11 +1310,11 @@ func BenchmarkIkeaUnmarshal(b *testing.B) {
 type ShamatonMapMsgpackSerializer struct{}
 
 func (m ShamatonMapMsgpackSerializer) Marshal(o interface{}) ([]byte, error) {
-	return shamaton.EncodeStructAsMap(o)
+	return shamaton.MarshalAsMap(o)
 }
 
 func (m ShamatonMapMsgpackSerializer) Unmarshal(d []byte, o interface{}) error {
-	return shamaton.DecodeStructAsMap(d, o)
+	return shamaton.UnmarshalAsMap(d, o)
 }
 
 func BenchmarkShamatonMapMsgpackMarshal(b *testing.B) {
@@ -1330,11 +1330,11 @@ func BenchmarkShamatonMapMsgpackUnmarshal(b *testing.B) {
 type ShamatonArrayMsgpackSerializer struct{}
 
 func (m ShamatonArrayMsgpackSerializer) Marshal(o interface{}) ([]byte, error) {
-	return shamaton.EncodeStructAsArray(o)
+	return shamaton.MarshalAsArray(o)
 }
 
 func (m ShamatonArrayMsgpackSerializer) Unmarshal(d []byte, o interface{}) error {
-	return shamaton.DecodeStructAsArray(d, o)
+	return shamaton.UnmarshalAsArray(d, o)
 }
 
 func BenchmarkShamatonArrayMsgpackMarshal(b *testing.B) {
