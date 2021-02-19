@@ -47,7 +47,7 @@ structdef-bebop.go:
 	bebopc-go -i structdef-bebop.bop -o structdef-bebop.go --package goserbench
 
 structdef_msgpackgen.go: structdef.go
-	go run github.com/shamaton/msgpackgen -output-file structdef_msgpackgen.go
+	go run github.com/shamaton/msgpackgen -input-file structdef.go -output-file structdef_msgpackgen.go -strict
 
 .PHONY: clean
 clean:
