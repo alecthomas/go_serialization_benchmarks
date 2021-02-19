@@ -14,6 +14,8 @@ github.com/andyleap/parser v0.0.0-20160126201130-db5a13a7cd46 h1:t5xfxrFvtVIPcpt
 github.com/andyleap/parser v0.0.0-20160126201130-db5a13a7cd46/go.mod h1:optl5aMZUO+oj3KCDaQ0WYQMP6QhUQXXDAHQnCA3wI8=
 github.com/calmh/xdr v1.1.0 h1:U/Dd4CXNLoo8EiQ4ulJUXkgO1/EyQLgDKLgpY1SOoJE=
 github.com/calmh/xdr v1.1.0/go.mod h1:E8sz2ByAdXC8MbANf1LCRYzedSnnc+/sXXJs/PVqoeg=
+github.com/dave/jennifer v1.4.1 h1:XyqG6cn5RQsTj3qlWQTKlRGAyrTcsk1kUmWdZBzRjDw=
+github.com/dave/jennifer v1.4.1/go.mod h1:7jEdnm+qBcxl8PC0zyp7vxcpSRnzXSt9r39tpTVGlwA=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/davecgh/go-xdr v0.0.0-20161123171359-e6a2ba005892 h1:qg9VbHo1TlL0KDM0vYvBG9EY0X0Yku5WYIPoFWt8f6o=
@@ -92,6 +94,8 @@ github.com/shamaton/msgpack v1.1.1/go.mod h1:ibiaNQRTCUISAYkkyOpaSCEBiCAxXe6u6Mu
 github.com/shamaton/msgpack v1.2.1 h1:40cwW7YAEdOIxcxIsUkAxSMUyYWZUyNiazI5AyiBntI=
 github.com/shamaton/msgpack/v2 v2.0.0 h1:qaFDySYUa5LPaWNBQc9wA72YGaNts86aW9364i8ztGM=
 github.com/shamaton/msgpack/v2 v2.0.0/go.mod h1:aTUEmh31ziGX1Ml7wMPLVY0f4vT3CRsCvZRoSCs+VGg=
+github.com/shamaton/msgpackgen v0.1.1 h1:Aq+uhF53vaYO0kDgsEt4O+ogE1tU3okB0SyhnNllAzo=
+github.com/shamaton/msgpackgen v0.1.1/go.mod h1:IPBa+TaqE5H+APs+KuHNlYpMTnhQTLmb84qyJYdlzFQ=
 github.com/stretchr/objx v0.1.0/go.mod h1:HFkY916IF+rwdDfMAkV7OtwuqBVzrE8GR6GFx+wExME=
 github.com/stretchr/testify v1.3.0/go.mod h1:M5WIy9Dh21IEIfnGCwXGc5bZfKNJtfHm1UVUgZn+9EI=
 github.com/tinylib/msgp v1.1.0 h1:9fQd+ICuRIu/ue4vxJZu6/LzxN0HwMds2nq/0cFvxHU=

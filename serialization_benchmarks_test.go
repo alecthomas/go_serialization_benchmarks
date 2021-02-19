@@ -26,6 +26,7 @@ import (
 	"github.com/niubaoshu/gotiny"
 	ssz "github.com/prysmaticlabs/go-ssz"
 	shamaton "github.com/shamaton/msgpack/v2"
+	shamatongen "github.com/shamaton/msgpackgen/msgpack"
 	"github.com/tinylib/msgp/msgp"
 	"github.com/ugorji/go/codec"
 	vmihailenco "github.com/vmihailenco/msgpack/v4"
@@ -1343,6 +1344,44 @@ func BenchmarkShamatonArrayMsgpackMarshal(b *testing.B) {
 
 func BenchmarkShamatonArrayMsgpackUnmarshal(b *testing.B) {
 	benchUnmarshal(b, ShamatonArrayMsgpackSerializer{})
+}
+
+// github.com/shamaton/msgpackgen - as map
+
+type ShamatonMapMsgpackgenSerializer struct{}
+
+func (m ShamatonMapMsgpackgenSerializer) Marshal(o interface{}) ([]byte, error) {
+	return shamatongen.MarshalAsMap(o)
+}
+func (m ShamatonMapMsgpackgenSerializer) Unmarshal(d []byte, o interface{}) error {
+	return shamatongen.UnmarshalAsMap(d, o)
+}
+func BenchmarkShamatonMapMsgpackgenMarshal(b *testing.B) {
+	RegisterGeneratedResolver()
+	benchMarshal(b, ShamatonMapMsgpackgenSerializer{})
+}
+func BenchmarkShamatonMapMsgpackgenUnmarshal(b *testing.B) {
+	RegisterGeneratedResolver()
+	benchUnmarshal(b, ShamatonMapMsgpackgenSerializer{})
+}
+
+// github.com/shamaton/msgpackgen - as array
+
+type ShamatonArrayMsgpackgenSerializer struct{}
+
+func (m ShamatonArrayMsgpackgenSerializer) Marshal(o interface{}) ([]byte, error) {
+	return shamatongen.MarshalAsArray(o)
+}
+func (m ShamatonArrayMsgpackgenSerializer) Unmarshal(d []byte, o interface{}) error {
+	return shamatongen.UnmarshalAsArray(d, o)
+}
+func BenchmarkShamatonArrayMsgpackgenMarshal(b *testing.B) {
+	RegisterGeneratedResolver()
+	benchMarshal(b, ShamatonArrayMsgpackgenSerializer{})
+}
+func BenchmarkShamatonArrayMsgpackgenUnmarshal(b *testing.B) {
+	RegisterGeneratedResolver()
+	benchUnmarshal(b, ShamatonArrayMsgpackgenSerializer{})
 }
 
 // github.com/prysmaticlabs/go-ssz
