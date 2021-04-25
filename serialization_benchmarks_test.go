@@ -179,11 +179,11 @@ func NewGotinySerializer(o interface{}) Serializer {
 	}
 }
 
-func BenchmarkGotinyMarshal(b *testing.B) {
+func Benchmark_Gotiny_Marshal(b *testing.B) {
 	benchMarshal(b, NewGotinySerializer(A{}))
 }
 
-func BenchmarkGotinyUnmarshal(b *testing.B) {
+func Benchmark_Gotiny_Unmarshal(b *testing.B) {
 	benchUnmarshal(b, NewGotinySerializer(A{}))
 }
 
@@ -202,7 +202,7 @@ func generateNoTimeA() []*NoTimeA {
 	return a
 }
 
-func BenchmarkGotinyNoTimeMarshal(b *testing.B) {
+func Benchmark_GotinyNoTime_Marshal(b *testing.B) {
 	s := NewGotinySerializer(NoTimeA{})
 	data := generateNoTimeA()
 	b.ReportAllocs()
@@ -218,7 +218,7 @@ func BenchmarkGotinyNoTimeMarshal(b *testing.B) {
 	b.ReportMetric(float64(serialSize)/float64(b.N), "B/serial")
 }
 
-func BenchmarkGotinyNoTimeUnmarshal(b *testing.B) {
+func Benchmark_GotinyNoTime_Unmarshal(b *testing.B) {
 	b.StopTimer()
 	s := NewGotinySerializer(NoTimeA{})
 	data := generateNoTimeA()
@@ -268,11 +268,11 @@ func (m MsgpSerializer) Unmarshal(d []byte, o interface{}) error {
 	return err
 }
 
-func BenchmarkMsgpMarshal(b *testing.B) {
+func Benchmark_Msgp_Marshal(b *testing.B) {
 	benchMarshal(b, MsgpSerializer{})
 }
 
-func BenchmarkMsgpUnmarshal(b *testing.B) {
+func Benchmark_Msgp_Unmarshal(b *testing.B) {
 	benchUnmarshal(b, MsgpSerializer{})
 }
 
@@ -288,11 +288,11 @@ func (m VmihailencoMsgpackSerializer) Unmarshal(d []byte, o interface{}) error {
 	return vmihailenco.Unmarshal(d, o)
 }
 
-func BenchmarkVmihailencoMsgpackMarshal(b *testing.B) {
+func Benchmark_VmihailencoMsgpack_Marshal(b *testing.B) {
 	benchMarshal(b, VmihailencoMsgpackSerializer{})
 }
 
-func BenchmarkVmihailencoMsgpackUnmarshal(b *testing.B) {
+func Benchmark_VmihailencoMsgpack_Unmarshal(b *testing.B) {
 	benchUnmarshal(b, VmihailencoMsgpackSerializer{})
 }
 
@@ -308,11 +308,11 @@ func (j JsonSerializer) Unmarshal(d []byte, o interface{}) error {
 	return json.Unmarshal(d, o)
 }
 
-func BenchmarkJsonMarshal(b *testing.B) {
+func Benchmark_Json_Marshal(b *testing.B) {
 	benchMarshal(b, JsonSerializer{})
 }
 
-func BenchmarkJsonUnmarshal(b *testing.B) {
+func Benchmark_Json_Unmarshal(b *testing.B) {
 	benchUnmarshal(b, JsonSerializer{})
 }
 
@@ -328,11 +328,11 @@ func (j JsonIterSerializer) Unmarshal(d []byte, o interface{}) error {
 	return jsoniterFast.Unmarshal(d, o)
 }
 
-func BenchmarkJsonIterMarshal(b *testing.B) {
+func Benchmark_JsonIter_Marshal(b *testing.B) {
 	benchMarshal(b, JsonIterSerializer{})
 }
 
-func BenchmarkJsonIterUnmarshal(b *testing.B) {
+func Benchmark_JsonIter_Unmarshal(b *testing.B) {
 	benchUnmarshal(b, JsonIterSerializer{})
 }
 
@@ -348,11 +348,11 @@ func (m EasyJSONSerializer) Unmarshal(d []byte, o interface{}) error {
 	return easyjson.Unmarshal(d, o.(*A))
 }
 
-func BenchmarkEasyJsonMarshal(b *testing.B) {
+func Benchmark_EasyJson_Marshal(b *testing.B) {
 	benchMarshal(b, EasyJSONSerializer{})
 }
 
-func BenchmarkEasyJsonUnmarshal(b *testing.B) {
+func Benchmark_EasyJson_Unmarshal(b *testing.B) {
 	benchUnmarshal(b, EasyJSONSerializer{})
 }
 
@@ -368,11 +368,11 @@ func (m BsonSerializer) Unmarshal(d []byte, o interface{}) error {
 	return bson.Unmarshal(d, o)
 }
 
-func BenchmarkBsonMarshal(b *testing.B) {
+func Benchmark_Bson_Marshal(b *testing.B) {
 	benchMarshal(b, BsonSerializer{})
 }
 
-func BenchmarkBsonUnmarshal(b *testing.B) {
+func Benchmark_Bson_Unmarshal(b *testing.B) {
 	benchUnmarshal(b, BsonSerializer{})
 }
 
@@ -413,12 +413,12 @@ func NewGobSerializer() *GobSerializer {
 	return s
 }
 
-func BenchmarkGobMarshal(b *testing.B) {
+func Benchmark_Gob_Marshal(b *testing.B) {
 	s := NewGobSerializer()
 	benchMarshal(b, s)
 }
 
-func BenchmarkGobUnmarshal(b *testing.B) {
+func Benchmark_Gob_Unmarshal(b *testing.B) {
 	s := NewGobSerializer()
 	benchUnmarshal(b, s)
 }
@@ -436,11 +436,11 @@ func (x XDRSerializer) Unmarshal(d []byte, o interface{}) error {
 	return err
 }
 
-func BenchmarkXDRMarshal(b *testing.B) {
+func Benchmark_XDR_Marshal(b *testing.B) {
 	benchMarshal(b, XDRSerializer{})
 }
 
-func BenchmarkXDRUnmarshal(b *testing.B) {
+func Benchmark_XDR_Unmarshal(b *testing.B) {
 	benchUnmarshal(b, XDRSerializer{})
 }
 
@@ -459,21 +459,21 @@ func (u *UgorjiCodecSerializer) Unmarshal(d []byte, o interface{}) error {
 	return codec.NewDecoderBytes(d, u.Handle).Decode(o)
 }
 
-func BenchmarkUgorjiCodecMsgpackMarshal(b *testing.B) {
+func Benchmark_UgorjiCodecMsgpack_Marshal(b *testing.B) {
 	benchMarshal(b, &UgorjiCodecSerializer{&codec.MsgpackHandle{}})
 }
 
-func BenchmarkUgorjiCodecMsgpackUnmarshal(b *testing.B) {
+func Benchmark_UgorjiCodecMsgpack_Unmarshal(b *testing.B) {
 	benchUnmarshal(b, &UgorjiCodecSerializer{&codec.MsgpackHandle{}})
 }
 
-func BenchmarkUgorjiCodecBincMarshal(b *testing.B) {
+func Benchmark_UgorjiCodecBinc_Marshal(b *testing.B) {
 	h := &codec.BincHandle{}
 	h.AsSymbols = 0
 	benchMarshal(b, &UgorjiCodecSerializer{h})
 }
 
-func BenchmarkUgorjiCodecBincUnmarshal(b *testing.B) {
+func Benchmark_UgorjiCodecBinc_Unmarshal(b *testing.B) {
 	h := &codec.BincHandle{}
 	h.AsSymbols = 0
 	benchUnmarshal(b, &UgorjiCodecSerializer{h})
@@ -492,11 +492,11 @@ func (s SerealSerializer) Unmarshal(d []byte, o interface{}) error {
 	return err
 }
 
-func BenchmarkSerealMarshal(b *testing.B) {
+func Benchmark_Sereal_Marshal(b *testing.B) {
 	benchMarshal(b, SerealSerializer{})
 }
 
-func BenchmarkSerealUnmarshal(b *testing.B) {
+func Benchmark_Sereal_Unmarshal(b *testing.B) {
 	benchUnmarshal(b, SerealSerializer{})
 }
 
@@ -512,11 +512,11 @@ func (b BinarySerializer) Unmarshal(d []byte, o interface{}) error {
 	return binary.Unmarshal(d, o)
 }
 
-func BenchmarkBinaryMarshal(b *testing.B) {
+func Benchmark_Binary_Marshal(b *testing.B) {
 	benchMarshal(b, BinarySerializer{})
 }
 
-func BenchmarkBinaryUnmarshal(b *testing.B) {
+func Benchmark_Binary_Unmarshal(b *testing.B) {
 	benchUnmarshal(b, BinarySerializer{})
 }
 
@@ -563,11 +563,11 @@ func (s *FlatBufferSerializer) Unmarshal(d []byte, i interface{}) error {
 	return nil
 }
 
-func BenchmarkFlatBuffersMarshal(b *testing.B) {
+func Benchmark_FlatBuffers_Marshal(b *testing.B) {
 	benchMarshal(b, &FlatBufferSerializer{flatbuffers.NewBuilder(0)})
 }
 
-func BenchmarkFlatBuffersUnmarshal(b *testing.B) {
+func Benchmark_FlatBuffers_Unmarshal(b *testing.B) {
 	benchUnmarshal(b, &FlatBufferSerializer{flatbuffers.NewBuilder(0)})
 }
 
@@ -610,11 +610,11 @@ func (x *CapNProtoSerializer) Unmarshal(d []byte, i interface{}) error {
 	return nil
 }
 
-func BenchmarkCapNProtoMarshal(b *testing.B) {
+func Benchmark_CapNProto_Marshal(b *testing.B) {
 	benchMarshal(b, &CapNProtoSerializer{nil, &bytes.Buffer{}})
 }
 
-func BenchmarkCapNProtoUnmarshal(b *testing.B) {
+func Benchmark_CapNProto_Unmarshal(b *testing.B) {
 	benchUnmarshal(b, &CapNProtoSerializer{nil, &bytes.Buffer{}})
 }
 
@@ -671,11 +671,11 @@ func (x *CapNProto2Serializer) Unmarshal(d []byte, i interface{}) error {
 	return nil
 }
 
-func BenchmarkCapNProto2Marshal(b *testing.B) {
+func Benchmark_CapNProto2_Marshal(b *testing.B) {
 	benchMarshal(b, &CapNProto2Serializer{capnp.SingleSegment(nil)})
 }
 
-func BenchmarkCapNProto2Unmarshal(b *testing.B) {
+func Benchmark_CapNProto2_Unmarshal(b *testing.B) {
 	benchUnmarshal(b, &CapNProto2Serializer{capnp.SingleSegment(nil)})
 }
 
@@ -728,13 +728,13 @@ func (s *HproseSerializer) Unmarshal(d []byte, i interface{}) (err error) {
 	return err
 }
 
-func BenchmarkHproseMarshal(b *testing.B) {
+func Benchmark_Hprose_Marshal(b *testing.B) {
 	buf := new(bytes.Buffer)
 	writer := hprose.NewWriter(buf, true)
 	benchMarshal(b, &HproseSerializer{writer: writer})
 }
 
-func BenchmarkHproseUnmarshal(b *testing.B) {
+func Benchmark_Hprose_Unmarshal(b *testing.B) {
 	buf := new(bytes.Buffer)
 	reader := hprose.NewReader(buf, true)
 	bufw := new(bytes.Buffer)
@@ -775,12 +775,12 @@ func (s Hprose2Serializer) Unmarshal(d []byte, i interface{}) error {
 	return nil
 }
 
-func BenchmarkHprose2Marshal(b *testing.B) {
+func Benchmark_Hprose2_Marshal(b *testing.B) {
 	writer := hprose2.NewWriter(true)
 	benchMarshal(b, Hprose2Serializer{writer: writer})
 }
 
-func BenchmarkHprose2Unmarshal(b *testing.B) {
+func Benchmark_Hprose2_Unmarshal(b *testing.B) {
 	writer := hprose2.NewWriter(true)
 	reader := hprose2.NewReader(nil, true)
 	benchUnmarshal(b, &Hprose2Serializer{writer: writer, reader: reader})
@@ -798,11 +798,11 @@ func (m ProtobufSerializer) Unmarshal(d []byte, o interface{}) error {
 	return protobuf.Decode(d, o)
 }
 
-func BenchmarkProtobufMarshal(b *testing.B) {
+func Benchmark_Protobuf_Marshal(b *testing.B) {
 	benchMarshal(b, ProtobufSerializer{})
 }
 
-func BenchmarkProtobufUnmarshal(b *testing.B) {
+func Benchmark_Protobuf_Unmarshal(b *testing.B) {
 	benchUnmarshal(b, ProtobufSerializer{})
 }
 
@@ -823,7 +823,7 @@ func generateProto() []*ProtoBufA {
 	return a
 }
 
-func BenchmarkGoprotobufMarshal(b *testing.B) {
+func Benchmark_Goprotobuf_Marshal(b *testing.B) {
 	data := generateProto()
 	b.ReportAllocs()
 	b.ResetTimer()
@@ -838,7 +838,7 @@ func BenchmarkGoprotobufMarshal(b *testing.B) {
 	b.ReportMetric(float64(serialSize)/float64(b.N), "B/serial")
 }
 
-func BenchmarkGoprotobufUnmarshal(b *testing.B) {
+func Benchmark_Goprotobuf_Unmarshal(b *testing.B) {
 	b.StopTimer()
 	data := generateProto()
 	ser := make([][]byte, len(data))
@@ -890,7 +890,7 @@ func generateGogoProto() []*GogoProtoBufA {
 	return a
 }
 
-func BenchmarkGogoprotobufMarshal(b *testing.B) {
+func Benchmark_Gogoprotobuf_Marshal(b *testing.B) {
 	data := generateGogoProto()
 	b.ReportAllocs()
 	b.ResetTimer()
@@ -905,7 +905,7 @@ func BenchmarkGogoprotobufMarshal(b *testing.B) {
 	b.ReportMetric(float64(serialSize)/float64(b.N), "B/serial")
 }
 
-func BenchmarkGogoprotobufUnmarshal(b *testing.B) {
+func Benchmark_Gogoprotobuf_Unmarshal(b *testing.B) {
 	b.StopTimer()
 	data := generateGogoProto()
 	ser := make([][]byte, len(data))
@@ -957,7 +957,7 @@ func generateColfer() []*ColferA {
 	return a
 }
 
-func BenchmarkColferMarshal(b *testing.B) {
+func Benchmark_Colfer_Marshal(b *testing.B) {
 	data := generateColfer()
 	b.ReportAllocs()
 	b.ResetTimer()
@@ -972,7 +972,7 @@ func BenchmarkColferMarshal(b *testing.B) {
 	b.ReportMetric(float64(serialSize)/float64(b.N), "B/serial")
 }
 
-func BenchmarkColferUnmarshal(b *testing.B) {
+func Benchmark_Colfer_Unmarshal(b *testing.B) {
 	b.StopTimer()
 	data := generateColfer()
 	ser := make([][]byte, len(data))
@@ -1022,7 +1022,7 @@ func generateGencode() []*GencodeA {
 	return a
 }
 
-func BenchmarkGencodeMarshal(b *testing.B) {
+func Benchmark_Gencode_Marshal(b *testing.B) {
 	data := generateGencode()
 	b.ReportAllocs()
 	b.ResetTimer()
@@ -1037,7 +1037,7 @@ func BenchmarkGencodeMarshal(b *testing.B) {
 	b.ReportMetric(float64(serialSize)/float64(b.N), "B/serial")
 }
 
-func BenchmarkGencodeUnmarshal(b *testing.B) {
+func Benchmark_Gencode_Unmarshal(b *testing.B) {
 	b.StopTimer()
 	data := generateGencode()
 	ser := make([][]byte, len(data))
@@ -1087,7 +1087,7 @@ func generateGencodeUnsafe() []*GencodeUnsafeA {
 	return a
 }
 
-func BenchmarkGencodeUnsafeMarshal(b *testing.B) {
+func Benchmark_GencodeUnsafe_Marshal(b *testing.B) {
 	data := generateGencodeUnsafe()
 	b.ReportAllocs()
 	b.ResetTimer()
@@ -1102,7 +1102,7 @@ func BenchmarkGencodeUnsafeMarshal(b *testing.B) {
 	b.ReportMetric(float64(serialSize)/float64(b.N), "B/serial")
 }
 
-func BenchmarkGencodeUnsafeUnmarshal(b *testing.B) {
+func Benchmark_GencodeUnsafe_Unmarshal(b *testing.B) {
 	b.StopTimer()
 	data := generateGencodeUnsafe()
 	ser := make([][]byte, len(data))
@@ -1154,7 +1154,7 @@ func generateXDR() []*XDRA {
 	return a
 }
 
-func BenchmarkXDR2Marshal(b *testing.B) {
+func Benchmark_XDR2_Marshal(b *testing.B) {
 	data := generateXDR()
 	b.ReportAllocs()
 	b.ResetTimer()
@@ -1169,7 +1169,7 @@ func BenchmarkXDR2Marshal(b *testing.B) {
 	b.ReportMetric(float64(serialSize)/float64(b.N), "B/serial")
 }
 
-func BenchmarkXDR2Unmarshal(b *testing.B) {
+func Benchmark_XDR2_Unmarshal(b *testing.B) {
 	b.StopTimer()
 	data := generateXDR()
 	ser := make([][]byte, len(data))
@@ -1202,29 +1202,29 @@ func BenchmarkXDR2Unmarshal(b *testing.B) {
 
 // gopkg.in/linkedin/goavro.v1
 
-func BenchmarkGoAvroMarshal(b *testing.B) {
+func Benchmark_GoAvro_Marshal(b *testing.B) {
 	benchMarshal(b, NewAvroA())
 }
 
-func BenchmarkGoAvroUnmarshal(b *testing.B) {
+func Benchmark_GoAvro_Unmarshal(b *testing.B) {
 	benchUnmarshal(b, NewAvroA())
 }
 
 // github.com/linkedin/goavro
 
-func BenchmarkGoAvro2TextMarshal(b *testing.B) {
+func Benchmark_GoAvro2Text_Marshal(b *testing.B) {
 	benchMarshal(b, NewAvro2Txt())
 }
 
-func BenchmarkGoAvro2TextUnmarshal(b *testing.B) {
+func Benchmark_GoAvro2Text_Unmarshal(b *testing.B) {
 	benchUnmarshal(b, NewAvro2Txt())
 }
 
-func BenchmarkGoAvro2BinaryMarshal(b *testing.B) {
+func Benchmark_GoAvro2Binary_Marshal(b *testing.B) {
 	benchMarshal(b, NewAvro2Bin())
 }
 
-func BenchmarkGoAvro2BinaryUnmarshal(b *testing.B) {
+func Benchmark_GoAvro2Binary_Unmarshal(b *testing.B) {
 	benchUnmarshal(b, NewAvro2Bin())
 }
 
@@ -1254,7 +1254,7 @@ func generateIkeA() []*IkeA {
 	return a
 }
 
-func BenchmarkIkeaMarshal(b *testing.B) {
+func Benchmark_Ikea_Marshal(b *testing.B) {
 	buf := new(bytes.Buffer)
 	buf.Grow(100)
 	data := generateIkeA()
@@ -1269,7 +1269,7 @@ func BenchmarkIkeaMarshal(b *testing.B) {
 	b.ReportMetric(float64(serialSize)/float64(b.N), "B/serial")
 }
 
-func BenchmarkIkeaUnmarshal(b *testing.B) {
+func Benchmark_Ikea_Unmarshal(b *testing.B) {
 	b.StopTimer()
 	data := generateIkeA()
 	ser := make([][]byte, len(data))
@@ -1318,11 +1318,11 @@ func (m ShamatonMapMsgpackSerializer) Unmarshal(d []byte, o interface{}) error {
 	return shamaton.UnmarshalAsMap(d, o)
 }
 
-func BenchmarkShamatonMapMsgpackMarshal(b *testing.B) {
+func Benchmark_ShamatonMapMsgpack_Marshal(b *testing.B) {
 	benchMarshal(b, ShamatonMapMsgpackSerializer{})
 }
 
-func BenchmarkShamatonMapMsgpackUnmarshal(b *testing.B) {
+func Benchmark_ShamatonMapMsgpack_Unmarshal(b *testing.B) {
 	benchUnmarshal(b, ShamatonMapMsgpackSerializer{})
 }
 
@@ -1338,11 +1338,11 @@ func (m ShamatonArrayMsgpackSerializer) Unmarshal(d []byte, o interface{}) error
 	return shamaton.UnmarshalAsArray(d, o)
 }
 
-func BenchmarkShamatonArrayMsgpackMarshal(b *testing.B) {
+func Benchmark_ShamatonArrayMsgpack_Marshal(b *testing.B) {
 	benchMarshal(b, ShamatonArrayMsgpackSerializer{})
 }
 
-func BenchmarkShamatonArrayMsgpackUnmarshal(b *testing.B) {
+func Benchmark_ShamatonArrayMsgpack_Unmarshal(b *testing.B) {
 	benchUnmarshal(b, ShamatonArrayMsgpackSerializer{})
 }
 
@@ -1356,11 +1356,11 @@ func (m ShamatonMapMsgpackgenSerializer) Marshal(o interface{}) ([]byte, error) 
 func (m ShamatonMapMsgpackgenSerializer) Unmarshal(d []byte, o interface{}) error {
 	return shamatongen.UnmarshalAsMap(d, o)
 }
-func BenchmarkShamatonMapMsgpackgenMarshal(b *testing.B) {
+func Benchmark_ShamatonMapMsgpackgen_Marshal(b *testing.B) {
 	RegisterGeneratedResolver()
 	benchMarshal(b, ShamatonMapMsgpackgenSerializer{})
 }
-func BenchmarkShamatonMapMsgpackgenUnmarshal(b *testing.B) {
+func Benchmark_ShamatonMapMsgpackgen_Unmarshal(b *testing.B) {
 	RegisterGeneratedResolver()
 	benchUnmarshal(b, ShamatonMapMsgpackgenSerializer{})
 }
@@ -1375,11 +1375,11 @@ func (m ShamatonArrayMsgpackgenSerializer) Marshal(o interface{}) ([]byte, error
 func (m ShamatonArrayMsgpackgenSerializer) Unmarshal(d []byte, o interface{}) error {
 	return shamatongen.UnmarshalAsArray(d, o)
 }
-func BenchmarkShamatonArrayMsgpackgenMarshal(b *testing.B) {
+func Benchmark_ShamatonArrayMsgpackgen_Marshal(b *testing.B) {
 	RegisterGeneratedResolver()
 	benchMarshal(b, ShamatonArrayMsgpackgenSerializer{})
 }
-func BenchmarkShamatonArrayMsgpackgenUnmarshal(b *testing.B) {
+func Benchmark_ShamatonArrayMsgpackgen_Unmarshal(b *testing.B) {
 	RegisterGeneratedResolver()
 	benchUnmarshal(b, ShamatonArrayMsgpackgenSerializer{})
 }
@@ -1401,7 +1401,7 @@ func generateNoTimeNoStringNoFloatA() []*NoTimeNoStringNoFloatA {
 	return a
 }
 
-func BenchmarkSSZNoTimeNoStringNoFloatAMarshal(b *testing.B) {
+func Benchmark_SSZNoTimeNoStringNoFloatA_Marshal(b *testing.B) {
 	data := generateNoTimeNoStringNoFloatA()
 	b.ReportAllocs()
 	b.ResetTimer()
@@ -1416,7 +1416,7 @@ func BenchmarkSSZNoTimeNoStringNoFloatAMarshal(b *testing.B) {
 	b.ReportMetric(float64(serialSize)/float64(b.N), "B/serial")
 }
 
-func BenchmarkSSZNoTimeNoStringNoFloatAUnmarshal(b *testing.B) {
+func Benchmark_SSZNoTimeNoStringNoFloatA_Unmarshal(b *testing.B) {
 	b.StopTimer()
 	data := generateNoTimeNoStringNoFloatA()
 	ser := make([][]byte, len(data))
@@ -1453,12 +1453,12 @@ func BenchmarkSSZNoTimeNoStringNoFloatAUnmarshal(b *testing.B) {
 }
 
 // github.com/itsmontoya/mum
-func BenchmarkMumMarshal(b *testing.B) {
+func Benchmark_Mum_Marshal(b *testing.B) {
 	s := newMumSerializer()
 	benchMarshal(b, s)
 }
 
-func BenchmarkMumUnmarshal(b *testing.B) {
+func Benchmark_Mum_Unmarshal(b *testing.B) {
 	s := newMumSerializer()
 	benchUnmarshal(b, s)
 }
@@ -1481,7 +1481,7 @@ func generateBebopA() []*BebopBufA {
 	return a
 }
 
-func BenchmarkBebopMarshal(b *testing.B) {
+func Benchmark_Bebop_Marshal(b *testing.B) {
 	data := generateBebopA()
 	b.ReportAllocs()
 	b.ResetTimer()
@@ -1493,7 +1493,7 @@ func BenchmarkBebopMarshal(b *testing.B) {
 	b.ReportMetric(float64(serialSize)/float64(b.N), "B/serial")
 }
 
-func BenchmarkBebopUnmarshal(b *testing.B) {
+func Benchmark_Bebop_Unmarshal(b *testing.B) {
 	b.StopTimer()
 	data := generateBebopA()
 	ser := make([][]byte, len(data))
