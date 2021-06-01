@@ -29,6 +29,7 @@ import (
 	shamatongen "github.com/shamaton/msgpackgen/msgpack"
 	"github.com/tinylib/msgp/msgp"
 	"github.com/ugorji/go/codec"
+	fastjson "github.com/valyala/fastjson"
 	vmihailenco "github.com/vmihailenco/msgpack/v4"
 	"go.dedis.ch/protobuf"
 	"gopkg.in/mgo.v2/bson"
@@ -1521,6 +1522,79 @@ func Benchmark_Bebop_Unmarshal(b *testing.B) {
 			correct := o.Name == i.Name && o.Phone == i.Phone && o.Siblings == i.Siblings && o.Spouse == i.Spouse && o.Money == i.Money && o.BirthDay == i.BirthDay
 			if !correct {
 				b.Fatalf("unmarshaled object differed:\n%v\n%v", i, o)
+			}
+		}
+	}
+}
+
+// github.com/valyala/fastjson
+
+func generateFastJsonA() []*fastjson.Value {
+	var arena fastjson.Arena
+	var res []*fastjson.Value
+	for i := 0; i < 1000; i++ {
+		object := arena.NewObject()
+		object.Set("name", arena.NewString(randString(16)))
+		object.Set("birthday", arena.NewNumberInt(int(time.Now().UnixNano())))
+		object.Set("phone", arena.NewString(randString(10)))
+		object.Set("siblings", arena.NewNumberInt(rand.Intn(5)))
+		var spouse *fastjson.Value
+		if rand.Intn(2) == 1 {
+			spouse = arena.NewTrue()
+		} else {
+			spouse = arena.NewFalse()
+		}
+		object.Set("spouse", spouse)
+		object.Set("money", arena.NewNumberFloat64(rand.Float64()))
+		res = append(res, object)
+	}
+	return res
+}
+
+func Benchmark_FastJson_Marshal(b *testing.B) {
+	data := generateFastJsonA()
+	b.ReportAllocs()
+	b.ResetTimer()
+	var serialSize int
+	for i := 0; i < b.N; i++ {
+		out := data[rand.Intn(len(data))].MarshalTo(nil)
+		serialSize += len(out)
+	}
+	b.ReportMetric(float64(serialSize)/float64(b.N), "B/serial")
+}
+
+func Benchmark_FastJson_Unmarshal(b *testing.B) {
+	b.StopTimer()
+	data := generateFastJsonA()
+	ser := make([][]byte, len(data))
+	var serialSize int
+	for i, d := range data {
+		ser[i] = d.MarshalTo(nil)
+		serialSize += len(ser[i])
+	}
+	b.ReportMetric(float64(serialSize)/float64(len(data)), "B/serial")
+	buf := new(bytes.Buffer)
+	buf.Grow(100)
+	b.ReportAllocs()
+	b.StartTimer()
+
+	for i := 0; i < b.N; i++ {
+		n := rand.Intn(len(ser))
+		val, err := fastjson.ParseBytes(ser[n])
+		if err != nil {
+			b.Fatalf("bebop failed to unmarshal: %s (%s)", err, ser[n])
+		}
+		// Validate unmarshalled data.
+		if validate != "" {
+			i := data[n]
+			correct := bytes.Equal(val.GetStringBytes("name"), i.GetStringBytes("name")) &&
+				bytes.Equal(val.GetStringBytes("phone"), i.GetStringBytes("phone")) &&
+				val.GetInt("siblings") == i.GetInt("siblings") &&
+				val.GetBool("spouse") == i.GetBool("spouse") &&
+				val.GetFloat64("money") == i.GetFloat64("money") &&
+				val.GetUint64("birthday") == i.GetUint64("birthday")
+			if !correct {
+				b.Fatalf("unmarshaled object differed:\n%v\n%v", i, val)
 			}
 		}
 	}

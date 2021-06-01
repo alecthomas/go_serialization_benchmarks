@@ -36,12 +36,13 @@ require (
 	github.com/protolambda/zssz v0.1.1 // indirect
 	github.com/prysmaticlabs/go-bitfield v0.0.0-20190825002834-fb724e897364 // indirect
 	github.com/prysmaticlabs/go-ssz v0.0.0-20190827151743-72881c4223d8
-	github.com/shamaton/msgpack v1.1.1
+	github.com/shamaton/msgpack v1.1.1 // indirect
 	github.com/shamaton/msgpack/v2 v2.0.0
 	github.com/shamaton/msgpackgen v0.1.1
 	github.com/tinylib/msgp v1.1.0
 	github.com/ttacon/chalk v0.0.0-20160626202418-22c06c80ed31 // indirect
 	github.com/ugorji/go/codec v1.1.7
+	github.com/valyala/fastjson v1.6.3
 	github.com/vmihailenco/msgpack/v4 v4.3.0
 	go.dedis.ch/protobuf v1.0.6
 	gopkg.in/linkedin/goavro.v1 v1.0.5
