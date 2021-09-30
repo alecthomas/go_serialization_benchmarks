@@ -1792,7 +1792,11 @@ func (tc *ThriftSerializer) Marshal(o interface{}) (r []byte, err error) {
 			err = fmt.Errorf("err writing struct: %w", err)
 			return
 		}
-		r = tc.trans.Buffer.Bytes()
+		if err = tc.proto.Flush(context.Background()); err != nil {
+			err = fmt.Errorf("err flush: %w", err)
+			return
+		}
+		r = tc.trans.Buffer.Bytes()[:]
 		return
 	}
 	err = ErrNotThriftStructWriter
@@ -1802,6 +1806,7 @@ func (tc *ThriftSerializer) Marshal(o interface{}) (r []byte, err error) {
 func (tc *ThriftSerializer) Unmarshal(d []byte, o interface{}) (err error) {
 	if v, ok := o.(ThriftStructReader); ok {
 		defer tc.trans.Close() // reset buffer
+		defer tc.proto.Flush(context.Background())
 		tc.trans.Buffer.Write(d)
 		if err = v.Read(context.Background(), tc.proto); err != nil {
 			err = fmt.Errorf("err reading bytes: %w", err)
@@ -1859,22 +1864,22 @@ func benchThriftUnmarshal(b *testing.B, marshaller Serializer) {
 			b.Fatal(err)
 		}
 		if len(ser[i]) > 0 {
-			b.Logf("%d  [OK] :)      len=%#v   %+#v\n", i, len(ser[i]), d)
+			b.Logf("%d  [OK] :)      len=%#v   %+#v %s\n", i, len(ser[i]), d, ser[i])
 		} else {
 			b.Logf("%d  [weird data] len=%#v  %+#v\n", i, ser[i], d) // also check if it's nil
 		}
 		serialSize += len(ser[i])
 	}
-	b.Logf("serSize %d %+#v %+#v\n", serialSize, ser[0], ser[1])
 	b.ReportMetric(float64(serialSize)/float64(len(data)), "B/serial")
 	b.ReportAllocs()
 	b.StartTimer()
 	for i := 0; i < b.N; i++ {
 		n := rand.Intn(len(ser))
 		o := goserbench.NewThriftStructA()
+		fmt.Printf("feeded %d %s\n", n, ser[n])
 		err := marshaller.Unmarshal(ser[n], o)
 		if err != nil {
-			b.Fatal(fmt.Errorf("unmarshal err: %w (%+v)", err, ser[n]))
+			b.Fatal(fmt.Errorf("unmarshal err: %d %w (%s)", i, err, ser[n]))
 		}
 		if validate != "" {
 			i := data[n]
