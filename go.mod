@@ -10,6 +10,7 @@ require (
 	github.com/alecthomas/binary v0.0.0-20171101084825-6e8df1b1fb9d
 	github.com/andyleap/gencode v0.0.0-20171124163308-e1423834d4b4 // indirect
 	github.com/andyleap/parser v0.0.0-20160126201130-db5a13a7cd46 // indirect
+	github.com/apache/thrift/lib/go/thrift v0.0.0-20210120171102-e27e82c46ba4 // indirect
 	github.com/calmh/xdr v1.1.0
 	github.com/davecgh/go-xdr v0.0.0-20161123171359-e6a2ba005892
 	github.com/glycerine/go-capnproto v0.0.0-20190118050403-2d07de3aa7fc

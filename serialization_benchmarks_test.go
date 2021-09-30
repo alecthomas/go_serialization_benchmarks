@@ -2,6 +2,7 @@ package goserbench
 
 import (
 	"bytes"
+	"context"
 	"encoding/gob"
 	"encoding/json"
 	"errors"
@@ -15,6 +16,8 @@ import (
 
 	"github.com/Sereal/Sereal/Go/sereal"
 	"github.com/alecthomas/binary"
+	"github.com/alecthomas/go_serialization_benchmarks/gen-go/goserbench"
+	"github.com/apache/thrift/lib/go/thrift"
 	"github.com/davecgh/go-xdr/xdr"
 	capn "github.com/glycerine/go-capnproto"
 	"github.com/gogo/protobuf/proto"
@@ -1722,4 +1725,208 @@ func (g MusgoSerializer) Unmarshal(d []byte, o interface{}) error {
 	v := o.(*NoTimeA)
 	_, err := v.UnmarshalMUS(d)
 	return err
+}
+
+// ----------------------------------------------------------------
+//  Thrift 0.15.0
+// ----------------------------------------------------------------
+
+//go:generate thrift-0.15.0 -o . -r --gen go structdef-thrift.thrift
+
+var (
+	ErrNotThriftStructWriter = errors.New("not a thrift struct writer")
+	ErrNotThriftStructReader = errors.New("not a thrift struct reader")
+)
+
+type ThriftStructWriter interface {
+	Write(ctx context.Context, oprot thrift.TProtocol) error
+}
+
+type ThriftStructReader interface {
+	Read(ctx context.Context, iprot thrift.TProtocol) error
+}
+
+// ----------------------------------------------------------------
+
+func NewThriftCompactSerializer() *ThriftSerializer {
+	trans := thrift.NewTMemoryBuffer()
+	return &ThriftSerializer{
+		trans: trans,
+		proto: thrift.NewTCompactProtocolConf(trans, nil),
+	}
+}
+
+func NewThriftBinarySerializer() *ThriftSerializer {
+	trans := thrift.NewTMemoryBuffer()
+	return &ThriftSerializer{
+		trans: trans,
+		proto: thrift.NewTBinaryProtocolConf(trans, nil),
+	}
+}
+
+func NewThriftJSONSerializer() *ThriftSerializer {
+	trans := thrift.NewTMemoryBuffer()
+	return &ThriftSerializer{
+		trans: trans,
+		proto: thrift.NewTJSONProtocol(trans),
+	}
+}
+
+func NewThriftSimpleJSONSerializer() *ThriftSerializer {
+	trans := thrift.NewTMemoryBuffer()
+	return &ThriftSerializer{
+		trans: trans,
+		proto: thrift.NewTSimpleJSONProtocol(trans),
+	}
+}
+
+type ThriftSerializer struct {
+	trans *thrift.TMemoryBuffer //thrift.TTransport
+	proto thrift.TProtocol
+}
+
+func (tc *ThriftSerializer) Marshal(o interface{}) (r []byte, err error) {
+	if v, ok := o.(ThriftStructWriter); ok {
+		defer tc.trans.Close() // reset buffer
+		if err = v.Write(context.Background(), tc.proto); err != nil {
+			err = fmt.Errorf("err writing struct: %w", err)
+			return
+		}
+		r = tc.trans.Buffer.Bytes()
+		return
+	}
+	err = ErrNotThriftStructWriter
+	return
+}
+
+func (tc *ThriftSerializer) Unmarshal(d []byte, o interface{}) (err error) {
+	if v, ok := o.(ThriftStructReader); ok {
+		defer tc.trans.Close() // reset buffer
+		tc.trans.Buffer.Write(d)
+		if err = v.Read(context.Background(), tc.proto); err != nil {
+			err = fmt.Errorf("err reading bytes: %w", err)
+			return
+		}
+		return
+	}
+	err = ErrNotThriftStructReader
+	return
+}
+
+// ----------------------------------------------------------------
+
+func generateThriftProto() []*goserbench.ThriftStructA {
+	a := make([]*goserbench.ThriftStructA, 0, 1000)
+	for i := 0; i < 1000; i++ {
+		a = append(a, &goserbench.ThriftStructA{
+			Name:     randString(16),
+			BirthDay: time.Now().UnixNano(),
+			Phone:    randString(10),
+			Siblings: rand.Int31n(5),
+			Spouse:   rand.Intn(2) == 1,
+			Money:    rand.Float64(),
+		})
+	}
+	return a
+}
+
+func benchThriftMarshal(b *testing.B, marshaller Serializer) {
+	data := generateThriftProto()
+	b.ReportAllocs()
+	b.ResetTimer()
+	var serialSize int
+	b.Log(b.N)
+	for i := 0; i < b.N; i++ {
+		bytes, err := marshaller.Marshal(data[rand.Intn(len(data))])
+		if err != nil {
+			b.Fatal(err)
+		}
+		serialSize += len(bytes)
+	}
+	b.ReportMetric(float64(serialSize)/float64(b.N), "B/serial")
+}
+
+func benchThriftUnmarshal(b *testing.B, marshaller Serializer) {
+	b.StopTimer()
+	data := generateThriftProto()
+	ser := make([][]byte, len(data))
+	var serialSize int
+	b.Log(b.N)
+	for i, d := range data {
+		var err error
+		ser[i], err = marshaller.Marshal(d)
+		if err != nil {
+			b.Fatal(err)
+		}
+		if len(ser[i]) > 0 {
+			b.Logf("%d  [OK] :)      len=%#v   %+#v\n", i, len(ser[i]), d)
+		} else {
+			b.Logf("%d  [weird data] len=%#v  %+#v\n", i, ser[i], d) // also check if it's nil
+		}
+		serialSize += len(ser[i])
+	}
+	b.Logf("serSize %d %+#v %+#v\n", serialSize, ser[0], ser[1])
+	b.ReportMetric(float64(serialSize)/float64(len(data)), "B/serial")
+	b.ReportAllocs()
+	b.StartTimer()
+	for i := 0; i < b.N; i++ {
+		n := rand.Intn(len(ser))
+		o := goserbench.NewThriftStructA()
+		err := marshaller.Unmarshal(ser[n], o)
+		if err != nil {
+			b.Fatal(fmt.Errorf("unmarshal err: %w (%+v)", err, ser[n]))
+		}
+		if validate != "" {
+			i := data[n]
+			correct := o.Name == i.Name &&
+				o.Phone == i.Phone &&
+				o.Siblings == i.Siblings &&
+				o.Spouse == i.Spouse &&
+				o.Money == i.Money &&
+				o.BirthDay == i.BirthDay
+			if !correct {
+				b.Fatalf("unmarshalled object differed:\n%v\n%v", i, o)
+			}
+		}
+	}
+}
+
+// ----------------------------------------------------------------
+
+func Benchmark_Thrift_TCompact_Marshal(b *testing.B) {
+	benchThriftMarshal(b, NewThriftCompactSerializer())
+}
+
+func Benchmark_Thrift_TCompact_Unmarshal(b *testing.B) {
+	benchThriftUnmarshal(b, NewThriftCompactSerializer())
+}
+
+// ----------------------------------------------------------------
+
+func Benchmark_Thrift_TBinary_Marshal(b *testing.B) {
+	benchThriftMarshal(b, NewThriftBinarySerializer())
+}
+
+func Benchmark_Thrift_TBinary_Unmarshal(b *testing.B) {
+	benchThriftUnmarshal(b, NewThriftBinarySerializer())
+}
+
+// ----------------------------------------------------------------
+
+func Benchmark_Thrift_TJSON_Marshal(b *testing.B) {
+	benchThriftMarshal(b, NewThriftJSONSerializer())
+}
+
+func Benchmark_Thrift_TJSON_Unmarshal(b *testing.B) {
+	benchThriftUnmarshal(b, NewThriftJSONSerializer())
+}
+
+// ----------------------------------------------------------------
+
+func Benchmark_Thrift_SimpleJSON_Marshal(b *testing.B) {
+	benchThriftMarshal(b, NewThriftSimpleJSONSerializer())
+}
+
+func Benchmark_Thrift_SimpleJSON_Unmarshal(b *testing.B) {
+	benchThriftUnmarshal(b, NewThriftSimpleJSONSerializer())
 }
