@@ -12,6 +12,8 @@ github.com/andyleap/gencode v0.0.0-20171124163308-e1423834d4b4 h1:8Po0yx+yydP7Fv
 github.com/andyleap/gencode v0.0.0-20171124163308-e1423834d4b4/go.mod h1:yE6zprmDWRrIsbjHdb+C3MGq+YpJnqJxaFilOM27PtI=
 github.com/andyleap/parser v0.0.0-20160126201130-db5a13a7cd46 h1:t5xfxrFvtVIPcptfgVgE32rztLL1QfKAifRPxRxgppk=
 github.com/andyleap/parser v0.0.0-20160126201130-db5a13a7cd46/go.mod h1:optl5aMZUO+oj3KCDaQ0WYQMP6QhUQXXDAHQnCA3wI8=
+github.com/apache/thrift/lib/go/thrift v0.0.0-20210120171102-e27e82c46ba4 h1:orNYqmQGnSjgOauLWjHEp9/qIDT98xv/0Aa4Zet3/Y8=
+github.com/apache/thrift/lib/go/thrift v0.0.0-20210120171102-e27e82c46ba4/go.mod h1:V/LzksIyqd3KZuQ2SunvReTG/UkArhII1dAWY5U1sCE=
 github.com/calmh/xdr v1.1.0 h1:U/Dd4CXNLoo8EiQ4ulJUXkgO1/EyQLgDKLgpY1SOoJE=
 github.com/calmh/xdr v1.1.0/go.mod h1:E8sz2ByAdXC8MbANf1LCRYzedSnnc+/sXXJs/PVqoeg=
 github.com/dave/jennifer v1.4.1 h1:XyqG6cn5RQsTj3qlWQTKlRGAyrTcsk1kUmWdZBzRjDw=
