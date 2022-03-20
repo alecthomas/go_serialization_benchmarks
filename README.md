@@ -73,7 +73,7 @@ type A struct {
 
 ## Results
 
-2021-06-21 Results with Go 1.17.8 Darwin/arm64 on an Apple M1 Max
+2022-03-19 Results with Go 1.17.8 Darwin/arm64 on an Apple M1 Max
 
 benchmark                                     | iter       | time/iter    | bytes/op  | allocs/op  | tt.sec | tt.kb        | ns/alloc
 ----------------------------------------------|------------|--------------|-----------|------------|--------|--------------|-----------
