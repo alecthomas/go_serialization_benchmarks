@@ -17,6 +17,7 @@ import (
 	"github.com/alecthomas/binary"
 	"github.com/davecgh/go-xdr/xdr"
 	capn "github.com/glycerine/go-capnproto"
+	"github.com/gogo/protobuf/jsonpb"
 	"github.com/gogo/protobuf/proto"
 	flatbuffers "github.com/google/flatbuffers/go"
 	"github.com/hprose/hprose-go"
@@ -33,6 +34,7 @@ import (
 	fastjson "github.com/valyala/fastjson"
 	vmihailenco "github.com/vmihailenco/msgpack/v4"
 	"go.dedis.ch/protobuf"
+	mongobson "go.mongodb.org/mongo-driver/bson"
 	"gopkg.in/mgo.v2/bson"
 	capnp "zombiezen.com/go/capnproto2"
 )
@@ -376,6 +378,26 @@ func Benchmark_Bson_Marshal(b *testing.B) {
 
 func Benchmark_Bson_Unmarshal(b *testing.B) {
 	benchUnmarshal(b, BsonSerializer{})
+}
+
+// go.mongodb.org/mongo-driver/mongo
+
+type MongoBsonSerializer struct{}
+
+func (m MongoBsonSerializer) Marshal(o interface{}) ([]byte, error) {
+	return mongobson.Marshal(o)
+}
+
+func (m MongoBsonSerializer) Unmarshal(d []byte, o interface{}) error {
+	return mongobson.Unmarshal(d, o)
+}
+
+func Benchmark_MongoBson_Marshal(b *testing.B) {
+	benchMarshal(b, MongoBsonSerializer{})
+}
+
+func Benchmark_MongoBson_Unmarshal(b *testing.B) {
+	benchUnmarshal(b, MongoBsonSerializer{})
 }
 
 // encoding/gob
@@ -928,6 +950,61 @@ func Benchmark_Gogoprotobuf_Unmarshal(b *testing.B) {
 		n := rand.Intn(len(ser))
 		o := &GogoProtoBufA{}
 		err := proto.Unmarshal(ser[n], o)
+		if err != nil {
+			b.Fatalf("goprotobuf failed to unmarshal: %s (%s)", err, ser[n])
+		}
+		// Validate unmarshalled data.
+		if validate != "" {
+			i := data[n]
+			correct := o.Name == i.Name && o.Phone == i.Phone && o.Siblings == i.Siblings && o.Spouse == i.Spouse && o.Money == i.Money && o.BirthDay == i.BirthDay //&& cmpTags(o.Tags, i.Tags) && cmpAliases(o.Aliases, i.Aliases)
+			if !correct {
+				b.Fatalf("unmarshaled object differed:\n%v\n%v", i, o)
+			}
+		}
+	}
+}
+
+func Benchmark_Gogojsonpb_Marshal(b *testing.B) {
+	data := generateGogoProto()
+	marshaler := &jsonpb.Marshaler{}
+	b.ReportAllocs()
+	b.ResetTimer()
+	var serialSize int
+	for i := 0; i < b.N; i++ {
+		buf := &bytes.Buffer{}
+		err := marshaler.Marshal(buf, data[rand.Intn(len(data))])
+		if err != nil {
+			b.Fatal(err)
+		}
+		serialSize += buf.Len()
+	}
+	b.ReportMetric(float64(serialSize)/float64(b.N), "B/serial")
+}
+
+func Benchmark_Gogojsonpb_Unmarshal(b *testing.B) {
+	b.StopTimer()
+	data := generateGogoProto()
+	marshaler := &jsonpb.Marshaler{}
+	unmarshaler := &jsonpb.Unmarshaler{}
+	ser := make([][]byte, len(data))
+	var serialSize int
+	for i, d := range data {
+		buf := &bytes.Buffer{}
+		err := marshaler.Marshal(buf, d)
+		if err != nil {
+			b.Fatal(err)
+		}
+		ser[i] = buf.Bytes()
+		serialSize += len(ser[i])
+	}
+	b.ReportMetric(float64(serialSize)/float64(len(data)), "B/serial")
+	b.ReportAllocs()
+	b.StartTimer()
+
+	for i := 0; i < b.N; i++ {
+		n := rand.Intn(len(ser))
+		o := &GogoProtoBufA{}
+		err := unmarshaler.Unmarshal(bytes.NewReader(ser[n]), o)
 		if err != nil {
 			b.Fatalf("goprotobuf failed to unmarshal: %s (%s)", err, ser[n])
 		}
