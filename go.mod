@@ -12,7 +12,7 @@ require (
 	github.com/glycerine/go-capnproto v0.0.0-20190118050403-2d07de3aa7fc
 	github.com/glycerine/goconvey v0.0.0-20190410193231-58a59202ab31 // indirect
 	github.com/glycerine/rbtree v0.0.0-20190406191118-ceb71889d809 // indirect
-	github.com/gogo/protobuf v1.2.1
+	github.com/gogo/protobuf v1.3.2
 	github.com/golang/protobuf v1.3.2
 	github.com/google/flatbuffers v1.11.0
 	github.com/gopherjs/gopherjs v0.0.0-20210603182125-eeedf4a0e899 // indirect
