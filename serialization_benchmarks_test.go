@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"encoding/gob"
 	"encoding/json"
-	"errors"
 	"fmt"
 	"math"
 	"math/rand"
@@ -162,12 +161,11 @@ See README.md for details on running the benchmarks.
 // github.com/niubaoshu/gotiny
 
 type GotinySerializer struct {
-	enc *gotiny.Encoder
 	dec *gotiny.Decoder
 }
 
 func (g GotinySerializer) Marshal(o interface{}) ([]byte, error) {
-	return g.enc.Encode(o), nil
+	return gotiny.Marshal(o), nil
 }
 
 func (g GotinySerializer) Unmarshal(d []byte, o interface{}) error {
@@ -178,7 +176,6 @@ func (g GotinySerializer) Unmarshal(d []byte, o interface{}) error {
 func NewGotinySerializer(o interface{}) Serializer {
 	ot := reflect.TypeOf(o)
 	return GotinySerializer{
-		enc: gotiny.NewEncoderWithType(ot),
 		dec: gotiny.NewDecoderWithType(ot),
 	}
 }
@@ -403,38 +400,22 @@ func Benchmark_MongoBson_Unmarshal(b *testing.B) {
 // encoding/gob
 
 type GobSerializer struct {
-	b   bytes.Buffer
-	enc *gob.Encoder
-	dec *gob.Decoder
 }
 
 func (g *GobSerializer) Marshal(o interface{}) ([]byte, error) {
-	g.b.Reset()
-	err := g.enc.Encode(o)
-	return g.b.Bytes(), err
+	var buf bytes.Buffer
+	err := gob.NewEncoder(&buf).Encode(o)
+	return buf.Bytes(), err
 }
 
 func (g *GobSerializer) Unmarshal(d []byte, o interface{}) error {
-	g.b.Reset()
-	g.b.Write(d)
-	err := g.dec.Decode(o)
-	return err
+	return gob.NewDecoder(bytes.NewReader(d)).Decode(o)
 }
 
 func NewGobSerializer() *GobSerializer {
-	s := &GobSerializer{}
-	s.enc = gob.NewEncoder(&s.b)
-	s.dec = gob.NewDecoder(&s.b)
-	err := s.enc.Encode(A{})
-	if err != nil {
-		panic(err)
-	}
-	var a A
-	err = s.dec.Decode(&a)
-	if err != nil {
-		panic(err)
-	}
-	return s
+	// registration required before first use
+	gob.Register(A{})
+	return &GobSerializer{}
 }
 
 func Benchmark_Gob_Marshal(b *testing.B) {
@@ -553,7 +534,7 @@ type FlatBufferSerializer struct {
 func (s *FlatBufferSerializer) Marshal(o interface{}) ([]byte, error) {
 	a := o.(*A)
 	builder := s.builder
-
+	builder.Bytes = nil // free
 	builder.Reset()
 
 	name := builder.CreateString(a.Name)
@@ -598,24 +579,21 @@ func Benchmark_FlatBuffers_Unmarshal(b *testing.B) {
 // github.com/glycerine/go-capnproto
 
 type CapNProtoSerializer struct {
-	buf []byte
-	out *bytes.Buffer
 }
 
 func (x *CapNProtoSerializer) Marshal(o interface{}) ([]byte, error) {
 	a := o.(*A)
-	s := capn.NewBuffer(x.buf)
-	c := NewRootCapnpA(s)
+	seg := capn.NewBuffer(nil)
+	c := NewRootCapnpA(seg)
 	c.SetName(a.Name)
 	c.SetBirthDay(a.BirthDay.UnixNano())
 	c.SetPhone(a.Phone)
 	c.SetSiblings(int32(a.Siblings))
 	c.SetSpouse(a.Spouse)
 	c.SetMoney(a.Money)
-	x.out.Reset()
-	_, err := s.WriteTo(x.out)
-	x.buf = []byte(s.Data)[:0]
-	return x.out.Bytes(), err
+	var buf bytes.Buffer
+	_, err := seg.WriteTo(&buf)
+	return buf.Bytes(), err
 }
 
 func (x *CapNProtoSerializer) Unmarshal(d []byte, i interface{}) error {
@@ -635,11 +613,11 @@ func (x *CapNProtoSerializer) Unmarshal(d []byte, i interface{}) error {
 }
 
 func Benchmark_CapNProto_Marshal(b *testing.B) {
-	benchMarshal(b, &CapNProtoSerializer{nil, &bytes.Buffer{}})
+	benchMarshal(b, &CapNProtoSerializer{})
 }
 
 func Benchmark_CapNProto_Unmarshal(b *testing.B) {
-	benchUnmarshal(b, &CapNProtoSerializer{nil, &bytes.Buffer{}})
+	benchUnmarshal(b, &CapNProtoSerializer{})
 }
 
 // zombiezen.com/go/capnproto2
@@ -650,14 +628,11 @@ type CapNProto2Serializer struct {
 
 func (x *CapNProto2Serializer) Marshal(o interface{}) ([]byte, error) {
 	a := o.(*A)
-	m, s, err := capnp.NewMessage(x.arena)
+	m, seg, err := capnp.NewMessage(capnp.SingleSegment(nil))
 	if err != nil {
 		return nil, err
 	}
-	if err != nil {
-		return nil, err
-	}
-	c, err := NewRootCapnp2A(s)
+	c, err := NewCapnp2A(seg)
 	if err != nil {
 		return nil, err
 	}
@@ -1334,16 +1309,19 @@ func generateIkeA() []*IkeA {
 }
 
 func Benchmark_Ikea_Marshal(b *testing.B) {
-	buf := new(bytes.Buffer)
-	buf.Grow(100)
 	data := generateIkeA()
 	b.ReportAllocs()
 	b.ResetTimer()
 	var serialSize int
 	for i := 0; i < b.N; i++ {
-		ikea.Pack(buf, data[rand.Intn(len(data))])
+		o := data[rand.Intn(len(data))]
+		var buf bytes.Buffer
+		buf.Grow(ikea.Len(o))
+		err := ikea.Pack(&buf, o)
+		if err != nil {
+			b.Fatal(err)
+		}
 		serialSize += buf.Len()
-		buf.Reset()
 	}
 	b.ReportMetric(float64(serialSize)/float64(b.N), "B/serial")
 }
@@ -1582,8 +1560,6 @@ func Benchmark_Bebop_Unmarshal(b *testing.B) {
 		serialSize += len(ser[i])
 	}
 	b.ReportMetric(float64(serialSize)/float64(len(data)), "B/serial")
-	buf := new(bytes.Buffer)
-	buf.Grow(100)
 	b.ReportAllocs()
 	b.StartTimer()
 
@@ -1651,8 +1627,6 @@ func Benchmark_FastJson_Unmarshal(b *testing.B) {
 		serialSize += len(ser[i])
 	}
 	b.ReportMetric(float64(serialSize)/float64(len(data)), "B/serial")
-	buf := new(bytes.Buffer)
-	buf.Grow(100)
 	b.ReportAllocs()
 	b.StartTimer()
 
@@ -1735,39 +1709,30 @@ func benchUnmarshalNoTime(b *testing.B, s Serializer) {
 }
 
 func Benchmark_MusgoUnsafe_Marshal(b *testing.B) {
-	benchMarshalNoTime(b, NewMusgoUnsafeSerializer())
+	benchMarshalNoTime(b, MusgoUnsafeSerializer{})
 }
 
 func Benchmark_MusgoUnsafe_Unmarshal(b *testing.B) {
-	benchUnmarshalNoTime(b, NewMusgoUnsafeSerializer())
+	benchUnmarshalNoTime(b, MusgoUnsafeSerializer{})
 }
 
 func Benchmark_Musgo_Marshal(b *testing.B) {
-	benchMarshalNoTime(b, NewMusgoSerializer())
+	benchMarshalNoTime(b, MusgoSerializer{})
 }
 
 func Benchmark_Musgo_Unmarshal(b *testing.B) {
-	benchUnmarshalNoTime(b, NewMusgoSerializer())
-}
-
-func NewMusgoUnsafeSerializer() MusgoUnsafeSerializer {
-	return MusgoUnsafeSerializer{buf: make([]byte, 100)}
+	benchUnmarshalNoTime(b, MusgoSerializer{})
 }
 
 type MusgoUnsafeSerializer struct {
-	buf []byte
 }
 
 func (g MusgoUnsafeSerializer) Marshal(o interface{}) (bs []byte,
 	err error) {
-	defer func() {
-		if r := recover(); r != nil {
-			err = errors.New("buf is too small")
-		}
-	}()
 	v := o.(*NoTimeA)
-	n := v.MarshalMUS(g.buf)
-	return g.buf[:n], nil
+	buf := make([]byte, v.SizeMUS())
+	n := v.MarshalMUS(buf)
+	return buf[:n], nil
 }
 
 func (g MusgoUnsafeSerializer) Unmarshal(d []byte, o interface{}) error {
@@ -1776,23 +1741,14 @@ func (g MusgoUnsafeSerializer) Unmarshal(d []byte, o interface{}) error {
 	return err
 }
 
-func NewMusgoSerializer() MusgoSerializer {
-	return MusgoSerializer{buf: make([]byte, 100)}
-}
-
 type MusgoSerializer struct {
-	buf []byte
 }
 
 func (g MusgoSerializer) Marshal(o interface{}) (bs []byte, err error) {
 	v := o.(*NoTimeA)
-	defer func() {
-		if r := recover(); r != nil {
-			err = errors.New("buf is too small")
-		}
-	}()
-	n := v.MarshalMUS(g.buf)
-	return g.buf[:n], nil
+	buf := make([]byte, v.SizeMUS())
+	n := v.MarshalMUS(buf)
+	return buf[:n], nil
 }
 
 func (g MusgoSerializer) Unmarshal(d []byte, o interface{}) error {
