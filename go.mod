@@ -36,7 +36,7 @@ require (
 	github.com/ugorji/go/codec v1.1.7
 	github.com/valyala/fastjson v1.6.3
 	github.com/vmihailenco/msgpack/v4 v4.3.0
-	github.com/ymz-ncnk/musgo v0.1.6
+	github.com/ymz-ncnk/musgo v0.1.11
 	go.dedis.ch/protobuf v1.0.6
 	go.mongodb.org/mongo-driver v1.5.1
 	golang.org/x/sys v0.0.0-20210616094352-59db8d763f22 // indirect

@@ -14,7 +14,7 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	var v goserbench.NoTimeA
+	var v goserbench.MusgoA
 	{
 		err = musGo.Generate(reflect.TypeOf(v), false)
 		if err != nil {
