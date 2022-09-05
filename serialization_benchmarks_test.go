@@ -1652,36 +1652,48 @@ func Benchmark_FastJson_Unmarshal(b *testing.B) {
 	}
 }
 
-// github.com/valyala/musgo
+// github.com/ymz-ncnk/musgo
 
-func benchMarshalNoTime(b *testing.B, s Serializer) {
-	data := generateNoTimeA()
+func generateMusgo() []MusgoA {
+	a := make([]MusgoA, 0, 1000)
+	for i := 0; i < 1000; i++ {
+		a = append(a, MusgoA{
+			Name:     randString(16),
+			BirthDay: time.Now().UnixNano(),
+			Phone:    randString(10),
+			Siblings: rand.Int31n(5),
+			Spouse:   rand.Intn(2) == 1,
+			Money:    rand.Float64(),
+		})
+	}
+	return a
+}
+
+func Benchmark_Musgo_Marshal(b *testing.B) {
+	data := generateMusgo()
 	b.ReportAllocs()
 	b.ResetTimer()
 	var serialSize int
+	var buf []byte
+	var o MusgoA
 	for i := 0; i < b.N; i++ {
-		bytes, err := s.Marshal(data[rand.Intn(len(data))])
-		if err != nil {
-			b.Fatal(err)
-		}
-		serialSize += len(bytes)
+		o = data[rand.Intn(len(data))]
+		buf = make([]byte, o.SizeMUS())
+		o.MarshalMUS(buf)
+		serialSize += len(buf)
 	}
 	b.ReportMetric(float64(serialSize)/float64(b.N), "B/serial")
 }
 
-func benchUnmarshalNoTime(b *testing.B, s Serializer) {
+func Benchmark_Musgo_Unmarshal(b *testing.B) {
 	b.StopTimer()
-	data := generateNoTimeA()
+	data := generateMusgo()
 	ser := make([][]byte, len(data))
 	var serialSize int
 	for i, d := range data {
-		o, err := s.Marshal(d)
-		if err != nil {
-			b.Fatal(err)
-		}
-		t := make([]byte, len(o))
-		serialSize += copy(t, o)
-		ser[i] = t
+		ser[i] = make([]byte, d.SizeMUS())
+		d.MarshalMUS(ser[i])
+		serialSize += len(ser[i])
 	}
 	b.ReportMetric(float64(serialSize)/float64(len(data)), "B/serial")
 	b.ReportAllocs()
@@ -1689,18 +1701,15 @@ func benchUnmarshalNoTime(b *testing.B, s Serializer) {
 
 	for i := 0; i < b.N; i++ {
 		n := rand.Intn(len(ser))
-		o := &NoTimeA{}
-		err := s.Unmarshal(ser[n], o)
+		o := &MusgoA{}
+		_, err := o.UnmarshalMUS(ser[n])
 		if err != nil {
-			b.Fatalf("%s failed to unmarshal: %s (%s)", s, err, ser[n])
+			b.Fatalf("musgo failed to unmarshal: %s (%s)", err, ser[n])
 		}
 		// Validate unmarshalled data.
 		if validate != "" {
 			i := data[n]
-			correct := o.Name == i.Name && o.Phone == i.Phone &&
-				o.Siblings == i.Siblings && o.Spouse == i.Spouse &&
-				o.Money == i.Money && o.BirthDay == i.BirthDay
-			//&& cmpTags(o.Tags, i.Tags) && cmpAliases(o.Aliases, i.Aliases)
+			correct := o.Name == i.Name && o.Phone == i.Phone && o.Siblings == i.Siblings && o.Spouse == i.Spouse && o.Money == i.Money && o.BirthDay == i.BirthDay //&& cmpTags(o.Tags, i.Tags) && cmpAliases(o.Aliases, i.Aliases)
 			if !correct {
 				b.Fatalf("unmarshaled object differed:\n%v\n%v", i, o)
 			}
@@ -1709,50 +1718,49 @@ func benchUnmarshalNoTime(b *testing.B, s Serializer) {
 }
 
 func Benchmark_MusgoUnsafe_Marshal(b *testing.B) {
-	benchMarshalNoTime(b, MusgoUnsafeSerializer{})
+	data := generateMusgo()
+	b.ReportAllocs()
+	b.ResetTimer()
+	var serialSize int
+	var buf []byte
+	var o MusgoA
+	for i := 0; i < b.N; i++ {
+		o = data[rand.Intn(len(data))]
+		buf = make([]byte, o.SizeMUSUnsafe())
+		o.MarshalMUSUnsafe(buf)
+		serialSize += len(buf)
+	}
+	b.ReportMetric(float64(serialSize)/float64(b.N), "B/serial")
 }
 
 func Benchmark_MusgoUnsafe_Unmarshal(b *testing.B) {
-	benchUnmarshalNoTime(b, MusgoUnsafeSerializer{})
-}
+	b.StopTimer()
+	data := generateMusgo()
+	ser := make([][]byte, len(data))
+	var serialSize int
+	for i, d := range data {
+		ser[i] = make([]byte, d.SizeMUSUnsafe())
+		d.MarshalMUSUnsafe(ser[i])
+		serialSize += len(ser[i])
+	}
+	b.ReportMetric(float64(serialSize)/float64(len(data)), "B/serial")
+	b.ReportAllocs()
+	b.StartTimer()
 
-func Benchmark_Musgo_Marshal(b *testing.B) {
-	benchMarshalNoTime(b, MusgoSerializer{})
-}
-
-func Benchmark_Musgo_Unmarshal(b *testing.B) {
-	benchUnmarshalNoTime(b, MusgoSerializer{})
-}
-
-type MusgoUnsafeSerializer struct {
-}
-
-func (g MusgoUnsafeSerializer) Marshal(o interface{}) (bs []byte,
-	err error) {
-	v := o.(*NoTimeA)
-	buf := make([]byte, v.SizeMUS())
-	n := v.MarshalMUS(buf)
-	return buf[:n], nil
-}
-
-func (g MusgoUnsafeSerializer) Unmarshal(d []byte, o interface{}) error {
-	v := o.(*NoTimeA)
-	_, err := v.UnmarshalMUSUnsafe(d)
-	return err
-}
-
-type MusgoSerializer struct {
-}
-
-func (g MusgoSerializer) Marshal(o interface{}) (bs []byte, err error) {
-	v := o.(*NoTimeA)
-	buf := make([]byte, v.SizeMUS())
-	n := v.MarshalMUS(buf)
-	return buf[:n], nil
-}
-
-func (g MusgoSerializer) Unmarshal(d []byte, o interface{}) error {
-	v := o.(*NoTimeA)
-	_, err := v.UnmarshalMUS(d)
-	return err
+	for i := 0; i < b.N; i++ {
+		n := rand.Intn(len(ser))
+		o := &MusgoA{}
+		_, err := o.UnmarshalMUSUnsafe(ser[n])
+		if err != nil {
+			b.Fatalf("musgo failed to unmarshal: %s (%s)", err, ser[n])
+		}
+		// Validate unmarshalled data.
+		if validate != "" {
+			i := data[n]
+			correct := o.Name == i.Name && o.Phone == i.Phone && o.Siblings == i.Siblings && o.Spouse == i.Spouse && o.Money == i.Money && o.BirthDay == i.BirthDay //&& cmpTags(o.Tags, i.Tags) && cmpAliases(o.Aliases, i.Aliases)
+			if !correct {
+				b.Fatalf("unmarshaled object differed:\n%v\n%v", i, o)
+			}
+		}
+	}
 }
