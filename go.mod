@@ -21,7 +21,7 @@ require (
 	github.com/mailru/easyjson v0.0.0-20190626092158-b2ccc519800e
 	github.com/niubaoshu/gotiny v0.0.3
 	github.com/prysmaticlabs/go-ssz v0.0.0-20190827151743-72881c4223d8
-	github.com/shamaton/msgpack/v2 v2.0.0
+	github.com/shamaton/msgpack/v2 v2.1.1
 	github.com/shamaton/msgpackgen v0.1.1
 	github.com/tinylib/msgp v1.1.0
 	github.com/ugorji/go/codec v1.1.7
