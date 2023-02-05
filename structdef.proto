@@ -1,4 +1,8 @@
+syntax = "proto2";
+
 package goserbench;
+
+option go_package = "github.com/alecthomas/go_serialization_benchmarks;goserbench";
 
 message ProtoBufA {
   required string name = 1;

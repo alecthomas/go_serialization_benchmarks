@@ -32,6 +32,9 @@ func (v MusgoA) MarshalMUSUnsafe(buf []byte) int {
 				i++
 			}
 		}
+		if len(buf[i:]) < length {
+			panic(errs.ErrSmallBuf)
+		}
 		i += copy(buf[i:], v.Name)
 	}
 	{
@@ -58,6 +61,9 @@ func (v MusgoA) MarshalMUSUnsafe(buf []byte) int {
 				buf[i] = byte(uv)
 				i++
 			}
+		}
+		if len(buf[i:]) < length {
+			panic(errs.ErrSmallBuf)
 		}
 		i += copy(buf[i:], v.Phone)
 	}

@@ -3,47 +3,39 @@
 package goserbench
 
 import (
-	"io"
-
 	"github.com/200sc/bebop"
 	"github.com/200sc/bebop/iohelp"
+	"io"
 )
 
 var _ bebop.Record = &BebopBufA{}
 
 type BebopBufA struct {
-	Name     string
+	Name string
 	BirthDay uint64
-	Phone    string
+	Phone string
 	Siblings int32
-	Spouse   bool
-	Money    float64
+	Spouse bool
+	Money float64
 }
 
-func (bbp BebopBufA) MarshalBebop() []byte {
-	buf := make([]byte, bbp.bodyLen())
-	bbp.MarshalBebopTo(buf)
-	return buf
-}
-
-func (bbp BebopBufA) MarshalBebopTo(buf []byte) {
+func (bbp BebopBufA) MarshalBebopTo(buf []byte) int {
 	at := 0
 	iohelp.WriteUint32Bytes(buf[at:], uint32(len(bbp.Name)))
-	at += 4
-	copy(buf[at:at+len(bbp.Name)], []byte(bbp.Name))
-	at += len(bbp.Name)
+	copy(buf[at+4:at+4+len(bbp.Name)], []byte(bbp.Name))
+	at += 4 + len(bbp.Name)
 	iohelp.WriteUint64Bytes(buf[at:], bbp.BirthDay)
 	at += 8
 	iohelp.WriteUint32Bytes(buf[at:], uint32(len(bbp.Phone)))
-	at += 4
-	copy(buf[at:at+len(bbp.Phone)], []byte(bbp.Phone))
-	at += len(bbp.Phone)
+	copy(buf[at+4:at+4+len(bbp.Phone)], []byte(bbp.Phone))
+	at += 4 + len(bbp.Phone)
 	iohelp.WriteInt32Bytes(buf[at:], bbp.Siblings)
 	at += 4
 	iohelp.WriteBoolBytes(buf[at:], bbp.Spouse)
 	at += 1
 	iohelp.WriteFloat64Bytes(buf[at:], bbp.Money)
 	at += 8
+	return at
 }
 
 func (bbp *BebopBufA) UnmarshalBebop(buf []byte) (err error) {
@@ -54,7 +46,7 @@ func (bbp *BebopBufA) UnmarshalBebop(buf []byte) (err error) {
 	}
 	at += 4 + len(bbp.Name)
 	if len(buf[at:]) < 8 {
-		return iohelp.ErrTooShort
+		return io.ErrUnexpectedEOF
 	}
 	bbp.BirthDay = iohelp.ReadUint64Bytes(buf[at:])
 	at += 8
@@ -64,17 +56,17 @@ func (bbp *BebopBufA) UnmarshalBebop(buf []byte) (err error) {
 	}
 	at += 4 + len(bbp.Phone)
 	if len(buf[at:]) < 4 {
-		return iohelp.ErrTooShort
+		return io.ErrUnexpectedEOF
 	}
 	bbp.Siblings = iohelp.ReadInt32Bytes(buf[at:])
 	at += 4
 	if len(buf[at:]) < 1 {
-		return iohelp.ErrTooShort
+		return io.ErrUnexpectedEOF
 	}
 	bbp.Spouse = iohelp.ReadBoolBytes(buf[at:])
 	at += 1
 	if len(buf[at:]) < 8 {
-		return iohelp.ErrTooShort
+		return io.ErrUnexpectedEOF
 	}
 	bbp.Money = iohelp.ReadFloat64Bytes(buf[at:])
 	at += 8
@@ -105,27 +97,32 @@ func (bbp *BebopBufA) DecodeBebop(ior io.Reader) (err error) {
 	return r.Err
 }
 
-func (bbp BebopBufA) bodyLen() int {
+func (bbp BebopBufA) Size() int {
 	bodyLen := 0
-	bodyLen += 4
-	bodyLen += len(bbp.Name)
+	bodyLen += 4 + len(bbp.Name)
 	bodyLen += 8
-	bodyLen += 4
-	bodyLen += len(bbp.Phone)
+	bodyLen += 4 + len(bbp.Phone)
 	bodyLen += 4
 	bodyLen += 1
 	bodyLen += 8
 	return bodyLen
 }
 
-func makeBebopBufA(r iohelp.ErrorReader) (BebopBufA, error) {
+func (bbp BebopBufA) MarshalBebop() []byte {
+	buf := make([]byte, bbp.Size())
+	bbp.MarshalBebopTo(buf)
+	return buf
+}
+
+func MakeBebopBufA(r iohelp.ErrorReader) (BebopBufA, error) {
 	v := BebopBufA{}
 	err := v.DecodeBebop(r)
 	return v, err
 }
 
-func makeBebopBufAFromBytes(buf []byte) (BebopBufA, error) {
+func MakeBebopBufAFromBytes(buf []byte) (BebopBufA, error) {
 	v := BebopBufA{}
 	err := v.UnmarshalBebop(buf)
 	return v, err
 }
+
