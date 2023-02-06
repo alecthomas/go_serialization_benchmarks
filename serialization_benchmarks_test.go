@@ -31,7 +31,7 @@ import (
 	"github.com/tinylib/msgp/msgp"
 	"github.com/ugorji/go/codec"
 	fastjson "github.com/valyala/fastjson"
-	vmihailenco "github.com/vmihailenco/msgpack/v4"
+	vmihailenco "github.com/vmihailenco/msgpack/v5"
 	"go.dedis.ch/protobuf"
 	mongobson "go.mongodb.org/mongo-driver/bson"
 	"gopkg.in/mgo.v2/bson"
@@ -150,12 +150,11 @@ func benchUnmarshal(b *testing.B, s Serializer) {
 }
 
 func TestMessage(t *testing.T) {
-	println(`
-A test suite for benchmarking various Go serialization methods.
+	fmt.Print(`A test suite for benchmarking various Go serialization methods.
 
 See README.md for details on running the benchmarks.
-`)
 
+`)
 }
 
 // github.com/niubaoshu/gotiny
@@ -399,8 +398,7 @@ func Benchmark_MongoBson_Unmarshal(b *testing.B) {
 
 // encoding/gob
 
-type GobSerializer struct {
-}
+type GobSerializer struct{}
 
 func (g *GobSerializer) Marshal(o interface{}) ([]byte, error) {
 	var buf bytes.Buffer
@@ -545,11 +543,7 @@ func (s *FlatBufferSerializer) Marshal(o interface{}) ([]byte, error) {
 	FlatBufferAAddPhone(builder, phone)
 	FlatBufferAAddBirthDay(builder, a.BirthDay.UnixNano())
 	FlatBufferAAddSiblings(builder, int32(a.Siblings))
-	var spouse byte
-	if a.Spouse {
-		spouse = byte(1)
-	}
-	FlatBufferAAddSpouse(builder, spouse)
+	FlatBufferAAddSpouse(builder, a.Spouse)
 	FlatBufferAAddMoney(builder, a.Money)
 	builder.Finish(FlatBufferAEnd(builder))
 	return builder.Bytes[builder.Head():], nil
@@ -563,7 +557,7 @@ func (s *FlatBufferSerializer) Unmarshal(d []byte, i interface{}) error {
 	a.BirthDay = time.Unix(0, o.BirthDay())
 	a.Phone = string(o.Phone())
 	a.Siblings = int(o.Siblings())
-	a.Spouse = o.Spouse() == byte(1)
+	a.Spouse = o.Spouse()
 	a.Money = o.Money()
 	return nil
 }
@@ -578,8 +572,7 @@ func Benchmark_FlatBuffers_Unmarshal(b *testing.B) {
 
 // github.com/glycerine/go-capnproto
 
-type CapNProtoSerializer struct {
-}
+type CapNProtoSerializer struct{}
 
 func (x *CapNProtoSerializer) Marshal(o interface{}) ([]byte, error) {
 	a := o.(*A)
@@ -822,6 +815,7 @@ func generateProto() []*ProtoBufA {
 	return a
 }
 
+/*
 func Benchmark_Goprotobuf_Marshal(b *testing.B) {
 	data := generateProto()
 	b.ReportAllocs()
@@ -871,6 +865,7 @@ func Benchmark_Goprotobuf_Unmarshal(b *testing.B) {
 		}
 	}
 }
+*/
 
 // github.com/gogo/protobuf/proto
 
@@ -1410,13 +1405,16 @@ type ShamatonMapMsgpackgenSerializer struct{}
 func (m ShamatonMapMsgpackgenSerializer) Marshal(o interface{}) ([]byte, error) {
 	return shamatongen.MarshalAsMap(o)
 }
+
 func (m ShamatonMapMsgpackgenSerializer) Unmarshal(d []byte, o interface{}) error {
 	return shamatongen.UnmarshalAsMap(d, o)
 }
+
 func Benchmark_ShamatonMapMsgpackgen_Marshal(b *testing.B) {
 	RegisterGeneratedResolver()
 	benchMarshal(b, ShamatonMapMsgpackgenSerializer{})
 }
+
 func Benchmark_ShamatonMapMsgpackgen_Unmarshal(b *testing.B) {
 	RegisterGeneratedResolver()
 	benchUnmarshal(b, ShamatonMapMsgpackgenSerializer{})
@@ -1429,13 +1427,16 @@ type ShamatonArrayMsgpackgenSerializer struct{}
 func (m ShamatonArrayMsgpackgenSerializer) Marshal(o interface{}) ([]byte, error) {
 	return shamatongen.MarshalAsArray(o)
 }
+
 func (m ShamatonArrayMsgpackgenSerializer) Unmarshal(d []byte, o interface{}) error {
 	return shamatongen.UnmarshalAsArray(d, o)
 }
+
 func Benchmark_ShamatonArrayMsgpackgen_Marshal(b *testing.B) {
 	RegisterGeneratedResolver()
 	benchMarshal(b, ShamatonArrayMsgpackgenSerializer{})
 }
+
 func Benchmark_ShamatonArrayMsgpackgen_Unmarshal(b *testing.B) {
 	RegisterGeneratedResolver()
 	benchUnmarshal(b, ShamatonArrayMsgpackgenSerializer{})
@@ -1509,16 +1510,18 @@ func Benchmark_SSZNoTimeNoStringNoFloatA_Unmarshal(b *testing.B) {
 	}
 }
 
-// github.com/itsmontoya/mum
-func Benchmark_Mum_Marshal(b *testing.B) {
-	s := newMumSerializer()
+/*
+// github.com/itsmontoya/enkodo
+func Benchmark_Enkodo_Marshal(b *testing.B) {
+	s := newEnkodoSerializer()
 	benchMarshal(b, s)
 }
 
-func Benchmark_Mum_Unmarshal(b *testing.B) {
-	s := newMumSerializer()
+func Benchmark_Enkodo_Unmarshal(b *testing.B) {
+	s := newEnkodoSerializer()
 	benchUnmarshal(b, s)
 }
+*/
 
 // github.com/200sc/bebop
 

@@ -448,19 +448,43 @@ func ___decodeArrayA_dd450b3568aeca1e592f09df9c4397c3c202e4bf15bc89215d4b28d1b99
 
 // decode to github.com/alecthomas/go_serialization_benchmarks.A
 func ___decodeMapA_dd450b3568aeca1e592f09df9c4397c3c202e4bf15bc89215d4b28d1b990d189(v *A, decoder *dec.Decoder, offset int) (int, error) {
+	keys := [][]byte{
+		{uint8(0x4e), uint8(0x61), uint8(0x6d), uint8(0x65)},                                                     // Name
+		{uint8(0x42), uint8(0x69), uint8(0x72), uint8(0x74), uint8(0x68), uint8(0x44), uint8(0x61), uint8(0x79)}, // BirthDay
+		{uint8(0x50), uint8(0x68), uint8(0x6f), uint8(0x6e), uint8(0x65)},                                        // Phone
+		{uint8(0x53), uint8(0x69), uint8(0x62), uint8(0x6c), uint8(0x69), uint8(0x6e), uint8(0x67), uint8(0x73)}, // Siblings
+		{uint8(0x53), uint8(0x70), uint8(0x6f), uint8(0x75), uint8(0x73), uint8(0x65)},                           // Spouse
+		{uint8(0x4d), uint8(0x6f), uint8(0x6e), uint8(0x65), uint8(0x79)},                                        // Money
+	}
 	offset, err := decoder.CheckStructHeader(6, offset)
 	if err != nil {
 		return 0, err
 	}
 	count := 0
 	for count < 6 {
-		var s string
-		s, offset, err = decoder.AsString(offset)
+		var dataKey []byte
+		dataKey, offset, err = decoder.AsStringBytes(offset)
 		if err != nil {
 			return 0, err
 		}
-		switch s {
-		case "Name":
+		fieldIndex := -1
+		for i, key := range keys {
+			if len(dataKey) != len(key) {
+				continue
+			}
+			fieldIndex = i
+			for dataKeyIndex := range dataKey {
+				if dataKey[dataKeyIndex] != key[dataKeyIndex] {
+					fieldIndex = -1
+					break
+				}
+			}
+			if fieldIndex >= 0 {
+				break
+			}
+		}
+		switch fieldIndex {
+		case 0:
 			{
 				var vv string
 				vv, offset, err = decoder.AsString(offset)
@@ -470,7 +494,7 @@ func ___decodeMapA_dd450b3568aeca1e592f09df9c4397c3c202e4bf15bc89215d4b28d1b990d
 				v.Name = vv
 			}
 			count++
-		case "BirthDay":
+		case 1:
 			{
 				var vv time.Time
 				vv, offset, err = decoder.AsDateTime(offset)
@@ -480,7 +504,7 @@ func ___decodeMapA_dd450b3568aeca1e592f09df9c4397c3c202e4bf15bc89215d4b28d1b990d
 				v.BirthDay = vv
 			}
 			count++
-		case "Phone":
+		case 2:
 			{
 				var vv string
 				vv, offset, err = decoder.AsString(offset)
@@ -490,7 +514,7 @@ func ___decodeMapA_dd450b3568aeca1e592f09df9c4397c3c202e4bf15bc89215d4b28d1b990d
 				v.Phone = vv
 			}
 			count++
-		case "Siblings":
+		case 3:
 			{
 				var vv int
 				vv, offset, err = decoder.AsInt(offset)
@@ -500,7 +524,7 @@ func ___decodeMapA_dd450b3568aeca1e592f09df9c4397c3c202e4bf15bc89215d4b28d1b990d
 				v.Siblings = vv
 			}
 			count++
-		case "Spouse":
+		case 4:
 			{
 				var vv bool
 				vv, offset, err = decoder.AsBool(offset)
@@ -510,7 +534,7 @@ func ___decodeMapA_dd450b3568aeca1e592f09df9c4397c3c202e4bf15bc89215d4b28d1b990d
 				v.Spouse = vv
 			}
 			count++
-		case "Money":
+		case 5:
 			{
 				var vv float64
 				vv, offset, err = decoder.AsFloat64(offset)
@@ -521,7 +545,7 @@ func ___decodeMapA_dd450b3568aeca1e592f09df9c4397c3c202e4bf15bc89215d4b28d1b990d
 			}
 			count++
 		default:
-			return 0, fmt.Errorf("unknown key[%s] found", s)
+			return 0, fmt.Errorf("unknown key[%s] found", string(dataKey))
 		}
 	}
 	return offset, err
@@ -650,19 +674,43 @@ func ___decodeArrayNoTimeA_dd450b3568aeca1e592f09df9c4397c3c202e4bf15bc89215d4b2
 
 // decode to github.com/alecthomas/go_serialization_benchmarks.NoTimeA
 func ___decodeMapNoTimeA_dd450b3568aeca1e592f09df9c4397c3c202e4bf15bc89215d4b28d1b990d189(v *NoTimeA, decoder *dec.Decoder, offset int) (int, error) {
+	keys := [][]byte{
+		{uint8(0x4e), uint8(0x61), uint8(0x6d), uint8(0x65)},                                                     // Name
+		{uint8(0x42), uint8(0x69), uint8(0x72), uint8(0x74), uint8(0x68), uint8(0x44), uint8(0x61), uint8(0x79)}, // BirthDay
+		{uint8(0x50), uint8(0x68), uint8(0x6f), uint8(0x6e), uint8(0x65)},                                        // Phone
+		{uint8(0x53), uint8(0x69), uint8(0x62), uint8(0x6c), uint8(0x69), uint8(0x6e), uint8(0x67), uint8(0x73)}, // Siblings
+		{uint8(0x53), uint8(0x70), uint8(0x6f), uint8(0x75), uint8(0x73), uint8(0x65)},                           // Spouse
+		{uint8(0x4d), uint8(0x6f), uint8(0x6e), uint8(0x65), uint8(0x79)},                                        // Money
+	}
 	offset, err := decoder.CheckStructHeader(6, offset)
 	if err != nil {
 		return 0, err
 	}
 	count := 0
 	for count < 6 {
-		var s string
-		s, offset, err = decoder.AsString(offset)
+		var dataKey []byte
+		dataKey, offset, err = decoder.AsStringBytes(offset)
 		if err != nil {
 			return 0, err
 		}
-		switch s {
-		case "Name":
+		fieldIndex := -1
+		for i, key := range keys {
+			if len(dataKey) != len(key) {
+				continue
+			}
+			fieldIndex = i
+			for dataKeyIndex := range dataKey {
+				if dataKey[dataKeyIndex] != key[dataKeyIndex] {
+					fieldIndex = -1
+					break
+				}
+			}
+			if fieldIndex >= 0 {
+				break
+			}
+		}
+		switch fieldIndex {
+		case 0:
 			{
 				var vv string
 				vv, offset, err = decoder.AsString(offset)
@@ -672,7 +720,7 @@ func ___decodeMapNoTimeA_dd450b3568aeca1e592f09df9c4397c3c202e4bf15bc89215d4b28d
 				v.Name = vv
 			}
 			count++
-		case "BirthDay":
+		case 1:
 			{
 				var vv int64
 				vv, offset, err = decoder.AsInt64(offset)
@@ -682,7 +730,7 @@ func ___decodeMapNoTimeA_dd450b3568aeca1e592f09df9c4397c3c202e4bf15bc89215d4b28d
 				v.BirthDay = vv
 			}
 			count++
-		case "Phone":
+		case 2:
 			{
 				var vv string
 				vv, offset, err = decoder.AsString(offset)
@@ -692,7 +740,7 @@ func ___decodeMapNoTimeA_dd450b3568aeca1e592f09df9c4397c3c202e4bf15bc89215d4b28d
 				v.Phone = vv
 			}
 			count++
-		case "Siblings":
+		case 3:
 			{
 				var vv int
 				vv, offset, err = decoder.AsInt(offset)
@@ -702,7 +750,7 @@ func ___decodeMapNoTimeA_dd450b3568aeca1e592f09df9c4397c3c202e4bf15bc89215d4b28d
 				v.Siblings = vv
 			}
 			count++
-		case "Spouse":
+		case 4:
 			{
 				var vv bool
 				vv, offset, err = decoder.AsBool(offset)
@@ -712,7 +760,7 @@ func ___decodeMapNoTimeA_dd450b3568aeca1e592f09df9c4397c3c202e4bf15bc89215d4b28d
 				v.Spouse = vv
 			}
 			count++
-		case "Money":
+		case 5:
 			{
 				var vv float64
 				vv, offset, err = decoder.AsFloat64(offset)
@@ -723,7 +771,7 @@ func ___decodeMapNoTimeA_dd450b3568aeca1e592f09df9c4397c3c202e4bf15bc89215d4b28d
 			}
 			count++
 		default:
-			return 0, fmt.Errorf("unknown key[%s] found", s)
+			return 0, fmt.Errorf("unknown key[%s] found", string(dataKey))
 		}
 	}
 	return offset, err
@@ -948,19 +996,43 @@ func ___decodeArrayNoTimeNoStringNoFloatA_dd450b3568aeca1e592f09df9c4397c3c202e4
 
 // decode to github.com/alecthomas/go_serialization_benchmarks.NoTimeNoStringNoFloatA
 func ___decodeMapNoTimeNoStringNoFloatA_dd450b3568aeca1e592f09df9c4397c3c202e4bf15bc89215d4b28d1b990d189(v *NoTimeNoStringNoFloatA, decoder *dec.Decoder, offset int) (int, error) {
+	keys := [][]byte{
+		{uint8(0x4e), uint8(0x61), uint8(0x6d), uint8(0x65)},                                                     // Name
+		{uint8(0x42), uint8(0x69), uint8(0x72), uint8(0x74), uint8(0x68), uint8(0x44), uint8(0x61), uint8(0x79)}, // BirthDay
+		{uint8(0x50), uint8(0x68), uint8(0x6f), uint8(0x6e), uint8(0x65)},                                        // Phone
+		{uint8(0x53), uint8(0x69), uint8(0x62), uint8(0x6c), uint8(0x69), uint8(0x6e), uint8(0x67), uint8(0x73)}, // Siblings
+		{uint8(0x53), uint8(0x70), uint8(0x6f), uint8(0x75), uint8(0x73), uint8(0x65)},                           // Spouse
+		{uint8(0x4d), uint8(0x6f), uint8(0x6e), uint8(0x65), uint8(0x79)},                                        // Money
+	}
 	offset, err := decoder.CheckStructHeader(6, offset)
 	if err != nil {
 		return 0, err
 	}
 	count := 0
 	for count < 6 {
-		var s string
-		s, offset, err = decoder.AsString(offset)
+		var dataKey []byte
+		dataKey, offset, err = decoder.AsStringBytes(offset)
 		if err != nil {
 			return 0, err
 		}
-		switch s {
-		case "Name":
+		fieldIndex := -1
+		for i, key := range keys {
+			if len(dataKey) != len(key) {
+				continue
+			}
+			fieldIndex = i
+			for dataKeyIndex := range dataKey {
+				if dataKey[dataKeyIndex] != key[dataKeyIndex] {
+					fieldIndex = -1
+					break
+				}
+			}
+			if fieldIndex >= 0 {
+				break
+			}
+		}
+		switch fieldIndex {
+		case 0:
 			if !decoder.IsCodeNil(offset) {
 				var vv []byte
 				var vvl int
@@ -982,7 +1054,7 @@ func ___decodeMapNoTimeNoStringNoFloatA_dd450b3568aeca1e592f09df9c4397c3c202e4bf
 				offset++
 			}
 			count++
-		case "BirthDay":
+		case 1:
 			{
 				var vv uint64
 				vv, offset, err = decoder.AsUint64(offset)
@@ -992,7 +1064,7 @@ func ___decodeMapNoTimeNoStringNoFloatA_dd450b3568aeca1e592f09df9c4397c3c202e4bf
 				v.BirthDay = vv
 			}
 			count++
-		case "Phone":
+		case 2:
 			if !decoder.IsCodeNil(offset) {
 				var vv []byte
 				var vvl int
@@ -1014,7 +1086,7 @@ func ___decodeMapNoTimeNoStringNoFloatA_dd450b3568aeca1e592f09df9c4397c3c202e4bf
 				offset++
 			}
 			count++
-		case "Siblings":
+		case 3:
 			{
 				var vv uint32
 				vv, offset, err = decoder.AsUint32(offset)
@@ -1024,7 +1096,7 @@ func ___decodeMapNoTimeNoStringNoFloatA_dd450b3568aeca1e592f09df9c4397c3c202e4bf
 				v.Siblings = vv
 			}
 			count++
-		case "Spouse":
+		case 4:
 			{
 				var vv bool
 				vv, offset, err = decoder.AsBool(offset)
@@ -1034,7 +1106,7 @@ func ___decodeMapNoTimeNoStringNoFloatA_dd450b3568aeca1e592f09df9c4397c3c202e4bf
 				v.Spouse = vv
 			}
 			count++
-		case "Money":
+		case 5:
 			{
 				var vv uint64
 				vv, offset, err = decoder.AsUint64(offset)
@@ -1045,7 +1117,7 @@ func ___decodeMapNoTimeNoStringNoFloatA_dd450b3568aeca1e592f09df9c4397c3c202e4bf
 			}
 			count++
 		default:
-			return 0, fmt.Errorf("unknown key[%s] found", s)
+			return 0, fmt.Errorf("unknown key[%s] found", string(dataKey))
 		}
 	}
 	return offset, err

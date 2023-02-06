@@ -1,26 +1,25 @@
 package goserbench
 
 import (
+	"bytes"
 	"fmt"
 	"time"
 
-	"github.com/itsmontoya/mum"
+	"github.com/mojura/enkodo"
 )
 
-func newMumSerializer() *mumSerializer {
-	var m mumSerializer
-	m.w = mum.NewWriter(make([]byte, 0, 67))
-	m.r = mum.NewReader(nil)
+func newEnkodoSerializer() *enkodoSerializer {
+	var m enkodoSerializer
+	m.w = enkodo.NewWriter(bytes.NewBuffer(nil))
 	return &m
 }
 
-type mumSerializer struct {
-	w *mum.Writer
-	r *mum.Reader
+type enkodoSerializer struct {
+	w *enkodo.Writer
 }
 
-func (m *mumSerializer) Marshal(value interface{}) (bs []byte, err error) {
-	encodee, ok := value.(mum.Encodee)
+func (m *enkodoSerializer) Marshal(value interface{}) (bs []byte, err error) {
+	encodee, ok := value.(enkodo.Encodee)
 	if !ok {
 		err = fmt.Errorf("invalid type, expected %t and received %t", encodee, value)
 		return
@@ -35,19 +34,17 @@ func (m *mumSerializer) Marshal(value interface{}) (bs []byte, err error) {
 	return
 }
 
-func (m *mumSerializer) Unmarshal(bs []byte, value interface{}) (err error) {
-	decodee, ok := value.(mum.Decodee)
+func (m *enkodoSerializer) Unmarshal(bs []byte, value interface{}) (err error) {
+	decodee, ok := value.(enkodo.Decodee)
 	if !ok {
 		err = fmt.Errorf("invalid type, expected %t and received %t", decodee, value)
 		return
 	}
-
-	m.r.SetBuffer(bs)
-	return m.r.Decode(decodee)
+	return enkodo.Unmarshal(bs, decodee)
 }
 
-// MarshalMum is an encoding helper func
-func (a *A) MarshalMum(enc *mum.Encoder) (err error) {
+// MarshalEnkodo is an encoding helper func
+func (a *A) MarshalEnkodo(enc *enkodo.Encoder) (err error) {
 	enc.String(a.Name)
 	enc.Int64(a.BirthDay.UnixNano())
 	enc.String(a.Phone)
@@ -57,8 +54,8 @@ func (a *A) MarshalMum(enc *mum.Encoder) (err error) {
 	return
 }
 
-// UnmarshalMum is an decoding helper func
-func (a *A) UnmarshalMum(dec *mum.Decoder) (err error) {
+// UnmarshalEnkodo is an decoding helper func
+func (a *A) UnmarshalEnkodo(dec *enkodo.Decoder) (err error) {
 	if a.Name, err = dec.String(); err != nil {
 		return
 	}

@@ -4,8 +4,8 @@ import (
 	"bytes"
 	"time"
 
-	goavro2 "github.com/linkedin/goavro"
-	goavro "gopkg.in/linkedin/goavro.v1"
+	goavro "github.com/linkedin/goavro"
+	goavro2 "github.com/linkedin/goavro/v2"
 )
 
 type AvroA struct {
@@ -21,8 +21,7 @@ type Avro2Bin struct {
 	codec *goavro2.Codec
 }
 
-var (
-	avroSchemaJSON = `
+var avroSchemaJSON = `
 		{
 		  "type": "record",
 		  "name": "AvroA",
@@ -56,7 +55,6 @@ var (
 		  ]
 		}
 	`
-)
 
 func NewAvroA() *AvroA {
 	rec, err := goavro.NewRecord(goavro.RecordSchema(avroSchemaJSON))
