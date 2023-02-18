@@ -56,7 +56,7 @@ require (
 	github.com/protolambda/zssz v0.1.1 // indirect
 	github.com/prysmaticlabs/go-bitfield v0.0.0-20190825002834-fb724e897364 // indirect
 	github.com/vmihailenco/tagparser/v2 v2.0.0 // indirect
-	golang.org/x/net v0.5.0 // indirect
+	golang.org/x/net v0.7.0 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 )
 
