@@ -1,0 +1,10 @@
+karmem karmemmodels @packed(true) @golang.package(`km`);
+
+struct KarmemA inline {
+    Name     []char;
+    Birthday int64;
+    Phone    []char;
+    Siblings int32;
+    Spouse   bool;
+    Money    float64;
+}

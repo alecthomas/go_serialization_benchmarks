@@ -14,6 +14,7 @@ import (
 
 	"github.com/Sereal/Sereal/Go/sereal"
 	"github.com/alecthomas/binary"
+	"github.com/alecthomas/go_serialization_benchmarks/km"
 	"github.com/davecgh/go-xdr/xdr"
 	capn "github.com/glycerine/go-capnproto"
 	"github.com/gogo/protobuf/jsonpb"
@@ -35,6 +36,7 @@ import (
 	"go.dedis.ch/protobuf"
 	mongobson "go.mongodb.org/mongo-driver/bson"
 	"gopkg.in/mgo.v2/bson"
+	karmem "karmem.org/golang"
 	capnp "zombiezen.com/go/capnproto2"
 )
 
@@ -1766,4 +1768,48 @@ func Benchmark_MusgoUnsafe_Unmarshal(b *testing.B) {
 			}
 		}
 	}
+}
+
+// karmem.org/golang
+
+type KarmemSerializer struct {
+	writer *karmem.Writer
+}
+
+func (s *KarmemSerializer) Marshal(o interface{}) ([]byte, error) {
+	a := o.(*A)
+
+	w := s.writer
+	k := km.KarmemA{
+		Name:     a.Name,
+		Birthday: a.BirthDay.UnixNano(),
+		Phone:    a.Phone,
+		Siblings: int32(a.Siblings),
+		Spouse:   a.Spouse,
+		Money:    a.Money,
+	}
+	w.Reset()
+	_, err := k.WriteAsRoot(w)
+	return w.Bytes(), err
+}
+
+func (s *KarmemSerializer) Unmarshal(d []byte, i interface{}) error {
+	a := i.(*A)
+	v := karmem.NewReader(d)
+	k := km.NewKarmemAViewer(v, 0)
+	a.Name = k.Name(v)
+	a.BirthDay = time.Unix(0, k.Birthday())
+	a.Phone = k.Phone(v)
+	a.Siblings = int(k.Siblings())
+	a.Spouse = k.Spouse()
+	a.Money = k.Money()
+	return nil
+}
+
+func Benchmark_Karmem_Marshal(b *testing.B) {
+	benchMarshal(b, &KarmemSerializer{karmem.NewWriter(1024)})
+}
+
+func Benchmark_Karmem_Unmarshal(b *testing.B) {
+	benchUnmarshal(b, &KarmemSerializer{karmem.NewWriter(1024)})
 }
