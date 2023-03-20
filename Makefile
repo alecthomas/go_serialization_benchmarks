@@ -1,7 +1,7 @@
 # This is necessary due to the use of two conflicting generator commands for capnproto
 .NOTPARALLEL:
 
-all: Colfer.go FlatBufferA.go msgp_gen.go structdef-gogo.pb.go structdef.pb.go structdefxdr_generated.go structdef-bebop.go structdef_msgpackgen.go musgo.go
+all: Colfer.go FlatBufferA.go msgp_gen.go structdef-gogo.pb.go structdef.pb.go structdefxdr_generated.go structdef-bebop.go structdef_msgpackgen.go musgo.go structdef.pulsar.go
 
 Colfer.go:
 	go run github.com/pascaldekloe/colfer/cmd/colf@latest go
@@ -24,6 +24,9 @@ structdef-gogo.pb.go: structdef-gogo.proto
 
 structdef.pb.go: structdef.proto
 	protoc --go_opt=paths=source_relative --go_out=. structdef.proto
+
+structdef-pulsar.pulsar.go: structdef-pulsar.proto
+	protoc --go-pulsar_out=. --go-pulsar_opt=paths=source_relative --go-pulsar_opt=features=protoc+fast -I . structdef-pulsar.proto
 
 #structdef.capnp2.go: structdef.capnp2
 #	go run zombiezen.com/go/capnproto2/capnpc-go@latest compile -I${GOPATH}/src -ogo structdef.capnp2
@@ -79,3 +82,4 @@ install:
 	go install github.com/200sc/bebop/main/bebopc-go@latest
 	go install github.com/shamaton/msgpackgen@latest
 	go install github.com/ymz-ncnk/musgo@latest
+	go install github.com/cosmos/cosmos-proto/cmd/protoc-gen-go-pulsar@latest
