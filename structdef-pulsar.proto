@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+package goserbench;
+
+option go_package = "github.com/alecthomas/go_serialization_benchmarks;goserbench";
+
+message PulsarBufA {
+  string name = 1;
+  int64 birthDay = 2;
+  string phone = 3;
+  int32 siblings = 4;
+  bool spouse = 5;
+  double money = 6;
+}

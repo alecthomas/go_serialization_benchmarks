@@ -34,6 +34,7 @@ import (
 	vmihailenco "github.com/vmihailenco/msgpack/v5"
 	"go.dedis.ch/protobuf"
 	mongobson "go.mongodb.org/mongo-driver/bson"
+	pproto "google.golang.org/protobuf/proto"
 	"gopkg.in/mgo.v2/bson"
 	capnp "zombiezen.com/go/capnproto2"
 )
@@ -866,6 +867,73 @@ func Benchmark_Goprotobuf_Unmarshal(b *testing.B) {
 	}
 }
 */
+
+// github.com/cosmos/cosmos-proto
+
+func generatePulsar() []*PulsarBufA {
+	a := make([]*PulsarBufA, 0, 1000)
+	for i := 0; i < 1000; i++ {
+		a = append(a, &PulsarBufA{
+			Name:     randString(16),
+			BirthDay: time.Now().UnixNano(),
+			Phone:    randString(10),
+			Siblings: rand.Int31n(5),
+			Spouse:   rand.Intn(2) == 1,
+			Money:    rand.Float64(),
+		})
+	}
+	return a
+}
+
+func Benchmark_Pulsar_Marshal(b *testing.B) {
+	data := generatePulsar()
+	b.ReportAllocs()
+	b.ResetTimer()
+	var serialSize int
+	for i := 0; i < b.N; i++ {
+		bytes, err := pproto.Marshal(data[rand.Intn(len(data))])
+		if err != nil {
+			b.Fatal(err)
+		}
+		serialSize += len(bytes)
+	}
+	b.ReportMetric(float64(serialSize)/float64(b.N), "B/serial")
+}
+
+func Benchmark_Pulsar_Unmarshal(b *testing.B) {
+	b.StopTimer()
+	data := generatePulsar()
+	ser := make([][]byte, len(data))
+	var serialSize int
+	for i, d := range data {
+		var err error
+		ser[i], err = pproto.Marshal(d)
+		if err != nil {
+			b.Fatal(err)
+		}
+		serialSize += len(ser[i])
+	}
+	b.ReportMetric(float64(serialSize)/float64(len(data)), "B/serial")
+	b.ReportAllocs()
+	b.StartTimer()
+
+	for i := 0; i < b.N; i++ {
+		n := rand.Intn(len(ser))
+		o := &PulsarBufA{}
+		err := pproto.Unmarshal(ser[n], o)
+		if err != nil {
+			b.Fatalf("goprotobuf failed to unmarshal: %s (%s)", err, ser[n])
+		}
+		// Validate unmarshalled data.
+		if validate != "" {
+			i := data[n]
+			correct := o.Name == i.Name && o.Phone == i.Phone && o.Siblings == i.Siblings && o.Spouse == i.Spouse && o.Money == i.Money && o.BirthDay == i.BirthDay //&& cmpTags(o.Tags, i.Tags) && cmpAliases(o.Aliases, i.Aliases)
+			if !correct {
+				b.Fatalf("unmarshaled object differed:\n%v\n%v", i, o)
+			}
+		}
+	}
+}
 
 // github.com/gogo/protobuf/proto
 
