@@ -79,3 +79,4 @@ install:
 	go install github.com/200sc/bebop/main/bebopc-go@latest
 	go install github.com/shamaton/msgpackgen@latest
 	go install github.com/cosmos/cosmos-proto/cmd/protoc-gen-go-pulsar@latest
+	go install github.com/mus-format/mus-go@latest

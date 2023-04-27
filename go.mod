@@ -50,11 +50,14 @@ require (
 	github.com/minio/sha256-simd v0.1.0 // indirect
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
 	github.com/modern-go/reflect2 v1.0.2 // indirect
+	github.com/mus-format/mus-common-go v0.0.0-20230426111652-d1324c6517b3 // indirect
+	github.com/mus-format/mus-go v0.0.0-20230426134740-6572513fca3d // indirect
 	github.com/philhofer/fwd v1.1.2 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/protolambda/zssz v0.1.1 // indirect
 	github.com/prysmaticlabs/go-bitfield v0.0.0-20190825002834-fb724e897364 // indirect
 	github.com/vmihailenco/tagparser/v2 v2.0.0 // indirect
+	golang.org/x/exp v0.0.0-20230321023759-10a507213a29 // indirect
 	golang.org/x/net v0.5.0 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 )
