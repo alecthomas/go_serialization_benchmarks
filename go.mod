@@ -27,8 +27,6 @@ require (
 	github.com/ugorji/go/codec v1.2.9
 	github.com/valyala/fastjson v1.6.4
 	github.com/vmihailenco/msgpack/v5 v5.3.5
-	github.com/ymz-ncnk/musgen v1.0.0
-	github.com/ymz-ncnk/musgo v1.0.0
 	go.dedis.ch/protobuf v1.0.11
 	go.mongodb.org/mongo-driver v1.11.1
 	google.golang.org/protobuf v1.28.1
