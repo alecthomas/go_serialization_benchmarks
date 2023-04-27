@@ -1,7 +1,7 @@
 # This is necessary due to the use of two conflicting generator commands for capnproto
 .NOTPARALLEL:
 
-all: Colfer.go FlatBufferA.go msgp_gen.go structdef-gogo.pb.go structdef.pb.go structdefxdr_generated.go structdef-bebop.go structdef_msgpackgen.go musgo.go structdef.pulsar.go
+all: Colfer.go FlatBufferA.go msgp_gen.go structdef-gogo.pb.go structdef.pb.go structdefxdr_generated.go structdef-bebop.go structdef_msgpackgen.go structdef.pulsar.go
 
 Colfer.go:
 	go run github.com/pascaldekloe/colfer/cmd/colf@latest go
@@ -49,12 +49,9 @@ structdef-bebop.go:
 structdef_msgpackgen.go: structdef.go
 	go run github.com/shamaton/msgpackgen@latest -input-file structdef.go -output-file structdef_msgpackgen.go -strict
 
-musgo.go: structdef.go
-	go run ./musgo-gen.go
-
 .PHONY: clean
 clean:
-	rm -f Colfer.go FlatBufferA.go msgp_gen.go structdef-gogo.pb.go structdef.pb.go structdefxdr_generated.go structdef_msgpackgen.go NoTimeA.musgen.go NoTimeAUnsafe.musgen.go
+	rm -f Colfer.go FlatBufferA.go msgp_gen.go structdef-gogo.pb.go structdef.pb.go structdefxdr_generated.go structdef_msgpackgen.go
 .PHONY: install
 install:
 	go install github.com/gogo/protobuf/protoc-gen-gogofaster@latest
@@ -81,5 +78,5 @@ install:
 	go install github.com/200sc/bebop@latest
 	go install github.com/200sc/bebop/main/bebopc-go@latest
 	go install github.com/shamaton/msgpackgen@latest
-	go install github.com/ymz-ncnk/musgo@latest
 	go install github.com/cosmos/cosmos-proto/cmd/protoc-gen-go-pulsar@latest
+	go install github.com/mus-format/mus-go@latest

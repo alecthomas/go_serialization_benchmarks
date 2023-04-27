@@ -1723,12 +1723,12 @@ func Benchmark_FastJson_Unmarshal(b *testing.B) {
 	}
 }
 
-// github.com/ymz-ncnk/musgo
+// github.com/mus-format/mus-go
 
-func generateMusgo() []MusgoA {
-	a := make([]MusgoA, 0, 1000)
+func generateMUS() []MUSA {
+	a := make([]MUSA, 0, 1000)
 	for i := 0; i < 1000; i++ {
-		a = append(a, MusgoA{
+		a = append(a, MUSA{
 			Name:     randString(16),
 			BirthDay: time.Now().UnixNano(),
 			Phone:    randString(10),
@@ -1740,30 +1740,28 @@ func generateMusgo() []MusgoA {
 	return a
 }
 
-func Benchmark_Musgo_Marshal(b *testing.B) {
-	data := generateMusgo()
+func Benchmark_MUS_Marshal(b *testing.B) {
+	data := generateMUS()
 	b.ReportAllocs()
 	b.ResetTimer()
 	var serialSize int
 	var buf []byte
-	var o MusgoA
+	var o MUSA
 	for i := 0; i < b.N; i++ {
 		o = data[rand.Intn(len(data))]
-		buf = make([]byte, o.SizeMUS())
-		o.MarshalMUS(buf)
+		buf = MarshalMUS(o)
 		serialSize += len(buf)
 	}
 	b.ReportMetric(float64(serialSize)/float64(b.N), "B/serial")
 }
 
-func Benchmark_Musgo_Unmarshal(b *testing.B) {
+func Benchmark_MUS_Unmarshal(b *testing.B) {
 	b.StopTimer()
-	data := generateMusgo()
+	data := generateMUS()
 	ser := make([][]byte, len(data))
 	var serialSize int
 	for i, d := range data {
-		ser[i] = make([]byte, d.SizeMUS())
-		d.MarshalMUS(ser[i])
+		ser[i] = MarshalMUS(d)
 		serialSize += len(ser[i])
 	}
 	b.ReportMetric(float64(serialSize)/float64(len(data)), "B/serial")
@@ -1772,10 +1770,9 @@ func Benchmark_Musgo_Unmarshal(b *testing.B) {
 
 	for i := 0; i < b.N; i++ {
 		n := rand.Intn(len(ser))
-		o := &MusgoA{}
-		_, err := o.UnmarshalMUS(ser[n])
+		o, _, err := UnmarshalMUS(ser[n])
 		if err != nil {
-			b.Fatalf("musgo failed to unmarshal: %s (%s)", err, ser[n])
+			b.Fatalf("mus failed to unmarshal: %s (%s)", err, ser[n])
 		}
 		// Validate unmarshalled data.
 		if validate != "" {
@@ -1788,30 +1785,28 @@ func Benchmark_Musgo_Unmarshal(b *testing.B) {
 	}
 }
 
-func Benchmark_MusgoUnsafe_Marshal(b *testing.B) {
-	data := generateMusgo()
+func Benchmark_MUSUnsafe_Marshal(b *testing.B) {
+	data := generateMUS()
 	b.ReportAllocs()
 	b.ResetTimer()
 	var serialSize int
 	var buf []byte
-	var o MusgoA
+	var o MUSA
 	for i := 0; i < b.N; i++ {
 		o = data[rand.Intn(len(data))]
-		buf = make([]byte, o.SizeMUSUnsafe())
-		o.MarshalMUSUnsafe(buf)
+		buf = MarshalMUSUnsafe(o)
 		serialSize += len(buf)
 	}
 	b.ReportMetric(float64(serialSize)/float64(b.N), "B/serial")
 }
 
-func Benchmark_MusgoUnsafe_Unmarshal(b *testing.B) {
+func Benchmark_MUSUnsafe_Unmarshal(b *testing.B) {
 	b.StopTimer()
-	data := generateMusgo()
+	data := generateMUS()
 	ser := make([][]byte, len(data))
 	var serialSize int
 	for i, d := range data {
-		ser[i] = make([]byte, d.SizeMUSUnsafe())
-		d.MarshalMUSUnsafe(ser[i])
+		ser[i] = MarshalMUSUnsafe(d)
 		serialSize += len(ser[i])
 	}
 	b.ReportMetric(float64(serialSize)/float64(len(data)), "B/serial")
@@ -1820,10 +1815,9 @@ func Benchmark_MusgoUnsafe_Unmarshal(b *testing.B) {
 
 	for i := 0; i < b.N; i++ {
 		n := rand.Intn(len(ser))
-		o := &MusgoA{}
-		_, err := o.UnmarshalMUSUnsafe(ser[n])
+		o, _, err := UnmarshalMUSUnsafe(ser[n])
 		if err != nil {
-			b.Fatalf("musgo failed to unmarshal: %s (%s)", err, ser[n])
+			b.Fatalf("mus failed to unmarshal: %s (%s)", err, ser[n])
 		}
 		// Validate unmarshalled data.
 		if validate != "" {
