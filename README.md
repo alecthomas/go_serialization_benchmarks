@@ -40,12 +40,6 @@ go get -u -t
 go test -bench='.*' ./
 ```
 
-To update the table in the README:
-
-```bash
-./stats.sh
-```
-
 ## Recommendation
 
 If performance, correctness and interoperability are the most
@@ -70,146 +64,115 @@ type A struct {
 }
 ```
 
-
 ## Results
 
-2023-04-27 Results with Go 1.20.3 linux/amd64 on an `AMD Ryzen 7 PRO 5850U` processor.
+2023-05-03 Results with Go 1.20.3 darwin/amd64 on an `Intel(R) Core(TM) i7-9750H CPU @ 2.60GHz` processor.
 
-benchmark                                        | iter       | time/iter    | bytes/op  | allocs/op  | tt.sec | tt.kb        | ns/alloc
--------------------------------------------------|------------|--------------|-----------|------------|--------|--------------|-----------
-Benchmark_Gotiny_Marshal-16                      |    2509231 |    653 ns/op |        48 |        168 |   1.64 |        12044 |    3.89
-Benchmark_Gotiny_Unmarshal-16                    |    3494467 |    357 ns/op |        47 |        112 |   1.25 |        16769 |    3.19
-Benchmark_GotinyNoTime_Marshal-16                |    1665592 |    715 ns/op |        48 |        168 |   1.19 |         7994 |    4.26
-Benchmark_GotinyNoTime_Unmarshal-16              |    3763646 |    345 ns/op |        48 |         96 |   1.30 |        18065 |    3.60
-Benchmark_Msgp_Marshal-16                        |    4259458 |    279 ns/op |        97 |        128 |   1.19 |        41316 |    2.19
-Benchmark_Msgp_Unmarshal-16                      |    3301718 |    429 ns/op |        97 |        112 |   1.42 |        32026 |    3.84
-Benchmark_VmihailencoMsgpack_Marshal-16          |     870376 |   1231 ns/op |        92 |        264 |   1.07 |         8007 |    4.66
-Benchmark_VmihailencoMsgpack_Unmarshal-16        |     739293 |   1470 ns/op |        92 |        160 |   1.09 |         6801 |    9.19
-Benchmark_Json_Marshal-16                        |    1069760 |   1537 ns/op |       151 |        208 |   1.64 |        16217 |    7.39
-Benchmark_Json_Unmarshal-16                      |     257702 |   3933 ns/op |       151 |        351 |   1.01 |         3906 |   11.21
-Benchmark_JsonIter_Marshal-16                    |    1000000 |   1015 ns/op |       141 |        200 |   1.01 |        14130 |    5.08
-Benchmark_JsonIter_Unmarshal-16                  |     897181 |   1292 ns/op |       141 |        216 |   1.16 |        12677 |    5.98
-Benchmark_EasyJson_Marshal-16                    |    1000000 |   1343 ns/op |       151 |        896 |   1.34 |        15170 |    1.50
-Benchmark_EasyJson_Unmarshal-16                  |    1041213 |   1298 ns/op |       151 |        112 |   1.35 |        15795 |   11.59
-Benchmark_Bson_Marshal-16                        |     722877 |   1491 ns/op |       110 |        376 |   1.08 |         7951 |    3.97
-Benchmark_Bson_Unmarshal-16                      |     748554 |   1855 ns/op |       110 |        224 |   1.39 |         8234 |    8.28
-Benchmark_MongoBson_Marshal-16                   |     764475 |   1499 ns/op |       110 |        240 |   1.15 |         8409 |    6.25
-Benchmark_MongoBson_Unmarshal-16                 |     483150 |   2166 ns/op |       110 |        408 |   1.05 |         5314 |    5.31
-Benchmark_Gob_Marshal-16                         |     201495 |   6363 ns/op |       163 |       1616 |   1.28 |         3298 |    3.94
-Benchmark_Gob_Unmarshal-16                       |      37329 |  33507 ns/op |       163 |       7768 |   1.25 |          610 |    4.31
-Benchmark_XDR_Marshal-16                         |     593994 |   1987 ns/op |        92 |        439 |   1.18 |         5464 |    4.53
-Benchmark_XDR_Unmarshal-16                       |     769069 |   1573 ns/op |        92 |        232 |   1.21 |         7075 |    6.78
-Benchmark_UgorjiCodecMsgpack_Marshal-16          |    1000000 |   1538 ns/op |        91 |       1240 |   1.54 |         9100 |    1.24
-Benchmark_UgorjiCodecMsgpack_Unmarshal-16        |     529971 |   2164 ns/op |        91 |        688 |   1.15 |         4822 |    3.15
-Benchmark_UgorjiCodecBinc_Marshal-16             |     555745 |   2007 ns/op |        95 |       1256 |   1.12 |         5279 |    1.60
-Benchmark_UgorjiCodecBinc_Unmarshal-16           |     569472 |   2001 ns/op |        95 |        688 |   1.14 |         5409 |    2.91
-Benchmark_Sereal_Marshal-16                      |     295790 |   4727 ns/op |       132 |        832 |   1.40 |         3904 |    5.68
-Benchmark_Sereal_Unmarshal-16                    |     201170 |   5099 ns/op |       132 |        976 |   1.03 |         2655 |    5.22
-Benchmark_Binary_Marshal-16                      |     502834 |   2571 ns/op |        61 |        360 |   1.29 |         3067 |    7.14
-Benchmark_Binary_Unmarshal-16                    |     401703 |   2501 ns/op |        61 |        320 |   1.00 |         2450 |    7.82
-Benchmark_FlatBuffers_Marshal-16                 |    1000000 |   1317 ns/op |        95 |        376 |   1.32 |         9511 |    3.50
-Benchmark_FlatBuffers_Unmarshal-16               |    2784686 |    401 ns/op |        95 |        112 |   1.12 |        26512 |    3.59
-Benchmark_CapNProto_Marshal-16                   |     430296 |   3012 ns/op |        96 |       4392 |   1.30 |         4130 |    0.69
-Benchmark_CapNProto_Unmarshal-16                 |    1210761 |    896 ns/op |        96 |        192 |   1.09 |        11623 |    4.67
-Benchmark_CapNProto2_Marshal-16                  |     480901 |   2187 ns/op |        96 |       1452 |   1.05 |         4616 |    1.51
-Benchmark_CapNProto2_Unmarshal-16                |    1365840 |    770 ns/op |        96 |        272 |   1.05 |        13112 |    2.83
-Benchmark_Hprose_Marshal-16                      |    2070277 |    522 ns/op |        85 |        403 |   1.08 |        17655 |    1.30
-Benchmark_Hprose_Unmarshal-16                    |     748009 |   1667 ns/op |        85 |        303 |   1.25 |         6378 |    5.50
-Benchmark_Hprose2_Marshal-16                     |    4282826 |    253 ns/op |        85 |          0 |   1.09 |        36519 |    0.00
-Benchmark_Hprose2_Unmarshal-16                   |    1670266 |    752 ns/op |        85 |        136 |   1.26 |        14240 |    5.53
-Benchmark_Protobuf_Marshal-16                    |    1000000 |   1025 ns/op |        52 |        144 |   1.02 |         5200 |    7.12
-Benchmark_Protobuf_Unmarshal-16                  |    1189854 |   1439 ns/op |        52 |        184 |   1.71 |         6187 |    7.82
-Benchmark_Pulsar_Marshal-16                      |     974084 |   1166 ns/op |        51 |        304 |   1.14 |         5033 |    3.84
-Benchmark_Pulsar_Unmarshal-16                    |    1195524 |   1136 ns/op |        51 |        256 |   1.36 |         6166 |    4.44
-Benchmark_Gogoprotobuf_Marshal-16                |    5046446 |    239 ns/op |        53 |         64 |   1.21 |        26746 |    3.74
-Benchmark_Gogoprotobuf_Unmarshal-16              |    3007797 |    352 ns/op |        53 |         96 |   1.06 |        15941 |    3.67
-Benchmark_Gogojsonpb_Marshal-16                  |      71272 |  15293 ns/op |       126 |       3121 |   1.09 |          899 |    4.90
-Benchmark_Gogojsonpb_Unmarshal-16                |      54970 |  22405 ns/op |       125 |       3378 |   1.23 |          691 |    6.63
-Benchmark_Colfer_Marshal-16                      |    9342464 |    157 ns/op |        51 |         64 |   1.47 |        47739 |    2.45
-Benchmark_Colfer_Unmarshal-16                    |    3477394 |    292 ns/op |        49 |        112 |   1.02 |        17039 |    2.61
-Benchmark_Gencode_Marshal-16                     |    6034485 |    204 ns/op |        53 |         80 |   1.23 |        31982 |    2.55
-Benchmark_Gencode_Unmarshal-16                   |    5354996 |    322 ns/op |        53 |        112 |   1.73 |        28381 |    2.88
-Benchmark_GencodeUnsafe_Marshal-16               |    6939962 |    165 ns/op |        46 |         48 |   1.15 |        31923 |    3.45
-Benchmark_GencodeUnsafe_Unmarshal-16             |    5896057 |    223 ns/op |        46 |         96 |   1.32 |        27121 |    2.32
-Benchmark_XDR2_Marshal-16                        |    4457760 |    259 ns/op |        60 |         64 |   1.15 |        26746 |    4.05
-Benchmark_XDR2_Unmarshal-16                      |    5318547 |    206 ns/op |        60 |         32 |   1.10 |        31911 |    6.46
-Benchmark_GoAvro_Marshal-16                      |     265651 |   4044 ns/op |        47 |        728 |   1.07 |         1248 |    5.55
-Benchmark_GoAvro_Unmarshal-16                    |     131302 |   9988 ns/op |        47 |       2544 |   1.31 |          617 |    3.93
-Benchmark_GoAvro2Text_Marshal-16                 |     198501 |   5475 ns/op |       133 |       1320 |   1.09 |         2653 |    4.15
-Benchmark_GoAvro2Text_Unmarshal-16               |     285451 |   4918 ns/op |       133 |        736 |   1.40 |         3819 |    6.68
-Benchmark_GoAvro2Binary_Marshal-16               |     775006 |   1516 ns/op |        47 |        464 |   1.17 |         3642 |    3.27
-Benchmark_GoAvro2Binary_Unmarshal-16             |     946983 |   1169 ns/op |        47 |        544 |   1.11 |         4450 |    2.15
-Benchmark_Ikea_Marshal-16                        |    1000000 |   1125 ns/op |        55 |        184 |   1.12 |         5500 |    6.11
-Benchmark_Ikea_Unmarshal-16                      |    1438875 |    933 ns/op |        55 |        160 |   1.34 |         7913 |    5.83
-Benchmark_ShamatonMapMsgpack_Marshal-16          |    1482009 |    828 ns/op |        92 |        192 |   1.23 |        13634 |    4.32
-Benchmark_ShamatonMapMsgpack_Unmarshal-16        |    1399692 |    812 ns/op |        92 |        168 |   1.14 |        12877 |    4.84
-Benchmark_ShamatonArrayMsgpack_Marshal-16        |    1529468 |    719 ns/op |        50 |        160 |   1.10 |         7647 |    4.50
-Benchmark_ShamatonArrayMsgpack_Unmarshal-16      |    1764112 |    675 ns/op |        50 |        168 |   1.19 |         8820 |    4.02
-Benchmark_ShamatonMapMsgpackgen_Marshal-16       |    4684315 |    245 ns/op |        92 |         96 |   1.15 |        43095 |    2.56
-Benchmark_ShamatonMapMsgpackgen_Unmarshal-16     |    2481304 |    486 ns/op |        92 |        112 |   1.21 |        22827 |    4.34
-Benchmark_ShamatonArrayMsgpackgen_Marshal-16     |    5872029 |    179 ns/op |        50 |         64 |   1.06 |        29360 |    2.81
-Benchmark_ShamatonArrayMsgpackgen_Unmarshal-16   |    4249507 |    265 ns/op |        50 |        112 |   1.13 |        21247 |    2.37
-Benchmark_SSZNoTimeNoStringNoFloatA_Marshal-16   |     390163 |   4420 ns/op |        55 |        440 |   1.72 |         2145 |   10.05
-Benchmark_SSZNoTimeNoStringNoFloatA_Unmarshal-16 |     141002 |   7252 ns/op |        55 |       1184 |   1.02 |          775 |    6.12
-Benchmark_Bebop_Marshal-16                       |    7579790 |    153 ns/op |        55 |         64 |   1.16 |        41688 |    2.40
-Benchmark_Bebop_Unmarshal-16                     |    9232676 |    127 ns/op |        55 |         32 |   1.18 |        50779 |    4.00
-Benchmark_FastJson_Marshal-16                    |    1000000 |   1216 ns/op |       133 |        504 |   1.22 |        13369 |    2.41
-Benchmark_FastJson_Unmarshal-16                  |     734396 |   1536 ns/op |       133 |       1704 |   1.13 |         9818 |    0.90
-Benchmark_MUS_Marshal-16                         |    8805204 |    125 ns/op |        46 |         48 |   1.10 |        40503 |    2.61
-Benchmark_MUS_Unmarshal-16                       |    7109659 |    181 ns/op |        46 |         32 |   1.29 |        32704 |    5.68
-Benchmark_MUSUnsafe_Marshal-16                   |   12780822 |    111 ns/op |        49 |         64 |   1.43 |        62626 |    1.74
-Benchmark_MUSUnsafe_Unmarshal-16                 |   37978525 |     30 ns/op |        49 |          0 |   1.16 |       186094 |    0.00
+> To see interactive results using [go-bench-viewer](https://github.com/nidorx/go-bench-viewer), go
+> to <https://nidorx.github.io/go-bench-viewer>, paste the raw result below and
+> use the following regex to group the data: `Benchmark_(?<NAME>[^_/]+)_(?<GROUP>.*)$`
 
 
-Totals:
+### Marshal
+![img.png](img/marshal.png)
 
+### Unmarshal
+![img.png](img/unmarshal.png)
 
-benchmark                               | iter       | time/iter    | bytes/op  | allocs/op  | tt.sec | tt.kb        | ns/alloc
-----------------------------------------|------------|--------------|-----------|------------|--------|--------------|-----------
-Benchmark_MUSUnsafe_-16                 |   50759347 |    142 ns/op |        98 |         64 |   7.21 |       497441 |    2.22
-Benchmark_Bebop_-16                     |   16812466 |    281 ns/op |       110 |         96 |   4.73 |       184937 |    2.93
-Benchmark_MUS_-16                       |   15914863 |    307 ns/op |        92 |         80 |   4.89 |       146416 |    3.84
-Benchmark_GencodeUnsafe_-16             |   12836019 |    388 ns/op |        92 |        144 |   4.99 |       118091 |    2.70
-Benchmark_ShamatonArrayMsgpackgen_-16   |   10121536 |    445 ns/op |       100 |        176 |   4.51 |       101215 |    2.53
-Benchmark_Colfer_-16                    |   12819858 |    449 ns/op |       100 |        176 |   5.77 |       128326 |    2.56
-Benchmark_XDR2_-16                      |    9776307 |    465 ns/op |       120 |         96 |   4.55 |       117315 |    4.85
-Benchmark_Gencode_-16                   |   11389481 |    527 ns/op |       106 |        192 |   6.00 |       120728 |    2.75
-Benchmark_Gogoprotobuf_-16              |    8054243 |    592 ns/op |       106 |        160 |   4.77 |        85374 |    3.70
-Benchmark_Msgp_-16                      |    7561176 |    709 ns/op |       194 |        240 |   5.36 |       146686 |    2.96
-Benchmark_ShamatonMapMsgpackgen_-16     |    7165619 |    731 ns/op |       184 |        208 |   5.24 |       131847 |    3.52
-Benchmark_Hprose2_-16                   |    5953092 |   1006 ns/op |       170 |        136 |   5.99 |       101518 |    7.40
-Benchmark_Gotiny_-16                    |    6003698 |   1010 ns/op |        95 |        280 |   6.07 |        57629 |    3.61
-Benchmark_GotinyNoTime_-16              |    5429238 |   1060 ns/op |        96 |        264 |   5.76 |        52120 |    4.02
-Benchmark_ShamatonArrayMsgpack_-16      |    3293580 |   1395 ns/op |       100 |        328 |   4.59 |        32935 |    4.25
-Benchmark_ShamatonMapMsgpack_-16        |    2881701 |   1641 ns/op |       184 |        360 |   4.73 |        53023 |    4.56
-Benchmark_FlatBuffers_-16               |    3784686 |   1718 ns/op |       190 |        488 |   6.50 |        72030 |    3.52
-Benchmark_Ikea_-16                      |    2438875 |   2058 ns/op |       110 |        344 |   5.02 |        26827 |    5.98
-Benchmark_Hprose_-16                    |    2818286 |   2189 ns/op |       170 |        706 |   6.17 |        48065 |    3.10
-Benchmark_Pulsar_-16                    |    2169608 |   2302 ns/op |       103 |        560 |   4.99 |        22401 |    4.11
-Benchmark_JsonIter_-16                  |    1897181 |   2307 ns/op |       282 |        416 |   4.38 |        53614 |    5.55
-Benchmark_Protobuf_-16                  |    2189854 |   2464 ns/op |       104 |        328 |   5.40 |        22774 |    7.51
-Benchmark_EasyJson_-16                  |    2041213 |   2641 ns/op |       303 |       1008 |   5.39 |        61930 |    2.62
-Benchmark_GoAvro2Binary_-16             |    1721989 |   2685 ns/op |        94 |       1008 |   4.62 |        16186 |    2.66
-Benchmark_VmihailencoMsgpack_-16        |    1609669 |   2701 ns/op |       184 |        424 |   4.35 |        29617 |    6.37
-Benchmark_FastJson_-16                  |    1734396 |   2752 ns/op |       267 |       2208 |   4.77 |        46377 |    1.25
-Benchmark_CapNProto2_-16                |    1846741 |   2957 ns/op |       192 |       1724 |   5.46 |        35457 |    1.72
-Benchmark_Bson_-16                      |    1471431 |   3346 ns/op |       220 |        600 |   4.92 |        32371 |    5.58
-Benchmark_XDR_-16                       |    1363063 |   3560 ns/op |       184 |        671 |   4.85 |        25080 |    5.31
-Benchmark_MongoBson_-16                 |    1247625 |   3665 ns/op |       220 |        648 |   4.57 |        27447 |    5.66
-Benchmark_UgorjiCodecMsgpack_-16        |    1529971 |   3702 ns/op |       182 |       1928 |   5.66 |        27845 |    1.92
-Benchmark_CapNProto_-16                 |    1641057 |   3908 ns/op |       192 |       4584 |   6.41 |        31508 |    0.85
-Benchmark_UgorjiCodecBinc_-16           |    1125217 |   4008 ns/op |       190 |       1944 |   4.51 |        21379 |    2.06
-Benchmark_Binary_-16                    |     904537 |   5072 ns/op |       122 |        680 |   4.59 |        11035 |    7.46
-Benchmark_Json_-16                      |    1327462 |   5470 ns/op |       303 |        559 |   7.26 |        40248 |    9.79
-Benchmark_Sereal_-16                    |     496960 |   9826 ns/op |       264 |       1808 |   4.88 |        13119 |    5.43
-Benchmark_GoAvro2Text_-16               |     483952 |  10393 ns/op |       267 |       2056 |   5.03 |        12945 |    5.05
-Benchmark_SSZNoTimeNoStringNoFloatA_-16 |     531165 |  11672 ns/op |       110 |       1624 |   6.20 |         5842 |    7.19
-Benchmark_GoAvro_-16                    |     396953 |  14032 ns/op |        94 |       3272 |   5.57 |         3731 |    4.29
-Benchmark_Gogojsonpb_-16                |     126242 |  37698 ns/op |       252 |       6499 |   4.76 |         3181 |    5.80
-Benchmark_Gob_-16                       |     238824 |  39870 ns/op |       327 |       9384 |   9.52 |         7816 |    4.25
+### RAW
+
+```shell
+goos: darwin
+goarch: amd64
+pkg: github.com/alecthomas/go_serialization_benchmarks
+cpu: Intel(R) Core(TM) i7-9750H CPU @ 2.60GHz
+Benchmark_Gotiny_Marshal-12                         	 3564903	       328.6 ns/op	        47.99 B/serial	     168 B/op	       5 allocs/op
+Benchmark_Gotiny_Unmarshal-12                       	 6758503	       193.1 ns/op	        48.00 B/serial	     112 B/op	       3 allocs/op
+Benchmark_GotinyNoTime_Marshal-12                   	 3923052	       301.6 ns/op	        48.00 B/serial	     168 B/op	       5 allocs/op
+Benchmark_GotinyNoTime_Unmarshal-12                 	 6942710	       167.9 ns/op	        47.99 B/serial	      96 B/op	       3 allocs/op
+Benchmark_Msgp_Marshal-12                           	10408419	       121.6 ns/op	        97.00 B/serial	     128 B/op	       1 allocs/op
+Benchmark_Msgp_Unmarshal-12                         	 5328546	       206.1 ns/op	        97.00 B/serial	     112 B/op	       3 allocs/op
+Benchmark_VmihailencoMsgpack_Marshal-12             	 1842178	       634.8 ns/op	        92.00 B/serial	     264 B/op	       4 allocs/op
+Benchmark_VmihailencoMsgpack_Unmarshal-12           	 1374514	       904.1 ns/op	        92.00 B/serial	     160 B/op	       4 allocs/op
+Benchmark_Json_Marshal-12                           	 1215380	       989.9 ns/op	       148.7 B/serial	     208 B/op	       2 allocs/op
+Benchmark_Json_Unmarshal-12                         	  443144	      2344 ns/op	       148.6 B/serial	     351 B/op	       8 allocs/op
+Benchmark_JsonIter_Marshal-12                       	 1731501	       703.0 ns/op	       138.3 B/serial	     200 B/op	       3 allocs/op
+Benchmark_JsonIter_Unmarshal-12                     	 1387546	       895.5 ns/op	       138.3 B/serial	     215 B/op	       5 allocs/op
+Benchmark_EasyJson_Marshal-12                       	 1477989	       811.0 ns/op	       148.7 B/serial	     896 B/op	       6 allocs/op
+Benchmark_EasyJson_Unmarshal-12                     	 1576713	       761.4 ns/op	       148.7 B/serial	     112 B/op	       3 allocs/op
+Benchmark_Bson_Marshal-12                           	 1499434	       812.0 ns/op	       110.0 B/serial	     376 B/op	      10 allocs/op
+Benchmark_Bson_Unmarshal-12                         	  922454	      1306 ns/op	       110.0 B/serial	     224 B/op	      19 allocs/op
+Benchmark_MongoBson_Marshal-12                      	 1000000	      1236 ns/op	       110.0 B/serial	     240 B/op	       9 allocs/op
+Benchmark_MongoBson_Unmarshal-12                    	 1000000	      1337 ns/op	       110.0 B/serial	     408 B/op	      15 allocs/op
+Benchmark_Gob_Marshal-12                            	  270751	      3825 ns/op	       163.6 B/serial	    1616 B/op	      35 allocs/op
+Benchmark_Gob_Unmarshal-12                          	   59148	     21109 ns/op	       163.6 B/serial	    7768 B/op	     209 allocs/op
+Benchmark_XDR_Marshal-12                            	 1128219	      1070 ns/op	        88.00 B/serial	     376 B/op	      19 allocs/op
+Benchmark_XDR_Unmarshal-12                          	 1361108	       877.5 ns/op	        88.00 B/serial	     216 B/op	      11 allocs/op
+Benchmark_UgorjiCodecMsgpack_Marshal-12             	 1700720	       710.8 ns/op	        91.00 B/serial	    1240 B/op	       3 allocs/op
+Benchmark_UgorjiCodecMsgpack_Unmarshal-12           	 1452357	       816.8 ns/op	        91.00 B/serial	     688 B/op	       4 allocs/op
+Benchmark_UgorjiCodecBinc_Marshal-12                	 1584528	       761.7 ns/op	        95.00 B/serial	    1256 B/op	       4 allocs/op
+Benchmark_UgorjiCodecBinc_Unmarshal-12              	 1617252	       747.1 ns/op	        95.00 B/serial	     688 B/op	       4 allocs/op
+Benchmark_Sereal_Marshal-12                         	  653470	      1832 ns/op	       132.0 B/serial	     832 B/op	      20 allocs/op
+Benchmark_Sereal_Unmarshal-12                       	  565933	      2157 ns/op	       132.0 B/serial	     976 B/op	      34 allocs/op
+Benchmark_Binary_Marshal-12                         	  991881	      1316 ns/op	        61.00 B/serial	     360 B/op	      27 allocs/op
+Benchmark_Binary_Unmarshal-12                       	 1000000	      1157 ns/op	        61.00 B/serial	     320 B/op	      22 allocs/op
+Benchmark_FlatBuffers_Marshal-12                    	 1938604	       589.3 ns/op	        95.19 B/serial	     376 B/op	      10 allocs/op
+Benchmark_FlatBuffers_Unmarshal-12                  	 6866598	       180.9 ns/op	        95.14 B/serial	     112 B/op	       3 allocs/op
+Benchmark_CapNProto_Marshal-12                      	  880801	      1430 ns/op	        96.00 B/serial	    4392 B/op	       6 allocs/op
+Benchmark_CapNProto_Unmarshal-12                    	 3203574	       375.3 ns/op	        96.00 B/serial	     192 B/op	       6 allocs/op
+Benchmark_CapNProto2_Marshal-12                     	 1341883	       874.7 ns/op	        96.00 B/serial	    1452 B/op	       7 allocs/op
+Benchmark_CapNProto2_Unmarshal-12                   	 3390470	       352.7 ns/op	        96.00 B/serial	     272 B/op	       4 allocs/op
+Benchmark_Hprose_Marshal-12                         	 1917482	       734.3 ns/op	        82.27 B/serial	     415 B/op	       8 allocs/op
+Benchmark_Hprose_Unmarshal-12                       	 1461663	       802.7 ns/op	        82.25 B/serial	     304 B/op	      10 allocs/op
+Benchmark_Hprose2_Marshal-12                        	 3486853	       343.4 ns/op	        82.27 B/serial	       0 B/op	       0 allocs/op
+Benchmark_Hprose2_Unmarshal-12                      	 2956712	       415.1 ns/op	        82.28 B/serial	     136 B/op	       4 allocs/op
+Benchmark_Protobuf_Marshal-12                       	 2407221	       529.7 ns/op	        52.00 B/serial	     144 B/op	       7 allocs/op
+Benchmark_Protobuf_Unmarshal-12                     	 1821458	       687.0 ns/op	        52.00 B/serial	     184 B/op	      10 allocs/op
+Benchmark_Pulsar_Marshal-12                         	 2684406	       447.0 ns/op	        51.68 B/serial	     304 B/op	       7 allocs/op
+Benchmark_Pulsar_Unmarshal-12                       	 2673390	       464.9 ns/op	        51.62 B/serial	     256 B/op	       7 allocs/op
+Benchmark_Gogoprotobuf_Marshal-12                   	10708094	       104.1 ns/op	        53.00 B/serial	      64 B/op	       1 allocs/op
+Benchmark_Gogoprotobuf_Unmarshal-12                 	 6233709	       178.3 ns/op	        53.00 B/serial	      96 B/op	       3 allocs/op
+Benchmark_Gogojsonpb_Marshal-12                     	  125532	      8203 ns/op	       125.6 B/serial	    3094 B/op	      83 allocs/op
+Benchmark_Gogojsonpb_Unmarshal-12                   	  113674	     10636 ns/op	       125.5 B/serial	    3374 B/op	      62 allocs/op
+Benchmark_Colfer_Marshal-12                         	14116735	        82.15 ns/op	        51.10 B/serial	      64 B/op	       1 allocs/op
+Benchmark_Colfer_Unmarshal-12                       	 9531223	       128.0 ns/op	        52.00 B/serial	     112 B/op	       3 allocs/op
+Benchmark_Gencode_Marshal-12                        	11219223	       102.5 ns/op	        53.00 B/serial	      80 B/op	       2 allocs/op
+Benchmark_Gencode_Unmarshal-12                      	 9852111	       121.2 ns/op	        53.00 B/serial	     112 B/op	       3 allocs/op
+Benchmark_GencodeUnsafe_Marshal-12                  	18370482	        64.71 ns/op	        46.00 B/serial	      48 B/op	       1 allocs/op
+Benchmark_GencodeUnsafe_Unmarshal-12                	11448187	       103.9 ns/op	        46.00 B/serial	      96 B/op	       3 allocs/op
+Benchmark_XDR2_Marshal-12                           	11248621	       107.7 ns/op	        60.00 B/serial	      64 B/op	       1 allocs/op
+Benchmark_XDR2_Unmarshal-12                         	14334502	        83.21 ns/op	        60.00 B/serial	      32 B/op	       2 allocs/op
+Benchmark_GoAvro_Marshal-12                         	  627751	      1683 ns/op	        47.00 B/serial	     728 B/op	      24 allocs/op
+Benchmark_GoAvro_Unmarshal-12                       	  316442	      3800 ns/op	        47.00 B/serial	    2544 B/op	      65 allocs/op
+Benchmark_GoAvro2Text_Marshal-12                    	  575835	      2048 ns/op	       133.7 B/serial	    1320 B/op	      20 allocs/op
+Benchmark_GoAvro2Text_Unmarshal-12                  	  568441	      1905 ns/op	       133.7 B/serial	     736 B/op	      31 allocs/op
+Benchmark_GoAvro2Binary_Marshal-12                  	 2078848	       576.3 ns/op	        47.00 B/serial	     464 B/op	       9 allocs/op
+Benchmark_GoAvro2Binary_Unmarshal-12                	 1874576	       635.9 ns/op	        47.00 B/serial	     544 B/op	      11 allocs/op
+Benchmark_Ikea_Marshal-12                           	 1764505	       678.7 ns/op	        55.00 B/serial	     184 B/op	      10 allocs/op
+Benchmark_Ikea_Unmarshal-12                         	 2225920	       537.7 ns/op	        55.00 B/serial	     160 B/op	      11 allocs/op
+Benchmark_ShamatonMapMsgpack_Marshal-12             	 2677450	       445.5 ns/op	        92.00 B/serial	     192 B/op	       4 allocs/op
+Benchmark_ShamatonMapMsgpack_Unmarshal-12           	 2763748	       430.8 ns/op	        92.00 B/serial	     168 B/op	       5 allocs/op
+Benchmark_ShamatonArrayMsgpack_Marshal-12           	 3027620	       396.9 ns/op	        50.00 B/serial	     160 B/op	       4 allocs/op
+Benchmark_ShamatonArrayMsgpack_Unmarshal-12         	 3365773	       357.0 ns/op	        50.00 B/serial	     168 B/op	       5 allocs/op
+Benchmark_ShamatonMapMsgpackgen_Marshal-12          	 8943220	       131.6 ns/op	        92.00 B/serial	      96 B/op	       1 allocs/op
+Benchmark_ShamatonMapMsgpackgen_Unmarshal-12        	 5050954	       236.7 ns/op	        92.00 B/serial	     112 B/op	       3 allocs/op
+Benchmark_ShamatonArrayMsgpackgen_Marshal-12        	11539459	       101.5 ns/op	        50.00 B/serial	      64 B/op	       1 allocs/op
+Benchmark_ShamatonArrayMsgpackgen_Unmarshal-12      	 8347653	       143.9 ns/op	        50.00 B/serial	     112 B/op	       3 allocs/op
+Benchmark_SSZNoTimeNoStringNoFloatA_Marshal-12      	  361600	      3269 ns/op	        55.00 B/serial	     440 B/op	      71 allocs/op
+Benchmark_SSZNoTimeNoStringNoFloatA_Unmarshal-12    	  230222	      4821 ns/op	        55.00 B/serial	    1184 B/op	      78 allocs/op
+Benchmark_Bebop_Marshal-12                          	13395981	        84.85 ns/op	        55.00 B/serial	      64 B/op	       1 allocs/op
+Benchmark_Bebop_Unmarshal-12                        	16807069	        68.74 ns/op	        55.00 B/serial	      32 B/op	       2 allocs/op
+Benchmark_FastJson_Marshal-12                       	 2975484	       403.2 ns/op	       133.8 B/serial	     504 B/op	       6 allocs/op
+Benchmark_FastJson_Unmarshal-12                     	 1000000	      1088 ns/op	       133.8 B/serial	    1704 B/op	       9 allocs/op
+Benchmark_MUS_Marshal-12                            	16945045	        68.81 ns/op	        46.00 B/serial	      48 B/op	       1 allocs/op
+Benchmark_MUS_Unmarshal-12                          	12426640	        95.61 ns/op	        46.00 B/serial	      32 B/op	       2 allocs/op
+Benchmark_MUSUnsafe_Marshal-12                      	17657185	        65.46 ns/op	        49.00 B/serial	      64 B/op	       1 allocs/op
+Benchmark_MUSUnsafe_Unmarshal-12                    	24122905	        48.51 ns/op	        49.00 B/serial	       0 B/op	       0 allocs/op
+PASS
+ok  	github.com/alecthomas/go_serialization_benchmarks	132.177s
+```
 
 ## Issues
-
 
 The benchmarks can also be run with validation enabled.
 
