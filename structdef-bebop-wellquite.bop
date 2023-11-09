@@ -1,0 +1,8 @@
+struct BebopBufWellquite {
+  string Name;
+  date BirthDay;
+  string Phone;
+  int32 Siblings;
+  bool Spouse;
+  float64 Money;
+}

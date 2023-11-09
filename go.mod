@@ -31,6 +31,7 @@ require (
 	go.mongodb.org/mongo-driver v1.11.1
 	google.golang.org/protobuf v1.28.1
 	gopkg.in/mgo.v2 v2.0.0-20190816093944-a6b53ec6cb22
+	wellquite.org/bebop v0.0.0-20231109192402-a92af83691ec
 	zombiezen.com/go/capnproto2 v2.18.2+incompatible
 )
 
@@ -42,6 +43,7 @@ require (
 	github.com/glycerine/rbtree v0.0.0-20190406191118-ceb71889d809 // indirect
 	github.com/golang/snappy v0.0.4 // indirect
 	github.com/google/go-cmp v0.5.9 // indirect
+	github.com/google/uuid v1.3.1 // indirect
 	github.com/gopherjs/gopherjs v0.0.0-20210603182125-eeedf4a0e899 // indirect
 	github.com/gorilla/websocket v1.4.2 // indirect
 	github.com/josharian/intern v1.0.0 // indirect

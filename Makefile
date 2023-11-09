@@ -46,6 +46,9 @@ structdefxdr_generated.go: structdefxdr.go
 structdef-bebop.go:
 	go run github.com/200sc/bebop/main/bebopc-go@latest -i structdef-bebop.bop -o structdef-bebop.go --package goserbench
 
+structdef-bebop-wellquite.go: structdef-bebop-wellquite.bop
+	go run wellquite.org/bebop/cmd/bebop -i ./structdef-bebop-wellquite.bop -o ./structdef-bebop-wellquite.go -p github.com/alecthomas/go_serialization_benchmarks/goserbench
+
 structdef_msgpackgen.go: structdef.go
 	go run github.com/shamaton/msgpackgen@latest -input-file structdef.go -output-file structdef_msgpackgen.go -strict
 
@@ -80,3 +83,5 @@ install:
 	go install github.com/shamaton/msgpackgen@latest
 	go install github.com/cosmos/cosmos-proto/cmd/protoc-gen-go-pulsar@latest
 	go install github.com/mus-format/mus-go@latest
+	go install wellquite.org/bebop@latest
+	go install wellquite.org/bebop/cmd/bebop@latest
