@@ -1652,6 +1652,76 @@ func Benchmark_Bebop_Unmarshal(b *testing.B) {
 	}
 }
 
+// wellquite.org/bebop
+
+func generateBebopWellquite() []BebopBufWellquite {
+	structs := make([]BebopBufWellquite, 1000)
+	for idx := range structs {
+		structs[idx] = BebopBufWellquite{
+			Name: randString(16),
+			// bebop does support times, but as 100-nanosecond ticks, losing some precision
+			BirthDay: time.Now().Round(100 * time.Nanosecond),
+			Phone:    randString(10),
+			Siblings: rand.Int31n(5),
+			Spouse:   rand.Intn(2) == 1,
+			Money:    rand.Float64(),
+		}
+	}
+	return structs
+}
+
+func Benchmark_Bebop_Wellquite_Marshal(b *testing.B) {
+	structs := generateBebopWellquite()
+	length := len(structs)
+	var serialSize int
+	b.ReportAllocs()
+	b.ResetTimer()
+	for iteration := 0; iteration < b.N; iteration++ {
+		out, err := structs[rand.Intn(length)].MarshalBebop(nil)
+		if err != nil {
+			b.Fatal(err)
+		}
+		serialSize += len(out)
+	}
+	b.ReportMetric(float64(serialSize)/float64(b.N), "B/serial")
+}
+
+func Benchmark_Bebop_Wellquite_Unmarshal(b *testing.B) {
+	b.StopTimer()
+	structs := generateBebopWellquite()
+	length := len(structs)
+	serialized := make([][]byte, length)
+	var serialSize int
+	for idx, value := range structs {
+		bites, err := value.MarshalBebop(nil)
+		if err != nil {
+			b.Fatal(err)
+		}
+		serialized[idx] = bites
+		serialSize += len(bites)
+	}
+	b.ReportMetric(float64(serialSize)/float64(length), "B/serial")
+	b.ReportAllocs()
+	b.StartTimer()
+
+	for iteration := 0; iteration < b.N; iteration++ {
+		idx := rand.Intn(length)
+		decoded := BebopBufWellquite{}
+		_, err := decoded.UnmarshalBebop(serialized[idx])
+		if err != nil {
+			b.Fatalf("bebop2 failed to unmarshal: %s (%s)", err, serialized[idx])
+		}
+		// Validate unmarshalled data.
+		if validate != "" {
+			value := structs[idx]
+			correct := decoded.Name == value.Name && decoded.BirthDay == value.BirthDay && decoded.Phone == value.Phone && decoded.Siblings == value.Siblings && decoded.Spouse == value.Spouse && decoded.Money == value.Money
+			if !correct {
+				b.Fatalf("unmarshaled object differed:\n%v\n%v", value, decoded)
+			}
+		}
+	}
+}
+
 // github.com/valyala/fastjson
 
 func generateFastJsonA() []*fastjson.Value {
