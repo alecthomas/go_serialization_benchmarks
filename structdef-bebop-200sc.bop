@@ -1,6 +1,6 @@
-struct BebopBufA {
+struct BebopBuf200sc {
   string name;
-  uint64 birthDay;
+  date birthDay;
   string phone;
   int32 siblings;
   bool spouse;

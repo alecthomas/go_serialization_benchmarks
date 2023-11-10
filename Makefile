@@ -43,8 +43,8 @@ structdef-pulsar.pulsar.go: structdef-pulsar.proto
 structdefxdr_generated.go: structdefxdr.go
 	go run github.com/calmh/xdr/cmd/genxdr@latest -o structdefxdr_generated.go structdefxdr.go
 
-structdef-bebop.go:
-	go run github.com/200sc/bebop/main/bebopc-go@latest -i structdef-bebop.bop -o structdef-bebop.go --package goserbench
+structdef-bebop-200sc.go:
+	go run github.com/200sc/bebop/main/bebopc-go@latest -i structdef-bebop-200sc.bop -o structdef-bebop-200sc.go --package goserbench --force-pointer-receivers
 
 structdef-bebop-wellquite.go: structdef-bebop-wellquite.bop
 	go run wellquite.org/bebop/cmd/bebop -i ./structdef-bebop-wellquite.bop -o ./structdef-bebop-wellquite.go -p github.com/alecthomas/go_serialization_benchmarks/goserbench
