@@ -1593,13 +1593,13 @@ func Benchmark_Enkodo_Unmarshal(b *testing.B) {
 
 // github.com/200sc/bebop
 
-func generateBebopA() []*BebopBufA {
-	a := make([]*BebopBufA, 0, 1000)
+func generateBebop200sc() []*BebopBuf200sc {
+	a := make([]*BebopBuf200sc, 0, 1000)
 	for i := 0; i < 1000; i++ {
-		a = append(a, &BebopBufA{
+		a = append(a, &BebopBuf200sc{
 			Name: randString(16),
 			// bebop does support times, but as 100-nanosecond ticks, losing some precision
-			BirthDay: uint64(time.Now().UnixNano()),
+			BirthDay: time.Now().Round(100 * time.Nanosecond),
 			Phone:    randString(10),
 			Siblings: rand.Int31n(5),
 			Spouse:   rand.Intn(2) == 1,
@@ -1609,8 +1609,8 @@ func generateBebopA() []*BebopBufA {
 	return a
 }
 
-func Benchmark_Bebop_Marshal(b *testing.B) {
-	data := generateBebopA()
+func Benchmark_Bebop_200sc_Marshal(b *testing.B) {
+	data := generateBebop200sc()
 	b.ReportAllocs()
 	b.ResetTimer()
 	var serialSize int
@@ -1621,9 +1621,9 @@ func Benchmark_Bebop_Marshal(b *testing.B) {
 	b.ReportMetric(float64(serialSize)/float64(b.N), "B/serial")
 }
 
-func Benchmark_Bebop_Unmarshal(b *testing.B) {
+func Benchmark_Bebop_200sc_Unmarshal(b *testing.B) {
 	b.StopTimer()
-	data := generateBebopA()
+	data := generateBebop200sc()
 	ser := make([][]byte, len(data))
 	var serialSize int
 	for i, d := range data {
@@ -1636,7 +1636,7 @@ func Benchmark_Bebop_Unmarshal(b *testing.B) {
 
 	for i := 0; i < b.N; i++ {
 		n := rand.Intn(len(ser))
-		o := BebopBufA{}
+		o := BebopBuf200sc{}
 		err := o.UnmarshalBebop(ser[n])
 		if err != nil {
 			b.Fatalf("bebop failed to unmarshal: %s (%s)", err, ser[n])
@@ -1644,7 +1644,7 @@ func Benchmark_Bebop_Unmarshal(b *testing.B) {
 		// Validate unmarshalled data.
 		if validate != "" {
 			i := data[n]
-			correct := o.Name == i.Name && o.Phone == i.Phone && o.Siblings == i.Siblings && o.Spouse == i.Spouse && o.Money == i.Money && o.BirthDay == i.BirthDay
+			correct := o.Name == i.Name && o.Phone == i.Phone && o.Siblings == i.Siblings && o.Spouse == i.Spouse && o.Money == i.Money && o.BirthDay.Equal(i.BirthDay)
 			if !correct {
 				b.Fatalf("unmarshaled object differed:\n%v\n%v", i, o)
 			}

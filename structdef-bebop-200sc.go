@@ -6,25 +6,30 @@ import (
 	"github.com/200sc/bebop"
 	"github.com/200sc/bebop/iohelp"
 	"io"
+	"time"
 )
 
-var _ bebop.Record = &BebopBufA{}
+var _ bebop.Record = &BebopBuf200sc{}
 
-type BebopBufA struct {
+type BebopBuf200sc struct {
 	Name string
-	BirthDay uint64
+	BirthDay time.Time
 	Phone string
 	Siblings int32
 	Spouse bool
 	Money float64
 }
 
-func (bbp BebopBufA) MarshalBebopTo(buf []byte) int {
+func (bbp *BebopBuf200sc) MarshalBebopTo(buf []byte) int {
 	at := 0
 	iohelp.WriteUint32Bytes(buf[at:], uint32(len(bbp.Name)))
 	copy(buf[at+4:at+4+len(bbp.Name)], []byte(bbp.Name))
 	at += 4 + len(bbp.Name)
-	iohelp.WriteUint64Bytes(buf[at:], bbp.BirthDay)
+	if bbp.BirthDay != (time.Time{}) {
+		iohelp.WriteInt64Bytes(buf[at:], ((bbp.BirthDay).UnixNano() / 100))
+	} else {
+		iohelp.WriteInt64Bytes(buf[at:], 0)
+	}
 	at += 8
 	iohelp.WriteUint32Bytes(buf[at:], uint32(len(bbp.Phone)))
 	copy(buf[at+4:at+4+len(bbp.Phone)], []byte(bbp.Phone))
@@ -38,7 +43,7 @@ func (bbp BebopBufA) MarshalBebopTo(buf []byte) int {
 	return at
 }
 
-func (bbp *BebopBufA) UnmarshalBebop(buf []byte) (err error) {
+func (bbp *BebopBuf200sc) UnmarshalBebop(buf []byte) (err error) {
 	at := 0
 	bbp.Name, err = iohelp.ReadStringBytes(buf[at:])
 	if err != nil {
@@ -48,7 +53,7 @@ func (bbp *BebopBufA) UnmarshalBebop(buf []byte) (err error) {
 	if len(buf[at:]) < 8 {
 		return io.ErrUnexpectedEOF
 	}
-	bbp.BirthDay = iohelp.ReadUint64Bytes(buf[at:])
+	bbp.BirthDay = iohelp.ReadDateBytes(buf[at:])
 	at += 8
 	bbp.Phone, err = iohelp.ReadStringBytes(buf[at:])
 	if err != nil {
@@ -73,11 +78,15 @@ func (bbp *BebopBufA) UnmarshalBebop(buf []byte) (err error) {
 	return nil
 }
 
-func (bbp BebopBufA) EncodeBebop(iow io.Writer) (err error) {
+func (bbp *BebopBuf200sc) EncodeBebop(iow io.Writer) (err error) {
 	w := iohelp.NewErrorWriter(iow)
 	iohelp.WriteUint32(w, uint32(len(bbp.Name)))
 	w.Write([]byte(bbp.Name))
-	iohelp.WriteUint64(w, bbp.BirthDay)
+	if bbp.BirthDay != (time.Time{}) {
+		iohelp.WriteInt64(w, ((bbp.BirthDay).UnixNano() / 100))
+	} else {
+		iohelp.WriteInt64(w, 0)
+	}
 	iohelp.WriteUint32(w, uint32(len(bbp.Phone)))
 	w.Write([]byte(bbp.Phone))
 	iohelp.WriteInt32(w, bbp.Siblings)
@@ -86,10 +95,10 @@ func (bbp BebopBufA) EncodeBebop(iow io.Writer) (err error) {
 	return w.Err
 }
 
-func (bbp *BebopBufA) DecodeBebop(ior io.Reader) (err error) {
+func (bbp *BebopBuf200sc) DecodeBebop(ior io.Reader) (err error) {
 	r := iohelp.NewErrorReader(ior)
 	bbp.Name = iohelp.ReadString(r)
-	bbp.BirthDay = iohelp.ReadUint64(r)
+	bbp.BirthDay = iohelp.ReadDate(r)
 	bbp.Phone = iohelp.ReadString(r)
 	bbp.Siblings = iohelp.ReadInt32(r)
 	bbp.Spouse = iohelp.ReadBool(r)
@@ -97,7 +106,7 @@ func (bbp *BebopBufA) DecodeBebop(ior io.Reader) (err error) {
 	return r.Err
 }
 
-func (bbp BebopBufA) Size() int {
+func (bbp *BebopBuf200sc) Size() int {
 	bodyLen := 0
 	bodyLen += 4 + len(bbp.Name)
 	bodyLen += 8
@@ -108,20 +117,20 @@ func (bbp BebopBufA) Size() int {
 	return bodyLen
 }
 
-func (bbp BebopBufA) MarshalBebop() []byte {
+func (bbp *BebopBuf200sc) MarshalBebop() []byte {
 	buf := make([]byte, bbp.Size())
 	bbp.MarshalBebopTo(buf)
 	return buf
 }
 
-func MakeBebopBufA(r iohelp.ErrorReader) (BebopBufA, error) {
-	v := BebopBufA{}
+func MakeBebopBuf200sc(r *iohelp.ErrorReader) (BebopBuf200sc, error) {
+	v := BebopBuf200sc{}
 	err := v.DecodeBebop(r)
 	return v, err
 }
 
-func MakeBebopBufAFromBytes(buf []byte) (BebopBufA, error) {
-	v := BebopBufA{}
+func MakeBebopBuf200scFromBytes(buf []byte) (BebopBuf200sc, error) {
+	v := BebopBuf200sc{}
 	err := v.UnmarshalBebop(buf)
 	return v, err
 }

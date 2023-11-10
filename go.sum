@@ -13,6 +13,16 @@ cloud.google.com/go/storage v1.0.0/go.mod h1:IhtSnM/ZTZV8YYJWCY8RULGVqBDmpoyjwiy
 dmitri.shuralyov.com/gpu/mtl v0.0.0-20190408044501-666a987793e9/go.mod h1:H6x//7gZCb22OMCxBHrMx7a5I7Hp++hsVxbQ4BYO7hU=
 github.com/200sc/bebop v0.3.3 h1:8qVg4KvSJnMYSNiwm/slo2VDvdBwzrTm9/EEOM4ojW0=
 github.com/200sc/bebop v0.3.3/go.mod h1:M+32fmqkfn58CcIc04BclGJTBAMQqG+6EftZcByArPA=
+github.com/200sc/bebop v0.4.1-0.20231110133633-66fb1b34c59d h1:/15rV/Sp7sNj40ufy+ChNall4PgmSZ4mqq3o4qh60HA=
+github.com/200sc/bebop v0.4.1-0.20231110133633-66fb1b34c59d/go.mod h1:4be7DOSfft4lpk3dMfE0mSAF8+ri00t5tdMHbw2oicE=
+github.com/200sc/bebop v0.4.1-0.20231110135718-c7d459316765 h1:1ArZuG2giCnuWUS/ztYVcbRZunwt1e7HwkSRWIFSFd4=
+github.com/200sc/bebop v0.4.1-0.20231110135718-c7d459316765/go.mod h1:4be7DOSfft4lpk3dMfE0mSAF8+ri00t5tdMHbw2oicE=
+github.com/200sc/bebop v0.4.1-0.20231110150503-575c4aa91039 h1:PKAAq2QiEaRWk3eCV9opEu3PxJ+D6oZY+NhQE602ej8=
+github.com/200sc/bebop v0.4.1-0.20231110150503-575c4aa91039/go.mod h1:4be7DOSfft4lpk3dMfE0mSAF8+ri00t5tdMHbw2oicE=
+github.com/200sc/bebop v0.4.1-0.20231110150946-8c7bf3b94ace h1:wrmH3ycX7LEo+LtT4GNJ/s98MtUPjX2YkLJ/LY8VDYA=
+github.com/200sc/bebop v0.4.1-0.20231110150946-8c7bf3b94ace/go.mod h1:4be7DOSfft4lpk3dMfE0mSAF8+ri00t5tdMHbw2oicE=
+github.com/200sc/bebop v0.5.0 h1:3dmQNCw4SZaik5E6eUbrwWzJDWi21W2v9MR5ehHSw8c=
+github.com/200sc/bebop v0.5.0/go.mod h1:4be7DOSfft4lpk3dMfE0mSAF8+ri00t5tdMHbw2oicE=
 github.com/BurntSushi/toml v0.3.1/go.mod h1:xHWCNGjB5oqiDr8zfno3MHue2Ht5sIBksp03qcyfWMU=
 github.com/BurntSushi/xgb v0.0.0-20160522181843-27f122750802/go.mod h1:IVnqGOEym/WlBOVXweHU+Q+/VP0lqqI8lqeDx9IjBqo=
 github.com/DataDog/zstd v1.5.2 h1:vUG4lAyuPCXO0TLbXvPv7EB7cNK1QV/luu55UHLrrn8=

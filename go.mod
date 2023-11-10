@@ -3,7 +3,7 @@ module github.com/alecthomas/go_serialization_benchmarks
 go 1.20
 
 require (
-	github.com/200sc/bebop v0.3.3
+	github.com/200sc/bebop v0.5.0
 	github.com/Sereal/Sereal v0.0.0-20230201113653-fa72c87b650e
 	github.com/alecthomas/binary v0.0.0-20221018225505-74871811ee56
 	github.com/calmh/xdr v1.1.0
