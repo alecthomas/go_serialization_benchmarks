@@ -80,13 +80,7 @@ Command used:
 ```bash
 perflock -governor 70% go test -bench='.*' ./ -count=1 > "results.txt"
 ```
-2023-11-16 Results with Go 1.21.4 linux/amd64:
-```
-goos: linux
-goarch: amd64
-pkg: github.com/alecthomas/go_serialization_benchmarks
-cpu: 11th Gen Intel(R) Core(TM) i5-11300H @ 3.10GHz
-```
+2023-11-16 Results with Go 1.21.4 linux/amd64 with processor `11th Gen Intel(R) Core(TM) i5-11300H @ 3.10GHz`
 
 benchmark                                        | iter       | time/iter    | bytes/op  | allocs/op  | tt.sec | tt.kb        | ns/alloc
 -------------------------------------------------|------------|--------------|-----------|------------|--------|--------------|-----------
@@ -226,49 +220,6 @@ Benchmark_GoAvro_-8                     |    1204800 |   4991 ns/op |        94 
 Benchmark_SSZNoTimeNoStringNoFloatA_-8  |     623344 |   8124 ns/op |       110 |       1624 |   5.06 |         6856 |    5.00
 Benchmark_Gogojsonpb_-8                 |     273397 |  17844 ns/op |       250 |       6438 |   4.88 |         6843 |    2.77
 Benchmark_Gob_-8                        |     403609 |  20773 ns/op |       325 |       9464 |   8.38 |        13125 |    2.19
-----------------------------------------|------------|--------------|-----------|------------|--------|--------------|-----------
-Benchmark_MUSUnsafe_-10                 |   85378385 |     60 ns/op |        98 |         64 |   5.17 |       836708 |    0.95
-Benchmark_Bebop_200sc_-10               |   58302864 |     82 ns/op |       110 |         96 |   4.79 |       641331 |    0.86
-Benchmark_Bebop_Wellquite_-10           |   54408611 |     87 ns/op |       110 |         96 |   4.77 |       598494 |    0.91
-Benchmark_MUS_-10                       |   52644181 |     92 ns/op |        92 |         80 |   4.90 |       484326 |    1.16
-Benchmark_GencodeUnsafe_-10             |   54074027 |     94 ns/op |        92 |        144 |   5.13 |       497481 |    0.66
-Benchmark_XDR2_-10                      |   44880381 |    111 ns/op |       120 |         96 |   4.99 |       538564 |    1.16
-Benchmark_Colfer_-10                    |   42985732 |    117 ns/op |       102 |        176 |   5.04 |       438884 |    0.67
-Benchmark_Gencode_-10                   |   36767866 |    129 ns/op |       106 |        192 |   4.75 |       389739 |    0.67
-Benchmark_Gogoprotobuf_-10              |   38634778 |    134 ns/op |       106 |        160 |   5.19 |       409528 |    0.84
-Benchmark_ShamatonArrayMsgpackgen_-10   |   35190708 |    139 ns/op |       100 |        176 |   4.91 |       351907 |    0.79
-Benchmark_Msgp_-10                      |   31039821 |    168 ns/op |       194 |        240 |   5.22 |       602172 |    0.70
-Benchmark_ShamatonMapMsgpackgen_-10     |   24419095 |    219 ns/op |       184 |        208 |   5.37 |       449311 |    1.06
-Benchmark_GotinyNoTime_-10              |   21227364 |    254 ns/op |        95 |        264 |   5.39 |       203761 |    0.96
-Benchmark_Gotiny_-10                    |   20759754 |    256 ns/op |        96 |        280 |   5.32 |       199293 |    0.92
-Benchmark_Hprose2_-10                   |   11975847 |    406 ns/op |       164 |        136 |   4.86 |       197122 |    2.99
-Benchmark_FlatBuffers_-10               |   15955008 |    412 ns/op |       190 |        488 |   6.58 |       303863 |    0.84
-Benchmark_ShamatonArrayMsgpack_-10      |   11061538 |    435 ns/op |       100 |        328 |   4.82 |       110615 |    1.33
-Benchmark_Pulsar_-10                    |   10378093 |    467 ns/op |       103 |        560 |   4.85 |       107112 |    0.83
-Benchmark_ShamatonMapMsgpack_-10        |    9369059 |    514 ns/op |       184 |        360 |   4.82 |       172390 |    1.43
-Benchmark_Protobuf_-10                  |    7763764 |    619 ns/op |       104 |        328 |   4.81 |        80743 |    1.89
-Benchmark_Ikea_-10                      |    6774646 |    723 ns/op |       110 |        344 |   4.90 |        74521 |    2.10
-Benchmark_CapNProto2_-10                |    8063993 |    731 ns/op |       192 |       1724 |   5.90 |       154828 |    0.42
-Benchmark_GoAvro2Binary_-10             |    6419293 |    749 ns/op |        94 |       1008 |   4.81 |        60341 |    0.74
-Benchmark_VmihailencoMsgpack_-10        |    6406357 |    752 ns/op |       184 |        424 |   4.82 |       117876 |    1.77
-Benchmark_Hprose_-10                    |    6392206 |    764 ns/op |       164 |        726 |   4.89 |       105158 |    1.05
-Benchmark_JsonIter_-10                  |    6245829 |    771 ns/op |       266 |        352 |   4.82 |       166513 |    2.19
-Benchmark_EasyJson_-10                  |    5678284 |    821 ns/op |       287 |        994 |   4.66 |       163137 |    0.83
-Benchmark_CapNProto_-10                 |    7396678 |    902 ns/op |       192 |       4584 |   6.68 |       142016 |    0.20
-Benchmark_UgorjiCodecBinc_-10           |    5344349 |    910 ns/op |       190 |       1944 |   4.87 |       101542 |    0.47
-Benchmark_UgorjiCodecMsgpack_-10        |    5308735 |    916 ns/op |       182 |       1928 |   4.87 |        96618 |    0.48
-Benchmark_FastJson_-10                  |    6358904 |    926 ns/op |       267 |       2208 |   5.89 |       170164 |    0.42
-Benchmark_XDR_-10                       |    5088832 |    950 ns/op |       168 |        592 |   4.84 |        85492 |    1.61
-Benchmark_Bson_-10                      |    4843484 |   1030 ns/op |       220 |        600 |   4.99 |       106556 |    1.72
-Benchmark_MongoBson_-10                 |    3835006 |   1258 ns/op |       220 |        648 |   4.83 |        84370 |    1.94
-Benchmark_Binary_-10                    |    3811397 |   1260 ns/op |       122 |        680 |   4.80 |        46499 |    1.85
-Benchmark_Json_-10                      |    3288127 |   1822 ns/op |       287 |        545 |   5.99 |        94435 |    3.34
-Benchmark_Sereal_-10                    |    1977356 |   2222 ns/op |       264 |       1808 |   4.39 |        52202 |    1.23
-Benchmark_GoAvro2Text_-10               |    1963158 |   2399 ns/op |       267 |       2056 |   4.71 |        52514 |    1.17
-Benchmark_GoAvro_-10                    |    1998763 |   2953 ns/op |        94 |       2896 |   5.90 |        18788 |    1.02
-Benchmark_SSZNoTimeNoStringNoFloatA_-10 |     981933 |   5104 ns/op |       110 |       1624 |   5.01 |        10801 |    3.14
-Benchmark_Gogojsonpb_-10                |     464198 |  10530 ns/op |       251 |       6474 |   4.89 |        11669 |    1.63
-Benchmark_Gob_-10                       |     675610 |  11947 ns/op |       325 |       9464 |   8.07 |        21970 |    1.26
 
 ## Issues
 
@@ -277,7 +228,7 @@ The benchmarks can also be run with validation enabled.
 
 (without perflock, because it's only validation)
 ```bash
-VALIDATE=1 go test -bench='.*' ./ -count=1 > "results.txt"
+VALIDATE=1 go test -bench='.*' ./
 ```
 
 Unfortunately, several of the serializers exhibit issues:
