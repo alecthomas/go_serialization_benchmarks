@@ -1793,6 +1793,72 @@ func Benchmark_FastJson_Unmarshal(b *testing.B) {
 	}
 }
 
+// github.com/deneonet/benc
+
+func generateBENC() []BENC {
+	a := make([]BENC, 0, 1000)
+	for i := 0; i < 1000; i++ {
+		a = append(a, BENC{
+			Name:     randString(16),
+			BirthDay: time.Now().UnixNano(),
+			Phone:    randString(10),
+			Siblings: rand.Int31n(5),
+			Spouse:   rand.Intn(2) == 1,
+			Money:    rand.Float64(),
+		})
+	}
+	return a
+}
+
+func Benchmark_BENC_Marshal(b *testing.B) {
+	data := generateBENC()
+	b.ReportAllocs()
+	b.ResetTimer()
+	var serialSize int
+	var buf []byte
+	var err error
+	var o BENC
+	for i := 0; i < b.N; i++ {
+		o = data[rand.Intn(len(data))]
+		buf, err = MarshalBENC(o)
+		if err != nil {
+			b.Fatalf("benc failed to marshal: %s (%+v)", err, o)
+		}
+		serialSize += len(buf)
+	}
+	b.ReportMetric(float64(serialSize)/float64(b.N), "B/serial")
+}
+
+func Benchmark_BENC_Unmarshal(b *testing.B) {
+	b.StopTimer()
+	data := generateBENC()
+	ser := make([][]byte, len(data))
+	var serialSize int
+	for i, d := range data {
+		ser[i], _ = MarshalBENC(d)
+		serialSize += len(ser[i])
+	}
+	b.ReportMetric(float64(serialSize)/float64(len(data)), "B/serial")
+	b.ReportAllocs()
+	b.StartTimer()
+
+	for i := 0; i < b.N; i++ {
+		n := rand.Intn(len(ser))
+		o, _, err := UnmarshalBENC(ser[n])
+		if err != nil {
+			b.Fatalf("benc failed to unmarshal: %s (%s)", err, ser[n])
+		}
+		// Validate unmarshalled data.
+		if validate != "" {
+			i := data[n]
+			correct := o.Name == i.Name && o.Phone == i.Phone && o.Siblings == i.Siblings && o.Spouse == i.Spouse && o.Money == i.Money && o.BirthDay == i.BirthDay //&& cmpTags(o.Tags, i.Tags) && cmpAliases(o.Aliases, i.Aliases)
+			if !correct {
+				b.Fatalf("unmarshaled object differed:\n%v\n%v", i, o)
+			}
+		}
+	}
+}
+
 // github.com/mus-format/mus-go
 
 func generateMUS() []MUSA {

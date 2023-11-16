@@ -1,6 +1,6 @@
 module github.com/alecthomas/go_serialization_benchmarks
 
-go 1.20
+go 1.21.4
 
 require (
 	github.com/200sc/bebop v0.5.0
@@ -39,6 +39,7 @@ require (
 	github.com/DataDog/zstd v1.5.2 // indirect
 	github.com/cosmos/cosmos-proto v1.0.0-beta.3 // indirect
 	github.com/cybriq/gotiny v0.0.5 // indirect
+	github.com/deneonet/benc v1.0.0 // indirect
 	github.com/glycerine/goconvey v0.0.0-20190410193231-58a59202ab31 // indirect
 	github.com/glycerine/rbtree v0.0.0-20190406191118-ceb71889d809 // indirect
 	github.com/golang/snappy v0.0.4 // indirect
@@ -59,7 +60,7 @@ require (
 	github.com/protolambda/zssz v0.1.1 // indirect
 	github.com/prysmaticlabs/go-bitfield v0.0.0-20190825002834-fb724e897364 // indirect
 	github.com/vmihailenco/tagparser/v2 v2.0.0 // indirect
-	golang.org/x/exp v0.0.0-20230321023759-10a507213a29 // indirect
+	golang.org/x/exp v0.0.0-20231110203233-9a3e6036ecaa // indirect
 	golang.org/x/net v0.5.0 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 )
