@@ -1861,7 +1861,7 @@ func Benchmark_BENC_Unmarshal(b *testing.B) {
 	}
 }
 
-func Benchmark_BENC_UnsafeStringConvertion_Marshal(b *testing.B) {
+func Benchmark_BENCUnsafe_Marshal(b *testing.B) {
 	bpre.Reset()
 	data := generateBENC()
 	b.ReportAllocs()
@@ -1880,7 +1880,7 @@ func Benchmark_BENC_UnsafeStringConvertion_Marshal(b *testing.B) {
 	}
 	b.ReportMetric(float64(serialSize)/float64(b.N), "B/serial")
 }
-func Benchmark_BENC_UnsafeStringConvertion_Unmarshal(b *testing.B) {
+func Benchmark_BENCUnsafe_Unmarshal(b *testing.B) {
 	bpre.Reset()
 	b.StopTimer()
 	data := generateBENC()
@@ -1911,7 +1911,7 @@ func Benchmark_BENC_UnsafeStringConvertion_Unmarshal(b *testing.B) {
 	}
 }
 
-func Benchmark_BENC_UnsafeStringConvertion_PreAllocation_Marshal(b *testing.B) {
+func Benchmark_BENCUnsafePre_Marshal(b *testing.B) {
 	bpre.Reset()
 	bpre.Marshal(100)
 	data := generateBENC()
@@ -1931,7 +1931,7 @@ func Benchmark_BENC_UnsafeStringConvertion_PreAllocation_Marshal(b *testing.B) {
 	}
 	b.ReportMetric(float64(serialSize)/float64(b.N), "B/serial")
 }
-func Benchmark_BENC_UnsafeStringConvertion_PreAllocation_Unmarshal(b *testing.B) {
+func Benchmark_BENCUnsafePre_Unmarshal(b *testing.B) {
 	bpre.Reset()
 	b.StopTimer()
 	data := generateBENC()
