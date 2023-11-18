@@ -64,8 +64,8 @@ github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/davecgh/go-xdr v0.0.0-20161123171359-e6a2ba005892 h1:qg9VbHo1TlL0KDM0vYvBG9EY0X0Yku5WYIPoFWt8f6o=
 github.com/davecgh/go-xdr v0.0.0-20161123171359-e6a2ba005892/go.mod h1:CTDl0pzVzE5DEzZhPfvhY/9sPFMQIxaJ9VAMs9AagrE=
-github.com/deneonet/benc v1.0.0 h1:Gvg1J0aBcMYGWJ79MguaeIg1LurgBUSv06hvIEMkYvQ=
-github.com/deneonet/benc v1.0.0/go.mod h1:xc2X801DN+9toSztFK53GgJqFzRXvRSEatA+zcmdLWw=
+github.com/deneonet/benc v1.0.2 h1:p3rcnKMie8f4LvMTygfvneho0ujjyzSDSNmuAlcYAok=
+github.com/deneonet/benc v1.0.2/go.mod h1:ntFdkYD1YoHgEIG7iRGU/XmnZE3D9trlQKVX4ZEya5A=
 github.com/dgrijalva/jwt-go v3.2.0+incompatible/go.mod h1:E3ru+11k8xSBh+hMPgOLZmtrrCbhqsmaPHjLKYnJCaQ=
 github.com/dgryski/go-sip13 v0.0.0-20181026042036-e10d5fee7954/go.mod h1:vAd38F8PWV+bWy6jNmig1y/TA+kYO4g3RSRF0IAv0no=
 github.com/fatih/color v1.7.0/go.mod h1:Zm6kSWBoL9eyXnKyktHP6abPY2pDugNf5KwzbycvMj4=

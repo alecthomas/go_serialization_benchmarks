@@ -15,6 +15,7 @@ import (
 	"github.com/Sereal/Sereal/Go/sereal"
 	"github.com/alecthomas/binary"
 	"github.com/davecgh/go-xdr/xdr"
+	"github.com/deneonet/benc/bpre"
 	capn "github.com/glycerine/go-capnproto"
 	"github.com/gogo/protobuf/jsonpb"
 	"github.com/gogo/protobuf/proto"
@@ -1811,6 +1812,7 @@ func generateBENC() []BENC {
 }
 
 func Benchmark_BENC_Marshal(b *testing.B) {
+	bpre.Reset()
 	data := generateBENC()
 	b.ReportAllocs()
 	b.ResetTimer()
@@ -1828,8 +1830,8 @@ func Benchmark_BENC_Marshal(b *testing.B) {
 	}
 	b.ReportMetric(float64(serialSize)/float64(b.N), "B/serial")
 }
-
 func Benchmark_BENC_Unmarshal(b *testing.B) {
+	bpre.Reset()
 	b.StopTimer()
 	data := generateBENC()
 	ser := make([][]byte, len(data))
@@ -1845,6 +1847,107 @@ func Benchmark_BENC_Unmarshal(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		n := rand.Intn(len(ser))
 		o, _, err := UnmarshalBENC(ser[n])
+		if err != nil {
+			b.Fatalf("benc failed to unmarshal: %s (%s)", err, ser[n])
+		}
+		// Validate unmarshalled data.
+		if validate != "" {
+			i := data[n]
+			correct := o.Name == i.Name && o.Phone == i.Phone && o.Siblings == i.Siblings && o.Spouse == i.Spouse && o.Money == i.Money && o.BirthDay == i.BirthDay //&& cmpTags(o.Tags, i.Tags) && cmpAliases(o.Aliases, i.Aliases)
+			if !correct {
+				b.Fatalf("unmarshaled object differed:\n%v\n%v", i, o)
+			}
+		}
+	}
+}
+
+func Benchmark_BENC_UnsafeStringConvertion_Marshal(b *testing.B) {
+	bpre.Reset()
+	data := generateBENC()
+	b.ReportAllocs()
+	b.ResetTimer()
+	var serialSize int
+	var buf []byte
+	var err error
+	var o BENC
+	for i := 0; i < b.N; i++ {
+		o = data[rand.Intn(len(data))]
+		buf, err = MarshalBENC_UnsafeStringConversion(o)
+		if err != nil {
+			b.Fatalf("benc failed to marshal: %s (%+v)", err, o)
+		}
+		serialSize += len(buf)
+	}
+	b.ReportMetric(float64(serialSize)/float64(b.N), "B/serial")
+}
+func Benchmark_BENC_UnsafeStringConvertion_Unmarshal(b *testing.B) {
+	bpre.Reset()
+	b.StopTimer()
+	data := generateBENC()
+	ser := make([][]byte, len(data))
+	var serialSize int
+	for i, d := range data {
+		ser[i], _ = MarshalBENC(d)
+		serialSize += len(ser[i])
+	}
+	b.ReportMetric(float64(serialSize)/float64(len(data)), "B/serial")
+	b.ReportAllocs()
+	b.StartTimer()
+
+	for i := 0; i < b.N; i++ {
+		n := rand.Intn(len(ser))
+		o, _, err := UnmarshalBENC_UnsafeStringConversion(ser[n])
+		if err != nil {
+			b.Fatalf("benc failed to unmarshal: %s (%s)", err, ser[n])
+		}
+		// Validate unmarshalled data.
+		if validate != "" {
+			i := data[n]
+			correct := o.Name == i.Name && o.Phone == i.Phone && o.Siblings == i.Siblings && o.Spouse == i.Spouse && o.Money == i.Money && o.BirthDay == i.BirthDay //&& cmpTags(o.Tags, i.Tags) && cmpAliases(o.Aliases, i.Aliases)
+			if !correct {
+				b.Fatalf("unmarshaled object differed:\n%v\n%v", i, o)
+			}
+		}
+	}
+}
+
+func Benchmark_BENC_UnsafeStringConvertion_PreAllocation_Marshal(b *testing.B) {
+	bpre.Reset()
+	bpre.Marshal(100)
+	data := generateBENC()
+	b.ReportAllocs()
+	b.ResetTimer()
+	var serialSize int
+	var buf []byte
+	var err error
+	var o BENC
+	for i := 0; i < b.N; i++ {
+		o = data[rand.Intn(len(data))]
+		buf, err = MarshalBENC_UnsafeStringConversion(o)
+		if err != nil {
+			b.Fatalf("benc failed to marshal: %s (%+v)", err, o)
+		}
+		serialSize += len(buf)
+	}
+	b.ReportMetric(float64(serialSize)/float64(b.N), "B/serial")
+}
+func Benchmark_BENC_UnsafeStringConvertion_PreAllocation_Unmarshal(b *testing.B) {
+	bpre.Reset()
+	b.StopTimer()
+	data := generateBENC()
+	ser := make([][]byte, len(data))
+	var serialSize int
+	for i, d := range data {
+		ser[i], _ = MarshalBENC(d)
+		serialSize += len(ser[i])
+	}
+	b.ReportMetric(float64(serialSize)/float64(len(data)), "B/serial")
+	b.ReportAllocs()
+	b.StartTimer()
+
+	for i := 0; i < b.N; i++ {
+		n := rand.Intn(len(ser))
+		o, _, err := UnmarshalBENC_UnsafeStringConversion(ser[n])
 		if err != nil {
 			b.Fatalf("benc failed to unmarshal: %s (%s)", err, ser[n])
 		}
