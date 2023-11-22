@@ -239,10 +239,15 @@ Unfortunately, several of the serializers exhibit issues:
 
 All other fields are correct however.
 
-Additionally, while not a correctness issue, FlatBuffers, ProtoBuffers, Cap'N'Proto and ikeapack do not
-support time types directly. In the benchmarks an int64 value is used to hold a UnixNano timestamp.
+Additionally, while not a correctness issue, FlatBuffers, ProtoBuffers, Cap'N'Proto, ikeapack and MUS
+do not support time types directly. In the benchmarks an int64 value is used to hold a UnixNano timestamp.
 
 Bebop (both libraries, by nature of the format) natively supports times rounded to 100ns ticks, and this is what is currently benchmarked (a unix nano timestamp is another valid approach).
+
+MUSUnsafe results were obtained using the mus-go unsafe package. With this 
+package, after decoding a byte slice into a string, any change to this slice 
+will change the contents of the string. In such cases, the slice can be reused 
+only after processing the received result.
 
 3. **(major)** Goprotobuf has been disabled in the above, as it is no longer maintained and is incompatible with the latest changes to Google's Protobuf package. See discussions: [1](https://github.com/containerd/ttrpc/issues/62), [2](https://github.com/containerd/ttrpc/pull/99).
 
