@@ -249,7 +249,7 @@ package, after decoding a byte slice into a string, any change to this slice
 will change the contents of the string. In such cases, the slice can be reused 
 only after processing the received result.
 
-1. **(major)** Goprotobuf has been disabled in the above, as it is no longer maintained and is incompatible with the latest changes to Google's Protobuf package. See discussions: [1](https://github.com/containerd/ttrpc/issues/62), [2](https://github.com/containerd/ttrpc/pull/99).
+3. **(major)** Goprotobuf has been disabled in the above, as it is no longer maintained and is incompatible with the latest changes to Google's Protobuf package. See discussions: [1](https://github.com/containerd/ttrpc/issues/62), [2](https://github.com/containerd/ttrpc/pull/99).
 
 ```
 panic: protobuf tag not enough fields in ProtoBufA.state:
