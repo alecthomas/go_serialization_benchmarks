@@ -52,8 +52,13 @@ END {
 	print "----------------------------------------|------------|--------------|-----------|------------|--------|--------------|-----------"
 	for (p in pname) {
 		pr=pname[p]
-	    arry[proto[pr,3]] = sprintf("%-39s | %10d | %6d %s | %9d | %10d | %6.2f | %12d | %7.2f",pr,proto[pr,2],proto[pr,3],proto[pr,4],proto[pr,5],proto[pr,7],
-			proto[pr,2]*proto[pr,3]/1000000000,proto[pr,2]*proto[pr,5]/10000,proto[pr,3]/proto[pr,7])
+		if (proto[pr,7] == 0) {
+	    	arry[proto[pr,3]] = sprintf("%-39s | %10d | %6d %s | %9d | %10d | %6.2f | %12d | Zero-Allocs",pr,proto[pr,2],proto[pr,3],proto[pr,4],proto[pr,5],proto[pr,7],
+				proto[pr,2]*proto[pr,3]/1000000000,proto[pr,2]*proto[pr,5]/10000)
+		} else {
+			arry[proto[pr,3]] = sprintf("%-39s | %10d | %6d %s | %9d | %10d | %6.2f | %12d | %7.2f",pr,proto[pr,2],proto[pr,3],proto[pr,4],proto[pr,5],proto[pr,7],
+				proto[pr,2]*proto[pr,3]/1000000000,proto[pr,2]*proto[pr,5]/10000,proto[pr,3]/proto[pr,7])
+		}
 	}
     arr_sort(arry,keys)
 	for(i=0;i<length(keys);i++){
