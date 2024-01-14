@@ -51,7 +51,7 @@ To update the table in the README:
 ## Recommendation
 
 If correctness and interoperability are the most
-important factors, [gob](http://golang.org/pkg/encoding/gob/) and [json](http://golang.org/pkg/encoding/json/) do the job good.
+important factors, [protobuf](https://google.golang.org/protobuf) and [json](http://golang.org/pkg/encoding/json/) do the job good.
 If speed matters, [MUS](https://github.com/mus-format/mus-go) and [BENC](https://github.com/deneonet/benc) are probably the best choice.
 
 But as always, make your own choice based on your requirements.
