@@ -161,8 +161,6 @@ Benchmark_BENC_Marshal-8                         |   21525518 |     65 ns/op |  
 Benchmark_BENC_Unmarshal-8                       |   23009800 |     60 ns/op |        51 |         32 |   1.39 |       117349 |    1.89
 Benchmark_BENCUnsafe_Marshal-8                   |   20615397 |     52 ns/op |        51 |         64 |   1.08 |       105138 |    0.82
 Benchmark_BENCUnsafe_Unmarshal-8                 |   54961459 |     21 ns/op |        51 |          0 |   1.21 |       280303 |    0.00
-Benchmark_BENCUnsafePre_Marshal-8                |   50289554 |     24 ns/op |        51 |          0 |   1.22 |       256476 |    0.00
-Benchmark_BENCUnsafePre_Unmarshal-8              |   59493313 |     19 ns/op |        51 |          0 |   1.18 |       303415 |    0.00
 Benchmark_MUS_Marshal-8                          |   18902049 |     64 ns/op |        46 |         48 |   1.22 |        86949 |    1.35
 Benchmark_MUS_Unmarshal-8                        |   15403171 |     76 ns/op |        46 |         32 |   1.18 |        70854 |    2.39
 Benchmark_MUSUnsafe_Marshal-8                    |   20805338 |     65 ns/op |        49 |         64 |   1.35 |       101946 |    1.02
@@ -174,7 +172,6 @@ Totals:
 
 benchmark                               | iter       | time/iter    | bytes/op  | allocs/op  | tt.sec | tt.kb        | ns/alloc
 ----------------------------------------|------------|--------------|-----------|------------|--------|--------------|-----------
-Benchmark_BENCUnsafePre_-8              |  109782867 |     44 ns/op |       102 |          0 |   4.84 |      1119785 | Zero-Allocs
 Benchmark_BENCUnsafe_-8                 |   75576856 |     74 ns/op |       102 |         64 |   5.64 |       770883 |    1.17
 Benchmark_MUSUnsafe_-8                  |   56785600 |     94 ns/op |        98 |         64 |   5.37 |       556498 |    1.48
 Benchmark_BENC_-8                       |   44535318 |    125 ns/op |       102 |         96 |   5.61 |       454260 |    1.31
