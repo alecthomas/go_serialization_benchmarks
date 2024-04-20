@@ -15,7 +15,6 @@ import (
 	"github.com/Sereal/Sereal/Go/sereal"
 	"github.com/alecthomas/binary"
 	"github.com/davecgh/go-xdr/xdr"
-	"github.com/deneonet/benc/bpre"
 	capn "github.com/glycerine/go-capnproto"
 	"github.com/gogo/protobuf/jsonpb"
 	"github.com/gogo/protobuf/proto"
