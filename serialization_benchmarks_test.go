@@ -2014,3 +2014,11 @@ func Benchmark_MUSUnsafe_Unmarshal(b *testing.B) {
 		}
 	}
 }
+
+func Benchmark_Baseline_Marshal(b *testing.B) {
+	benchMarshal(b, newBaselineSerializer())
+}
+
+func Benchmark_Baseline_Unmarshal(b *testing.B) {
+	benchUnmarshal(b, newBaselineSerializer())
+}
