@@ -128,13 +128,15 @@ func benchUnmarshal(b *testing.B, s Serializer) {
 		serialSize += copy(t, o)
 		ser[i] = t
 	}
+	o := &A{}
+
 	b.ReportMetric(float64(serialSize)/float64(len(data)), "B/serial")
 	b.ReportAllocs()
 	b.StartTimer()
 
 	for i := 0; i < b.N; i++ {
 		n := rand.Intn(len(ser))
-		o := &A{}
+		*o = A{}
 		err := s.Unmarshal(ser[n], o)
 		if err != nil {
 			b.Fatalf("unmarshal error %s for %#x / %q", err, ser[n], ser[n])
