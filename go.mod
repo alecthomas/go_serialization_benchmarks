@@ -37,7 +37,7 @@ require (
 
 require (
 	github.com/DataDog/zstd v1.5.2 // indirect
-	github.com/cosmos/cosmos-proto v1.0.0-beta.3 // indirect
+	github.com/cosmos/cosmos-proto v1.0.0-beta.3
 	github.com/cybriq/gotiny v0.0.5 // indirect
 	github.com/deneonet/benc v1.0.2
 	github.com/glycerine/goconvey v0.0.0-20190410193231-58a59202ab31 // indirect
@@ -54,7 +54,7 @@ require (
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
 	github.com/modern-go/reflect2 v1.0.2 // indirect
 	github.com/mus-format/mus-common-go v0.0.0-20230426111652-d1324c6517b3 // indirect
-	github.com/mus-format/mus-go v0.0.0-20230426134740-6572513fca3d // indirect
+	github.com/mus-format/mus-go v0.0.0-20230426134740-6572513fca3d
 	github.com/philhofer/fwd v1.1.2 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/protolambda/zssz v0.1.1 // indirect
