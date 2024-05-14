@@ -71,9 +71,26 @@ type Serializer interface {
 	Unmarshal(d []byte, o interface{}) error
 }
 
+// SerializerTimePrecision is a serializer that specifies the max precision that
+// a time.Time is encodable. This will be used to truncate time fields.
+type SerializerTimePrecision interface {
+	// TimePrecision is the max precision a time.Time may be encoded.  When
+	// greater than zero, all time.Time fields are truncated down to this
+	// precision.
+	TimePrecision() time.Duration
+}
+
+// SerializerEnforcesTimezone is a serializer that enforces a specific timezone
+// when marshalling/unmarshalling time.Time fields.
+type SerializerEnforcesTimezone interface {
+	// ForcesUTC is true when the serializes forces a UTC timezone.
+	ForcesUTC() bool
+}
+
 func benchMarshal(b *testing.B, s Serializer) {
 	b.Helper()
 	data := generate()
+
 	b.ReportAllocs()
 	b.ResetTimer()
 	var serialSize int
@@ -115,10 +132,31 @@ func cmpAliases(a, b []string) bool {
 func benchUnmarshal(b *testing.B, s Serializer) {
 	b.Helper()
 	b.StopTimer()
+
+	var timePrecision time.Duration
+	if stp, ok := s.(SerializerTimePrecision); ok {
+		timePrecision = stp.TimePrecision()
+	}
+	var forcesUTC bool
+	if set, ok := s.(SerializerEnforcesTimezone); ok {
+		forcesUTC = set.ForcesUTC()
+	}
+
 	data := generate()
 	ser := make([][]byte, len(data))
 	var serialSize int
 	for i, d := range data {
+		// Reduce the precision of the Birthday field when the
+		// serializer cannot represent time with nanosecond precision.
+		if timePrecision > 0 {
+			d.BirthDay = d.BirthDay.Truncate(timePrecision)
+		}
+
+		// Enforce Timezone when serializer requires it.
+		if forcesUTC {
+			d.BirthDay = d.BirthDay.UTC()
+		}
+
 		o, err := s.Marshal(d)
 		if err != nil {
 			b.Fatal(err)
@@ -1480,133 +1518,22 @@ func Benchmark_Enkodo_Unmarshal(b *testing.B) {
 
 // github.com/200sc/bebop
 
-func generateBebop200sc() []*BebopBuf200sc {
-	a := make([]*BebopBuf200sc, 0, 1000)
-	for i := 0; i < 1000; i++ {
-		a = append(a, &BebopBuf200sc{
-			Name: randString(16),
-			// bebop does support times, but as 100-nanosecond ticks, losing some precision
-			BirthDay: time.Now().Round(100 * time.Nanosecond),
-			Phone:    randString(10),
-			Siblings: rand.Int31n(5),
-			Spouse:   rand.Intn(2) == 1,
-			Money:    rand.Float64(),
-		})
-	}
-	return a
+func Benchmark_Bebop200sc_Marshal(b *testing.B) {
+	benchMarshal(b, newBebop200ScSerializer())
 }
 
-func Benchmark_Bebop_200sc_Marshal(b *testing.B) {
-	data := generateBebop200sc()
-	b.ReportAllocs()
-	b.ResetTimer()
-	var serialSize int
-	for i := 0; i < b.N; i++ {
-		out := data[rand.Intn(len(data))].MarshalBebop()
-		serialSize += len(out)
-	}
-	b.ReportMetric(float64(serialSize)/float64(b.N), "B/serial")
-}
-
-func Benchmark_Bebop_200sc_Unmarshal(b *testing.B) {
-	b.StopTimer()
-	data := generateBebop200sc()
-	ser := make([][]byte, len(data))
-	var serialSize int
-	for i, d := range data {
-		ser[i] = d.MarshalBebop()
-		serialSize += len(ser[i])
-	}
-	b.ReportMetric(float64(serialSize)/float64(len(data)), "B/serial")
-	b.ReportAllocs()
-	b.StartTimer()
-
-	for i := 0; i < b.N; i++ {
-		n := rand.Intn(len(ser))
-		o := BebopBuf200sc{}
-		err := o.UnmarshalBebop(ser[n])
-		if err != nil {
-			b.Fatalf("bebop failed to unmarshal: %s (%s)", err, ser[n])
-		}
-		// Validate unmarshalled data.
-		if validate != "" {
-			i := data[n]
-			correct := o.Name == i.Name && o.Phone == i.Phone && o.Siblings == i.Siblings && o.Spouse == i.Spouse && o.Money == i.Money && o.BirthDay.Equal(i.BirthDay)
-			if !correct {
-				b.Fatalf("unmarshaled object differed:\n%v\n%v", i, o)
-			}
-		}
-	}
+func Benchmark_Bebop200sc_Unmarshal(b *testing.B) {
+	benchUnmarshal(b, newBebop200ScSerializer())
 }
 
 // wellquite.org/bebop
 
-func generateBebopWellquite() []BebopBufWellquite {
-	structs := make([]BebopBufWellquite, 1000)
-	for idx := range structs {
-		structs[idx] = BebopBufWellquite{
-			Name: randString(16),
-			// bebop does support times, but as 100-nanosecond ticks, losing some precision
-			BirthDay: time.Now().Round(100 * time.Nanosecond),
-			Phone:    randString(10),
-			Siblings: rand.Int31n(5),
-			Spouse:   rand.Intn(2) == 1,
-			Money:    rand.Float64(),
-		}
-	}
-	return structs
+func Benchmark_BebopWellquite_Marshal(b *testing.B) {
+	benchMarshal(b, newBebopWellquiteSerializer())
 }
 
-func Benchmark_Bebop_Wellquite_Marshal(b *testing.B) {
-	structs := generateBebopWellquite()
-	length := len(structs)
-	var serialSize int
-	b.ReportAllocs()
-	b.ResetTimer()
-	for iteration := 0; iteration < b.N; iteration++ {
-		out, err := structs[rand.Intn(length)].MarshalBebop(nil)
-		if err != nil {
-			b.Fatal(err)
-		}
-		serialSize += len(out)
-	}
-	b.ReportMetric(float64(serialSize)/float64(b.N), "B/serial")
-}
-
-func Benchmark_Bebop_Wellquite_Unmarshal(b *testing.B) {
-	b.StopTimer()
-	structs := generateBebopWellquite()
-	length := len(structs)
-	serialized := make([][]byte, length)
-	var serialSize int
-	for idx, value := range structs {
-		bites, err := value.MarshalBebop(nil)
-		if err != nil {
-			b.Fatal(err)
-		}
-		serialized[idx] = bites
-		serialSize += len(bites)
-	}
-	b.ReportMetric(float64(serialSize)/float64(length), "B/serial")
-	b.ReportAllocs()
-	b.StartTimer()
-
-	for iteration := 0; iteration < b.N; iteration++ {
-		idx := rand.Intn(length)
-		decoded := BebopBufWellquite{}
-		_, err := decoded.UnmarshalBebop(serialized[idx])
-		if err != nil {
-			b.Fatalf("bebop2 failed to unmarshal: %s (%s)", err, serialized[idx])
-		}
-		// Validate unmarshalled data.
-		if validate != "" {
-			value := structs[idx]
-			correct := decoded.Name == value.Name && decoded.BirthDay == value.BirthDay && decoded.Phone == value.Phone && decoded.Siblings == value.Siblings && decoded.Spouse == value.Spouse && decoded.Money == value.Money
-			if !correct {
-				b.Fatalf("unmarshaled object differed:\n%v\n%v", value, decoded)
-			}
-		}
-	}
+func Benchmark_BebopWellquite_Unmarshal(b *testing.B) {
+	benchUnmarshal(b, newBebopWellquiteSerializer())
 }
 
 // github.com/valyala/fastjson
