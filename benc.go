@@ -1,11 +1,16 @@
 package goserbench
 
 import (
+	"time"
+
 	bstd "github.com/deneonet/benc"
 	"github.com/deneonet/benc/bunsafe"
 )
 
-func MarshalBENC(v BENC) (buf []byte, err error) {
+type BENCSerializer struct{}
+
+func (s BENCSerializer) Marshal(o interface{}) (buf []byte, err error) {
+	v := o.(*A)
 	n := bstd.SizeString(v.Name)
 	n += bstd.SizeInt64()
 	n += bstd.SizeString(v.Phone)
@@ -14,32 +19,38 @@ func MarshalBENC(v BENC) (buf []byte, err error) {
 	n += bstd.SizeFloat64()
 	n, buf = bstd.Marshal(n)
 	n = bstd.MarshalString(n, buf, v.Name)
-	n = bstd.MarshalInt64(n, buf, v.BirthDay)
+	n = bstd.MarshalInt64(n, buf, v.BirthDay.UnixNano())
 	n = bstd.MarshalString(n, buf, v.Phone)
-	n = bstd.MarshalInt32(n, buf, v.Siblings)
+	n = bstd.MarshalInt32(n, buf, int32(v.Siblings))
 	n = bstd.MarshalBool(n, buf, v.Spouse)
 	n = bstd.MarshalFloat64(n, buf, v.Money)
 	err = bstd.VerifyMarshal(n, buf)
 	return
 }
 
-func UnmarshalBENC(bs []byte) (v BENC, n int, err error) {
+func (s BENCSerializer) Unmarshal(bs []byte, o interface{}) (err error) {
+	v := o.(*A)
+	var n int
 	n, v.Name, err = bstd.UnmarshalString(0, bs)
 	if err != nil {
 		return
 	}
-	n, v.BirthDay, err = bstd.UnmarshalInt64(n, bs)
+	var bday int64
+	n, bday, err = bstd.UnmarshalInt64(n, bs)
 	if err != nil {
 		return
 	}
+	v.BirthDay = time.Unix(0, bday)
 	n, v.Phone, err = bstd.UnmarshalString(n, bs)
 	if err != nil {
 		return
 	}
-	n, v.Siblings, err = bstd.UnmarshalInt32(n, bs)
+	var sib int32
+	n, sib, err = bstd.UnmarshalInt32(n, bs)
 	if err != nil {
 		return
 	}
+	v.Siblings = int(sib)
 	n, v.Spouse, err = bstd.UnmarshalBool(n, bs)
 	if err != nil {
 		return
@@ -49,7 +60,10 @@ func UnmarshalBENC(bs []byte) (v BENC, n int, err error) {
 	return
 }
 
-func MarshalBENC_UnsafeStringConversion(v BENC) (buf []byte, err error) {
+type BENCUnsafeSerializer struct{}
+
+func (s BENCUnsafeSerializer) Marshal(o interface{}) (buf []byte, err error) {
+	v := o.(*A)
 	n := bstd.SizeString(v.Name)
 	n += bstd.SizeInt64()
 	n += bstd.SizeString(v.Phone)
@@ -58,32 +72,38 @@ func MarshalBENC_UnsafeStringConversion(v BENC) (buf []byte, err error) {
 	n += bstd.SizeFloat64()
 	n, buf = bstd.Marshal(n)
 	n = bunsafe.MarshalString(n, buf, v.Name)
-	n = bstd.MarshalInt64(n, buf, v.BirthDay)
+	n = bstd.MarshalInt64(n, buf, v.BirthDay.UnixNano())
 	n = bunsafe.MarshalString(n, buf, v.Phone)
-	n = bstd.MarshalInt32(n, buf, v.Siblings)
+	n = bstd.MarshalInt32(n, buf, int32(v.Siblings))
 	n = bstd.MarshalBool(n, buf, v.Spouse)
 	n = bstd.MarshalFloat64(n, buf, v.Money)
 	err = bstd.VerifyMarshal(n, buf)
 	return
 }
 
-func UnmarshalBENC_UnsafeStringConversion(bs []byte) (v BENC, n int, err error) {
+func (s BENCUnsafeSerializer) Unmarshal(bs []byte, o interface{}) (err error) {
+	var n int
+	v := o.(*A)
 	n, v.Name, err = bunsafe.UnmarshalString(0, bs)
 	if err != nil {
 		return
 	}
-	n, v.BirthDay, err = bstd.UnmarshalInt64(n, bs)
+	var bday int64
+	n, bday, err = bstd.UnmarshalInt64(n, bs)
 	if err != nil {
 		return
 	}
+	v.BirthDay = time.Unix(0, bday)
 	n, v.Phone, err = bunsafe.UnmarshalString(n, bs)
 	if err != nil {
 		return
 	}
-	n, v.Siblings, err = bstd.UnmarshalInt32(n, bs)
+	var sib int32
+	n, sib, err = bstd.UnmarshalInt32(n, bs)
 	if err != nil {
 		return
 	}
+	v.Siblings = int(sib)
 	n, v.Spouse, err = bstd.UnmarshalBool(n, bs)
 	if err != nil {
 		return
