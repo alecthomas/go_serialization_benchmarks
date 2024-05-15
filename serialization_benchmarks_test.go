@@ -24,7 +24,6 @@ import (
 	jsoniter "github.com/json-iterator/go"
 	easyjson "github.com/mailru/easyjson"
 	"github.com/niubaoshu/gotiny"
-	ssz "github.com/prysmaticlabs/go-ssz"
 	shamaton "github.com/shamaton/msgpack/v2"
 	shamatongen "github.com/shamaton/msgpackgen/msgpack"
 	"github.com/tinylib/msgp/msgp"
@@ -1365,70 +1364,12 @@ func Benchmark_ShamatonArrayMsgpackgen_Unmarshal(b *testing.B) {
 
 // github.com/prysmaticlabs/go-ssz
 
-func generateNoTimeNoStringNoFloatA() []*NoTimeNoStringNoFloatA {
-	a := make([]*NoTimeNoStringNoFloatA, 0, 1000)
-	for i := 0; i < 1000; i++ {
-		a = append(a, &NoTimeNoStringNoFloatA{
-			Name:     []byte(randString(16)),
-			BirthDay: uint64(time.Now().UnixNano()),
-			Phone:    []byte(randString(10)),
-			Siblings: uint32(rand.Intn(5)),
-			Spouse:   rand.Intn(2) == 1,
-			Money:    math.Float64bits(rand.Float64()),
-		})
-	}
-	return a
+func Benchmark_SSZ_Marshal(b *testing.B) {
+	benchMarshal(b, newSSZSerializer())
 }
 
-func Benchmark_SSZNoTimeNoStringNoFloatA_Marshal(b *testing.B) {
-	data := generateNoTimeNoStringNoFloatA()
-	b.ReportAllocs()
-	b.ResetTimer()
-	var serialSize int
-	for i := 0; i < b.N; i++ {
-		bytes, err := ssz.Marshal(data[rand.Intn(len(data))])
-		if err != nil {
-			b.Fatal(err)
-		}
-		serialSize += len(bytes)
-	}
-	b.ReportMetric(float64(serialSize)/float64(b.N), "B/serial")
-}
-
-func Benchmark_SSZNoTimeNoStringNoFloatA_Unmarshal(b *testing.B) {
-	b.StopTimer()
-	data := generateNoTimeNoStringNoFloatA()
-	ser := make([][]byte, len(data))
-	var serialSize int
-	for i, d := range data {
-		o, err := ssz.Marshal(d)
-		if err != nil {
-			b.Fatal(err)
-		}
-		t := make([]byte, len(o))
-		serialSize += copy(t, o)
-		ser[i] = t
-	}
-	b.ReportMetric(float64(serialSize)/float64(len(data)), "B/serial")
-	b.ReportAllocs()
-	b.StartTimer()
-
-	for i := 0; i < b.N; i++ {
-		n := rand.Intn(len(ser))
-		o := &NoTimeNoStringNoFloatA{}
-		err := ssz.Unmarshal(ser[n], o)
-		if err != nil {
-			b.Fatalf("%s failed to unmarshal: %s (%s)", "ssz", err, ser[n])
-		}
-		// Validate unmarshalled data.
-		if validate != "" {
-			i := data[n]
-			correct := bytes.Equal(o.Name, i.Name) && bytes.Equal(o.Phone, i.Phone) && o.Siblings == i.Siblings && o.Spouse == i.Spouse && o.Money == i.Money && o.BirthDay == i.BirthDay //&& cmpTags(o.Tags, i.Tags) && cmpAliases(o.Aliases, i.Aliases)
-			if !correct {
-				b.Fatalf("unmarshaled object differed:\n%v\n%v", i, o)
-			}
-		}
-	}
+func Benchmark_SSZ_Unmarshal(b *testing.B) {
+	benchUnmarshal(b, newSSZSerializer())
 }
 
 /*
