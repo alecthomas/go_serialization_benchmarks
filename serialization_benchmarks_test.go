@@ -1095,67 +1095,12 @@ func Benchmark_Gogojsonpb_Unmarshal(b *testing.B) {
 
 // github.com/pascaldekloe/colfer
 
-func generateColfer() []*ColferA {
-	a := make([]*ColferA, 0, 1000)
-	for i := 0; i < 1000; i++ {
-		a = append(a, &ColferA{
-			Name:     randString(16),
-			BirthDay: time.Now(),
-			Phone:    randString(10),
-			Siblings: rand.Int31n(5),
-			Spouse:   rand.Intn(2) == 1,
-			Money:    rand.Float64(),
-		})
-	}
-	return a
-}
-
 func Benchmark_Colfer_Marshal(b *testing.B) {
-	data := generateColfer()
-	b.ReportAllocs()
-	b.ResetTimer()
-	var serialSize int
-	for i := 0; i < b.N; i++ {
-		bytes, err := data[rand.Intn(len(data))].MarshalBinary()
-		if err != nil {
-			b.Fatal(err)
-		}
-		serialSize += len(bytes)
-	}
-	b.ReportMetric(float64(serialSize)/float64(b.N), "B/serial")
+	benchMarshal(b, newColferSerializer())
 }
 
 func Benchmark_Colfer_Unmarshal(b *testing.B) {
-	b.StopTimer()
-	data := generateColfer()
-	ser := make([][]byte, len(data))
-	var serialSize int
-	for i, d := range data {
-		var err error
-		ser[i], err = d.MarshalBinary()
-		if err != nil {
-			b.Fatal(err)
-		}
-		serialSize += len(ser[0])
-	}
-	b.ReportMetric(float64(serialSize)/float64(len(data)), "B/serial")
-	b.ReportAllocs()
-	b.StartTimer()
-
-	for i := 0; i < b.N; i++ {
-		n := rand.Intn(len(ser))
-		o := &ColferA{}
-		if err := o.UnmarshalBinary(ser[n]); err != nil {
-			b.Fatalf("Colfer failed to unmarshal %#v: %s", data[n], err)
-		}
-		if validate != "" {
-			i := data[n]
-			correct := o.Name == i.Name && o.Phone == i.Phone && o.Siblings == i.Siblings && o.Spouse == i.Spouse && o.Money == i.Money && o.BirthDay.Equal(i.BirthDay)
-			if !correct {
-				b.Fatalf("unmarshaled object differed:\n%v\n%v", i, o)
-			}
-		}
-	}
+	benchUnmarshal(b, newColferSerializer())
 }
 
 // github.com/andyleap/gencode
