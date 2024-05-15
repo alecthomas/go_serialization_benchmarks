@@ -5,7 +5,6 @@ import (
 	"encoding/gob"
 	"encoding/json"
 	"fmt"
-	"math"
 	"math/rand"
 	"os"
 	"reflect"
@@ -466,23 +465,23 @@ func Benchmark_Gob_Unmarshal(b *testing.B) {
 
 // github.com/davecgh/go-xdr/xdr
 
-type XDRSerializer struct{}
+type XDRDavecghSerializer struct{}
 
-func (x XDRSerializer) Marshal(o interface{}) ([]byte, error) {
+func (x XDRDavecghSerializer) Marshal(o interface{}) ([]byte, error) {
 	return xdr.Marshal(o)
 }
 
-func (x XDRSerializer) Unmarshal(d []byte, o interface{}) error {
+func (x XDRDavecghSerializer) Unmarshal(d []byte, o interface{}) error {
 	_, err := xdr.Unmarshal(d, o)
 	return err
 }
 
-func Benchmark_XDR_Marshal(b *testing.B) {
-	benchMarshal(b, XDRSerializer{})
+func Benchmark_XDRDavecgh_Marshal(b *testing.B) {
+	benchMarshal(b, XDRDavecghSerializer{})
 }
 
-func Benchmark_XDR_Unmarshal(b *testing.B) {
-	benchUnmarshal(b, XDRSerializer{})
+func Benchmark_XDRDavecgh_Unmarshal(b *testing.B) {
+	benchUnmarshal(b, XDRDavecghSerializer{})
 }
 
 // github.com/ugorji/go/codec
@@ -1179,65 +1178,12 @@ func Benchmark_GencodeUnsafe_Unmarshal(b *testing.B) {
 
 // github.com/calmh/xdr
 
-func generateXDR() []*XDRA {
-	a := make([]*XDRA, 0, 1000)
-	for i := 0; i < 1000; i++ {
-		a = append(a, &XDRA{
-			Name:     randString(16),
-			BirthDay: time.Now().UnixNano(),
-			Phone:    randString(10),
-			Siblings: rand.Int31n(5),
-			Spouse:   rand.Intn(2) == 1,
-			Money:    math.Float64bits(rand.Float64()),
-		})
-	}
-	return a
+func Benchmark_XDRCalmh_Marshal(b *testing.B) {
+	benchMarshal(b, newXDRCalmhSerializer())
 }
 
-func Benchmark_XDR2_Marshal(b *testing.B) {
-	data := generateXDR()
-	b.ReportAllocs()
-	b.ResetTimer()
-	var serialSize int
-	for i := 0; i < b.N; i++ {
-		bytes, err := data[rand.Intn(len(data))].MarshalXDR()
-		if err != nil {
-			b.Fatal(err)
-		}
-		serialSize += len(bytes)
-	}
-	b.ReportMetric(float64(serialSize)/float64(b.N), "B/serial")
-}
-
-func Benchmark_XDR2_Unmarshal(b *testing.B) {
-	b.StopTimer()
-	data := generateXDR()
-	ser := make([][]byte, len(data))
-	var serialSize int
-	for i, d := range data {
-		ser[i] = d.MustMarshalXDR()
-		serialSize += len(ser[i])
-	}
-	b.ReportMetric(float64(serialSize)/float64(len(data)), "B/serial")
-	b.ReportAllocs()
-	b.StartTimer()
-
-	for i := 0; i < b.N; i++ {
-		n := rand.Intn(len(ser))
-		o := XDRA{}
-		err := o.UnmarshalXDR(ser[n])
-		if err != nil {
-			b.Fatalf("xdr failed to unmarshal: %s (%s)", err, ser[n])
-		}
-		// Validate unmarshalled data.
-		if validate != "" {
-			i := data[n]
-			correct := o.Name == i.Name && o.Phone == i.Phone && o.Siblings == i.Siblings && o.Spouse == i.Spouse && o.Money == i.Money && o.BirthDay == i.BirthDay
-			if !correct {
-				b.Fatalf("unmarshaled object differed:\n%v\n%v", i, o)
-			}
-		}
-	}
+func Benchmark_XDRCalmh_Unmarshal(b *testing.B) {
+	benchUnmarshal(b, newXDRCalmhSerializer())
 }
 
 // gopkg.in/linkedin/goavro.v1
