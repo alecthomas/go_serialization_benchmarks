@@ -21,7 +21,6 @@ import (
 	flatbuffers "github.com/google/flatbuffers/go"
 	"github.com/hprose/hprose-go"
 	hprose2 "github.com/hprose/hprose-golang/io"
-	ikea "github.com/ikkerens/ikeapack"
 	jsoniter "github.com/json-iterator/go"
 	easyjson "github.com/mailru/easyjson"
 	"github.com/niubaoshu/gotiny"
@@ -1272,83 +1271,12 @@ func Benchmark_GoAvro2Binary_Unmarshal(b *testing.B) {
 
 // github.com/ikkerens/ikeapack
 
-type IkeA struct {
-	Name     string
-	BirthDay int64
-	Phone    string
-	Siblings int32
-	Spouse   bool
-	Money    uint64
-}
-
-func generateIkeA() []*IkeA {
-	a := make([]*IkeA, 0, 1000)
-	for i := 0; i < 1000; i++ {
-		a = append(a, &IkeA{
-			Name:     randString(16),
-			BirthDay: time.Now().UnixNano(),
-			Phone:    randString(10),
-			Siblings: rand.Int31n(5),
-			Spouse:   rand.Intn(2) == 1,
-			Money:    math.Float64bits(rand.Float64()),
-		})
-	}
-	return a
-}
-
 func Benchmark_Ikea_Marshal(b *testing.B) {
-	data := generateIkeA()
-	b.ReportAllocs()
-	b.ResetTimer()
-	var serialSize int
-	for i := 0; i < b.N; i++ {
-		o := data[rand.Intn(len(data))]
-		var buf bytes.Buffer
-		buf.Grow(ikea.Len(o))
-		err := ikea.Pack(&buf, o)
-		if err != nil {
-			b.Fatal(err)
-		}
-		serialSize += buf.Len()
-	}
-	b.ReportMetric(float64(serialSize)/float64(b.N), "B/serial")
+	benchMarshal(b, newIkeSerializer())
 }
 
 func Benchmark_Ikea_Unmarshal(b *testing.B) {
-	b.StopTimer()
-	data := generateIkeA()
-	ser := make([][]byte, len(data))
-	var serialSize int
-	for i, d := range data {
-		buf := new(bytes.Buffer)
-		ikea.Pack(buf, d)
-		ser[i] = buf.Bytes()
-		serialSize += buf.Len()
-	}
-	b.ReportMetric(float64(serialSize)/float64(len(data)), "B/serial")
-	buf := new(bytes.Buffer)
-	buf.Grow(100)
-	b.ReportAllocs()
-	b.StartTimer()
-
-	for i := 0; i < b.N; i++ {
-		n := rand.Intn(len(ser))
-		o := IkeA{}
-		buf.Reset()
-		buf.Write(ser[n])
-		err := ikea.Unpack(buf, &o)
-		if err != nil {
-			b.Fatalf("ikea failed to unmarshal: %s (%s)", err, ser[n])
-		}
-		// Validate unmarshalled data.
-		if validate != "" {
-			i := data[n]
-			correct := o.Name == i.Name && o.Phone == i.Phone && o.Siblings == i.Siblings && o.Spouse == i.Spouse && o.Money == i.Money && o.BirthDay == i.BirthDay
-			if !correct {
-				b.Fatalf("unmarshaled object differed:\n%v\n%v", i, o)
-			}
-		}
-	}
+	benchUnmarshal(b, newIkeSerializer())
 }
 
 // github.com/shamaton/msgpack - as map
