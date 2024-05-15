@@ -15,7 +15,6 @@ import (
 	"github.com/alecthomas/binary"
 	"github.com/davecgh/go-xdr/xdr"
 	capn "github.com/glycerine/go-capnproto"
-	"github.com/gogo/protobuf/proto"
 	flatbuffers "github.com/google/flatbuffers/go"
 	"github.com/hprose/hprose-go"
 	hprose2 "github.com/hprose/hprose-golang/io"
@@ -765,75 +764,6 @@ func Benchmark_Protobuf_Unmarshal(b *testing.B) {
 	benchUnmarshal(b, ProtobufSerializer{})
 }
 
-// github.com/golang/protobuf
-
-func generateProto() []*ProtoBufA {
-	a := make([]*ProtoBufA, 0, 1000)
-	for i := 0; i < 1000; i++ {
-		a = append(a, &ProtoBufA{
-			Name:     proto.String(randString(16)),
-			BirthDay: proto.Int64(time.Now().UnixNano()),
-			Phone:    proto.String(randString(10)),
-			Siblings: proto.Int32(rand.Int31n(5)),
-			Spouse:   proto.Bool(rand.Intn(2) == 1),
-			Money:    proto.Float64(rand.Float64()),
-		})
-	}
-	return a
-}
-
-/*
-func Benchmark_Goprotobuf_Marshal(b *testing.B) {
-	data := generateProto()
-	b.ReportAllocs()
-	b.ResetTimer()
-	var serialSize int
-	for i := 0; i < b.N; i++ {
-		bytes, err := proto.Marshal(data[rand.Intn(len(data))])
-		if err != nil {
-			b.Fatal(err)
-		}
-		serialSize += len(bytes)
-	}
-	b.ReportMetric(float64(serialSize)/float64(b.N), "B/serial")
-}
-
-func Benchmark_Goprotobuf_Unmarshal(b *testing.B) {
-	b.StopTimer()
-	data := generateProto()
-	ser := make([][]byte, len(data))
-	var serialSize int
-	for i, d := range data {
-		var err error
-		ser[i], err = proto.Marshal(d)
-		if err != nil {
-			b.Fatal(err)
-		}
-		serialSize += len(ser[i])
-	}
-	b.ReportMetric(float64(serialSize)/float64(len(data)), "B/serial")
-	b.ReportAllocs()
-	b.StartTimer()
-
-	for i := 0; i < b.N; i++ {
-		n := rand.Intn(len(ser))
-		o := &ProtoBufA{}
-		err := proto.Unmarshal(ser[n], o)
-		if err != nil {
-			b.Fatalf("goprotobuf failed to unmarshal: %s (%s)", err, ser[n])
-		}
-		// Validate unmarshalled data.
-		if validate != "" {
-			i := data[n]
-			correct := *o.Name == *i.Name && *o.Phone == *i.Phone && *o.Siblings == *i.Siblings && *o.Spouse == *i.Spouse && *o.Money == *i.Money && *o.BirthDay == *i.BirthDay //&& cmpTags(o.Tags, i.Tags) && cmpAliases(o.Aliases, i.Aliases)
-			if !correct {
-				b.Fatalf("unmarshaled object differed:\n%v\n%v", i, o)
-			}
-		}
-	}
-}
-*/
-
 // github.com/cosmos/cosmos-proto
 
 func Benchmark_Pulsar_Marshal(b *testing.B) {
@@ -1031,19 +961,6 @@ func Benchmark_SSZ_Marshal(b *testing.B) {
 func Benchmark_SSZ_Unmarshal(b *testing.B) {
 	benchUnmarshal(b, newSSZSerializer())
 }
-
-/*
-// github.com/itsmontoya/enkodo
-func Benchmark_Enkodo_Marshal(b *testing.B) {
-	s := newEnkodoSerializer()
-	benchMarshal(b, s)
-}
-
-func Benchmark_Enkodo_Unmarshal(b *testing.B) {
-	s := newEnkodoSerializer()
-	benchUnmarshal(b, s)
-}
-*/
 
 // github.com/200sc/bebop
 
