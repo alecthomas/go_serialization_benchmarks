@@ -5,6 +5,7 @@ import (
 	"encoding/gob"
 	"encoding/json"
 	"fmt"
+	"math"
 	"math/rand"
 	"os"
 	"reflect"
@@ -81,6 +82,14 @@ type SerializerEnforcesTimezone interface {
 	ForcesUTC() bool
 }
 
+// SerializerLimitsFloat64Precision is a serializer that enforces a maximum
+// precision when marshalling/unmarshalling float64 fields.
+type SerializerLimitsFloat64Precision interface {
+	// FractionalDigits returns the max number of fractional digits that
+	// the serializer may encode.
+	ReduceFloat64Precision() uint
+}
+
 func benchMarshal(b *testing.B, s Serializer) {
 	b.Helper()
 	data := generate()
@@ -149,6 +158,16 @@ func benchUnmarshal(b *testing.B, s Serializer) {
 		// Enforce Timezone when serializer requires it.
 		if forcesUTC {
 			d.BirthDay = d.BirthDay.UTC()
+		}
+
+		// Reduce precision of fractional fields when the serializer
+		// cannot represent the full float64 range.
+		if slfp, ok := s.(SerializerLimitsFloat64Precision); ok {
+			fracDigits := slfp.ReduceFloat64Precision()
+			i, f := math.Modf(d.Money)
+			power := math.Pow(10, float64(fracDigits))
+			newf := math.Trunc(f*power) / power
+			d.Money = float64(i) + newf
 		}
 
 		o, err := s.Marshal(d)
@@ -292,6 +311,10 @@ func (j JsonIterSerializer) Marshal(o interface{}) ([]byte, error) {
 
 func (j JsonIterSerializer) Unmarshal(d []byte, o interface{}) error {
 	return jsoniterFast.Unmarshal(d, o)
+}
+
+func (j JsonIterSerializer) ReduceFloat64Precision() uint {
+	return 6
 }
 
 func Benchmark_JsonIter_Marshal(b *testing.B) {
