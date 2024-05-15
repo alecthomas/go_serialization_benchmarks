@@ -349,6 +349,10 @@ func Benchmark_EasyJson_Unmarshal(b *testing.B) {
 
 type BsonSerializer struct{}
 
+func (m BsonSerializer) TimePrecision() time.Duration {
+	return time.Millisecond
+}
+
 func (m BsonSerializer) Marshal(o interface{}) ([]byte, error) {
 	return bson.Marshal(o)
 }
@@ -368,6 +372,10 @@ func Benchmark_Bson_Unmarshal(b *testing.B) {
 // go.mongodb.org/mongo-driver/mongo
 
 type MongoBsonSerializer struct{}
+
+func (m MongoBsonSerializer) TimePrecision() time.Duration {
+	return time.Millisecond
+}
 
 func (m MongoBsonSerializer) Marshal(o interface{}) ([]byte, error) {
 	return mongobson.Marshal(o)
