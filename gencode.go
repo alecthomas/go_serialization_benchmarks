@@ -36,7 +36,7 @@ func (s *GencodeSerializer) Unmarshal(bs []byte, o interface{}) (err error) {
 	return
 }
 
-func newGencodeSerializer() *GencodeSerializer {
+func NewGencodeSerializer() *GencodeSerializer {
 	return &GencodeSerializer{buf: make([]byte, 0, 1024)}
 }
 
@@ -74,6 +74,6 @@ func (s *GencodeUnsafeSerializer) Unmarshal(bs []byte, o interface{}) (err error
 	return
 }
 
-func newGencodeUnsafeSerializer() *GencodeUnsafeSerializer {
+func NewGencodeUnsafeSerializer() *GencodeUnsafeSerializer {
 	return &GencodeUnsafeSerializer{buf: make([]byte, 0, 1024)}
 }

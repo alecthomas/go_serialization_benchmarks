@@ -12,6 +12,6 @@ func (j JsonSerializer) Unmarshal(d []byte, o interface{}) error {
 	return json.Unmarshal(d, o)
 }
 
-func newJSONSerializer() JsonSerializer {
+func NewJSONSerializer() JsonSerializer {
 	return JsonSerializer{}
 }

@@ -15,7 +15,7 @@ func (m ShamatonMapMsgpackSerializer) Unmarshal(d []byte, o interface{}) error {
 	return shamaton.UnmarshalAsMap(d, o)
 }
 
-func newShamatonMapMsgpackSerializer() ShamatonMapMsgpackSerializer {
+func NewShamatonMapMsgpackSerializer() ShamatonMapMsgpackSerializer {
 	return ShamatonMapMsgpackSerializer{}
 }
 
@@ -29,7 +29,7 @@ func (m ShamatonArrayMsgpackSerializer) Unmarshal(d []byte, o interface{}) error
 	return shamaton.UnmarshalAsArray(d, o)
 }
 
-func newShamatonArrayMsgPackSerializer() ShamatonArrayMsgpackSerializer {
+func NewShamatonArrayMsgPackSerializer() ShamatonArrayMsgpackSerializer {
 	RegisterGeneratedResolver()
 	return ShamatonArrayMsgpackSerializer{}
 }
@@ -44,7 +44,7 @@ func (m ShamatonMapMsgpackgenSerializer) Unmarshal(d []byte, o interface{}) erro
 	return shamatongen.UnmarshalAsMap(d, o)
 }
 
-func newShamatonMapMsgPackgenSerializer() ShamatonMapMsgpackgenSerializer {
+func NewShamatonMapMsgPackgenSerializer() ShamatonMapMsgpackgenSerializer {
 	RegisterGeneratedResolver()
 	return ShamatonMapMsgpackgenSerializer{}
 }
@@ -60,6 +60,6 @@ func (m ShamatonArrayMsgpackgenSerializer) Unmarshal(d []byte, o interface{}) er
 	return shamatongen.UnmarshalAsArray(d, o)
 }
 
-func newShamatonArrayMsgpackgenSerializer() ShamatonArrayMsgpackgenSerializer {
+func NewShamatonArrayMsgpackgenSerializer() ShamatonArrayMsgpackgenSerializer {
 	return ShamatonArrayMsgpackgenSerializer{}
 }

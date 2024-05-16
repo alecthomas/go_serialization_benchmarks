@@ -13,6 +13,6 @@ func (s SerealSerializer) Unmarshal(d []byte, o interface{}) error {
 	return err
 }
 
-func newSerealSerializer() SerealSerializer {
+func NewSerealSerializer() SerealSerializer {
 	return SerealSerializer{}
 }

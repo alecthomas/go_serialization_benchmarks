@@ -45,7 +45,7 @@ func (s *FastJSONSerializer) Unmarshal(bs []byte, o interface{}) (err error) {
 	return nil
 }
 
-func newFastJSONSerializer() *FastJSONSerializer {
+func NewFastJSONSerializer() *FastJSONSerializer {
 	var arena fastjson.Arena
 	return &FastJSONSerializer{
 		object: arena.NewObject(),

@@ -35,7 +35,7 @@ func (s Hprose2Serializer) Unmarshal(d []byte, i interface{}) error {
 	return nil
 }
 
-func newHProse2Serializer() Hprose2Serializer {
+func NewHProse2Serializer() Hprose2Serializer {
 	writer := hprose2.NewWriter(true)
 	reader := hprose2.NewReader(nil, true)
 	return Hprose2Serializer{writer: writer, reader: reader}

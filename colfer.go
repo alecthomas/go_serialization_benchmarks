@@ -41,6 +41,6 @@ func (s *ColferSerializer) Unmarshal(bs []byte, o interface{}) (err error) {
 	return
 }
 
-func newColferSerializer() *ColferSerializer {
+func NewColferSerializer() *ColferSerializer {
 	return &ColferSerializer{}
 }

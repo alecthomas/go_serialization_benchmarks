@@ -12,6 +12,6 @@ func (m EasyJSONSerializer) Unmarshal(d []byte, o interface{}) error {
 	return easyjson.Unmarshal(d, o.(*A))
 }
 
-func newEasyJSONSerializer() EasyJSONSerializer {
+func NewEasyJSONSerializer() EasyJSONSerializer {
 	return EasyJSONSerializer{}
 }

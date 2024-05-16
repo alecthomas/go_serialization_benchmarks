@@ -20,6 +20,6 @@ func (m BsonSerializer) Unmarshal(d []byte, o interface{}) error {
 	return bson.Unmarshal(d, o)
 }
 
-func newBsonSerializer() BsonSerializer {
+func NewBsonSerializer() BsonSerializer {
 	return BsonSerializer{}
 }

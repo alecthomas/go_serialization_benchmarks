@@ -59,6 +59,6 @@ func (s *IkeSerializer) Unmarshal(bs []byte, o interface{}) (err error) {
 	return
 }
 
-func newIkeSerializer() *IkeSerializer {
+func NewIkeSerializer() *IkeSerializer {
 	return &IkeSerializer{buf: bytes.NewBuffer(make([]byte, 0, 1024))}
 }

@@ -14,6 +14,6 @@ func (m ProtobufSerializer) Unmarshal(d []byte, o interface{}) error {
 	return protobuf.Decode(d, o)
 }
 
-func newProtobufSerializer() ProtobufSerializer {
+func NewProtobufSerializer() ProtobufSerializer {
 	return ProtobufSerializer{}
 }

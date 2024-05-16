@@ -40,7 +40,7 @@ func (s *BebopWellquiteSerializer) TimePrecision() time.Duration {
 	return 100 * time.Nanosecond
 }
 
-func newBebopWellquiteSerializer() *BebopWellquiteSerializer {
+func NewBebopWellquiteSerializer() *BebopWellquiteSerializer {
 	return &BebopWellquiteSerializer{
 		buf: make([]byte, 1024),
 	}

@@ -13,6 +13,6 @@ func (m MsgpSerializer) Unmarshal(d []byte, o interface{}) error {
 	return err
 }
 
-func newMsgpSerializer() MsgpSerializer {
+func NewMsgpSerializer() MsgpSerializer {
 	return MsgpSerializer{}
 }

@@ -197,71 +197,71 @@ func Benchmark_Gotiny_Unmarshal(b *testing.B) {
 // github.com/tinylib/msgp
 
 func Benchmark_Msgp_Marshal(b *testing.B) {
-	benchMarshal(b, newMsgpSerializer())
+	benchMarshal(b, NewMsgpSerializer())
 }
 
 func Benchmark_Msgp_Unmarshal(b *testing.B) {
-	benchUnmarshal(b, newMsgpSerializer())
+	benchUnmarshal(b, NewMsgpSerializer())
 }
 
 // github.com/vmihailenco/msgpack
 
 func Benchmark_VmihailencoMsgpack_Marshal(b *testing.B) {
-	benchMarshal(b, newVmihailencoMsgpackSerialier())
+	benchMarshal(b, NewVmihailencoMsgpackSerialier())
 }
 
 func Benchmark_VmihailencoMsgpack_Unmarshal(b *testing.B) {
-	benchUnmarshal(b, newVmihailencoMsgpackSerialier())
+	benchUnmarshal(b, NewVmihailencoMsgpackSerialier())
 }
 
 // encoding/json
 
 func Benchmark_Json_Marshal(b *testing.B) {
-	benchMarshal(b, newJSONSerializer())
+	benchMarshal(b, NewJSONSerializer())
 }
 
 func Benchmark_Json_Unmarshal(b *testing.B) {
-	benchUnmarshal(b, newJSONSerializer())
+	benchUnmarshal(b, NewJSONSerializer())
 }
 
 // github.com/json-iterator/go
 
 func Benchmark_JsonIter_Marshal(b *testing.B) {
-	benchMarshal(b, newJSONIterSerializer())
+	benchMarshal(b, NewJSONIterSerializer())
 }
 
 func Benchmark_JsonIter_Unmarshal(b *testing.B) {
-	benchUnmarshal(b, newJSONIterSerializer())
+	benchUnmarshal(b, NewJSONIterSerializer())
 }
 
 // github.com/mailru/easyjson
 
 func Benchmark_EasyJson_Marshal(b *testing.B) {
-	benchMarshal(b, newEasyJSONSerializer())
+	benchMarshal(b, NewEasyJSONSerializer())
 }
 
 func Benchmark_EasyJson_Unmarshal(b *testing.B) {
-	benchUnmarshal(b, newEasyJSONSerializer())
+	benchUnmarshal(b, NewEasyJSONSerializer())
 }
 
 // gopkg.in/mgo.v2/bson
 
 func Benchmark_Bson_Marshal(b *testing.B) {
-	benchMarshal(b, newBsonSerializer())
+	benchMarshal(b, NewBsonSerializer())
 }
 
 func Benchmark_Bson_Unmarshal(b *testing.B) {
-	benchUnmarshal(b, newBsonSerializer())
+	benchUnmarshal(b, NewBsonSerializer())
 }
 
 // go.mongodb.org/mongo-driver/mongo
 
 func Benchmark_MongoBson_Marshal(b *testing.B) {
-	benchMarshal(b, newMongoBSONSerializer())
+	benchMarshal(b, NewMongoBSONSerializer())
 }
 
 func Benchmark_MongoBson_Unmarshal(b *testing.B) {
-	benchUnmarshal(b, newMongoBSONSerializer())
+	benchUnmarshal(b, NewMongoBSONSerializer())
 }
 
 // encoding/gob
@@ -277,165 +277,165 @@ func Benchmark_Gob_Unmarshal(b *testing.B) {
 // github.com/davecgh/go-xdr/xdr
 
 func Benchmark_XDRDavecgh_Marshal(b *testing.B) {
-	benchMarshal(b, newXDRDavecghSerializer())
+	benchMarshal(b, NewXDRDavecghSerializer())
 }
 
 func Benchmark_XDRDavecgh_Unmarshal(b *testing.B) {
-	benchUnmarshal(b, newXDRDavecghSerializer())
+	benchUnmarshal(b, NewXDRDavecghSerializer())
 }
 
 // github.com/ugorji/go/codec
 
 func Benchmark_UgorjiCodecMsgpack_Marshal(b *testing.B) {
-	benchMarshal(b, newUgorjiCodecMsgPack())
+	benchMarshal(b, NewUgorjiCodecMsgPack())
 }
 
 func Benchmark_UgorjiCodecMsgpack_Unmarshal(b *testing.B) {
-	benchUnmarshal(b, newUgorjiCodecMsgPack())
+	benchUnmarshal(b, NewUgorjiCodecMsgPack())
 }
 
 func Benchmark_UgorjiCodecBinc_Marshal(b *testing.B) {
-	benchMarshal(b, newUgorjiCodecBinc())
+	benchMarshal(b, NewUgorjiCodecBinc())
 }
 
 func Benchmark_UgorjiCodecBinc_Unmarshal(b *testing.B) {
-	benchUnmarshal(b, newUgorjiCodecBinc())
+	benchUnmarshal(b, NewUgorjiCodecBinc())
 }
 
 // github.com/Sereal/Sereal/Go/sereal
 
 func Benchmark_Sereal_Marshal(b *testing.B) {
-	benchMarshal(b, newSerealSerializer())
+	benchMarshal(b, NewSerealSerializer())
 }
 
 func Benchmark_Sereal_Unmarshal(b *testing.B) {
-	benchUnmarshal(b, newSerealSerializer())
+	benchUnmarshal(b, NewSerealSerializer())
 }
 
 // github.com/alecthomas/binary
 
 func Benchmark_Binary_Marshal(b *testing.B) {
-	benchMarshal(b, newBinarySerializer())
+	benchMarshal(b, NewBinarySerializer())
 }
 
 func Benchmark_Binary_Unmarshal(b *testing.B) {
-	benchUnmarshal(b, newBinarySerializer())
+	benchUnmarshal(b, NewBinarySerializer())
 }
 
 // github.com/google/flatbuffers/go
 
 func Benchmark_FlatBuffers_Marshal(b *testing.B) {
-	benchMarshal(b, newFlatBuffersSerializer())
+	benchMarshal(b, NewFlatBuffersSerializer())
 }
 
 func Benchmark_FlatBuffers_Unmarshal(b *testing.B) {
-	benchUnmarshal(b, newFlatBuffersSerializer())
+	benchUnmarshal(b, NewFlatBuffersSerializer())
 }
 
 // github.com/glycerine/go-capnproto
 
 func Benchmark_CapNProto_Marshal(b *testing.B) {
-	benchMarshal(b, newCapNProtoSerializer())
+	benchMarshal(b, NewCapNProtoSerializer())
 }
 
 func Benchmark_CapNProto_Unmarshal(b *testing.B) {
-	benchUnmarshal(b, newCapNProtoSerializer())
+	benchUnmarshal(b, NewCapNProtoSerializer())
 }
 
 // github.com/hprose/hprose-go/io
 
 func Benchmark_Hprose_Marshal(b *testing.B) {
-	benchMarshal(b, newHproseSerializer())
+	benchMarshal(b, NewHproseSerializer())
 }
 
 func Benchmark_Hprose_Unmarshal(b *testing.B) {
-	benchUnmarshal(b, newHproseSerializer())
+	benchUnmarshal(b, NewHproseSerializer())
 }
 
 // github.com/hprose/hprose-golang/io
 
 func Benchmark_Hprose2_Marshal(b *testing.B) {
-	benchMarshal(b, newHProse2Serializer())
+	benchMarshal(b, NewHProse2Serializer())
 }
 
 func Benchmark_Hprose2_Unmarshal(b *testing.B) {
-	benchUnmarshal(b, newHProse2Serializer())
+	benchUnmarshal(b, NewHProse2Serializer())
 }
 
 // go.dedis.ch/protobuf
 
 func Benchmark_Protobuf_Marshal(b *testing.B) {
-	benchMarshal(b, newProtobufSerializer())
+	benchMarshal(b, NewProtobufSerializer())
 }
 
 func Benchmark_Protobuf_Unmarshal(b *testing.B) {
-	benchUnmarshal(b, newProtobufSerializer())
+	benchUnmarshal(b, NewProtobufSerializer())
 }
 
 // github.com/cosmos/cosmos-proto
 
 func Benchmark_Pulsar_Marshal(b *testing.B) {
-	benchMarshal(b, newPulsarSerializer())
+	benchMarshal(b, NewPulsarSerializer())
 }
 
 func Benchmark_Pulsar_Unmarshal(b *testing.B) {
-	benchUnmarshal(b, newPulsarSerializer())
+	benchUnmarshal(b, NewPulsarSerializer())
 }
 
 // github.com/gogo/protobuf/proto
 
 func Benchmark_Gogoprotobuf_Marshal(b *testing.B) {
-	benchMarshal(b, newGogoProtoSerializer())
+	benchMarshal(b, NewGogoProtoSerializer())
 }
 
 func Benchmark_Gogoprotobuf_Unmarshal(b *testing.B) {
-	benchUnmarshal(b, newGogoProtoSerializer())
+	benchUnmarshal(b, NewGogoProtoSerializer())
 }
 
 func Benchmark_Gogojsonpb_Marshal(b *testing.B) {
-	benchMarshal(b, newGogoJsonSerializer())
+	benchMarshal(b, NewGogoJsonSerializer())
 }
 
 func Benchmark_Gogojsonpb_Unmarshal(b *testing.B) {
-	benchUnmarshal(b, newGogoJsonSerializer())
+	benchUnmarshal(b, NewGogoJsonSerializer())
 }
 
 // github.com/pascaldekloe/colfer
 
 func Benchmark_Colfer_Marshal(b *testing.B) {
-	benchMarshal(b, newColferSerializer())
+	benchMarshal(b, NewColferSerializer())
 }
 
 func Benchmark_Colfer_Unmarshal(b *testing.B) {
-	benchUnmarshal(b, newColferSerializer())
+	benchUnmarshal(b, NewColferSerializer())
 }
 
 // github.com/andyleap/gencode
 
 func Benchmark_Gencode_Marshal(b *testing.B) {
-	benchMarshal(b, newGencodeSerializer())
+	benchMarshal(b, NewGencodeSerializer())
 }
 
 func Benchmark_Gencode_Unmarshal(b *testing.B) {
-	benchUnmarshal(b, newGencodeSerializer())
+	benchUnmarshal(b, NewGencodeSerializer())
 }
 
 func Benchmark_GencodeUnsafe_Marshal(b *testing.B) {
-	benchMarshal(b, newGencodeUnsafeSerializer())
+	benchMarshal(b, NewGencodeUnsafeSerializer())
 }
 
 func Benchmark_GencodeUnsafe_Unmarshal(b *testing.B) {
-	benchUnmarshal(b, newGencodeUnsafeSerializer())
+	benchUnmarshal(b, NewGencodeUnsafeSerializer())
 }
 
 // github.com/calmh/xdr
 
 func Benchmark_XDRCalmh_Marshal(b *testing.B) {
-	benchMarshal(b, newXDRCalmhSerializer())
+	benchMarshal(b, NewXDRCalmhSerializer())
 }
 
 func Benchmark_XDRCalmh_Unmarshal(b *testing.B) {
-	benchUnmarshal(b, newXDRCalmhSerializer())
+	benchUnmarshal(b, NewXDRCalmhSerializer())
 }
 
 // gopkg.in/linkedin/goavro.v1
@@ -469,91 +469,91 @@ func Benchmark_GoAvro2Binary_Unmarshal(b *testing.B) {
 // github.com/ikkerens/ikeapack
 
 func Benchmark_Ikea_Marshal(b *testing.B) {
-	benchMarshal(b, newIkeSerializer())
+	benchMarshal(b, NewIkeSerializer())
 }
 
 func Benchmark_Ikea_Unmarshal(b *testing.B) {
-	benchUnmarshal(b, newIkeSerializer())
+	benchUnmarshal(b, NewIkeSerializer())
 }
 
 // github.com/shamaton/msgpack - as map
 
 func Benchmark_ShamatonMapMsgpack_Marshal(b *testing.B) {
-	benchMarshal(b, newShamatonMapMsgpackSerializer())
+	benchMarshal(b, NewShamatonMapMsgpackSerializer())
 }
 
 func Benchmark_ShamatonMapMsgpack_Unmarshal(b *testing.B) {
-	benchUnmarshal(b, newShamatonMapMsgpackSerializer())
+	benchUnmarshal(b, NewShamatonMapMsgpackSerializer())
 }
 
 // github.com/shamaton/msgpack - as array
 
 func Benchmark_ShamatonArrayMsgpack_Marshal(b *testing.B) {
-	benchMarshal(b, newShamatonArrayMsgPackSerializer())
+	benchMarshal(b, NewShamatonArrayMsgPackSerializer())
 }
 
 func Benchmark_ShamatonArrayMsgpack_Unmarshal(b *testing.B) {
-	benchUnmarshal(b, newShamatonArrayMsgPackSerializer())
+	benchUnmarshal(b, NewShamatonArrayMsgPackSerializer())
 }
 
 // github.com/shamaton/msgpackgen - as map
 
 func Benchmark_ShamatonMapMsgpackgen_Marshal(b *testing.B) {
-	benchMarshal(b, newShamatonMapMsgPackgenSerializer())
+	benchMarshal(b, NewShamatonMapMsgPackgenSerializer())
 }
 
 func Benchmark_ShamatonMapMsgpackgen_Unmarshal(b *testing.B) {
-	benchUnmarshal(b, newShamatonMapMsgPackgenSerializer())
+	benchUnmarshal(b, NewShamatonMapMsgPackgenSerializer())
 }
 
 // github.com/shamaton/msgpackgen - as array
 
 func Benchmark_ShamatonArrayMsgpackgen_Marshal(b *testing.B) {
-	benchMarshal(b, newShamatonArrayMsgpackgenSerializer())
+	benchMarshal(b, NewShamatonArrayMsgpackgenSerializer())
 }
 
 func Benchmark_ShamatonArrayMsgpackgen_Unmarshal(b *testing.B) {
-	benchUnmarshal(b, newShamatonArrayMsgpackgenSerializer())
+	benchUnmarshal(b, NewShamatonArrayMsgpackgenSerializer())
 }
 
 // github.com/prysmaticlabs/go-ssz
 
 func Benchmark_SSZ_Marshal(b *testing.B) {
-	benchMarshal(b, newSSZSerializer())
+	benchMarshal(b, NewSSZSerializer())
 }
 
 func Benchmark_SSZ_Unmarshal(b *testing.B) {
-	benchUnmarshal(b, newSSZSerializer())
+	benchUnmarshal(b, NewSSZSerializer())
 }
 
 // github.com/200sc/bebop
 
 func Benchmark_Bebop200sc_Marshal(b *testing.B) {
-	benchMarshal(b, newBebop200ScSerializer())
+	benchMarshal(b, NewBebop200ScSerializer())
 }
 
 func Benchmark_Bebop200sc_Unmarshal(b *testing.B) {
-	benchUnmarshal(b, newBebop200ScSerializer())
+	benchUnmarshal(b, NewBebop200ScSerializer())
 }
 
 // wellquite.org/bebop
 
 func Benchmark_BebopWellquite_Marshal(b *testing.B) {
-	benchMarshal(b, newBebopWellquiteSerializer())
+	benchMarshal(b, NewBebopWellquiteSerializer())
 }
 
 func Benchmark_BebopWellquite_Unmarshal(b *testing.B) {
-	benchUnmarshal(b, newBebopWellquiteSerializer())
+	benchUnmarshal(b, NewBebopWellquiteSerializer())
 }
 
 // github.com/valyala/fastjson
 
 func Benchmark_FastJson_Marshal(b *testing.B) {
-	benchMarshal(b, newFastJSONSerializer())
+	benchMarshal(b, NewFastJSONSerializer())
 }
 
 func Benchmark_FastJson_Unmarshal(b *testing.B) {
-	benchUnmarshal(b, newFastJSONSerializer())
+	benchUnmarshal(b, NewFastJSONSerializer())
 }
 
 // github.com/deneonet/benc
@@ -592,9 +592,9 @@ func Benchmark_MUSUnsafe_Unmarshal(b *testing.B) {
 }
 
 func Benchmark_Baseline_Marshal(b *testing.B) {
-	benchMarshal(b, newBaselineSerializer())
+	benchMarshal(b, NewBaselineSerializer())
 }
 
 func Benchmark_Baseline_Unmarshal(b *testing.B) {
-	benchUnmarshal(b, newBaselineSerializer())
+	benchUnmarshal(b, NewBaselineSerializer())
 }

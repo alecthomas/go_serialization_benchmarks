@@ -13,6 +13,6 @@ func (x XDRDavecghSerializer) Unmarshal(d []byte, o interface{}) error {
 	return err
 }
 
-func newXDRDavecghSerializer() XDRDavecghSerializer {
+func NewXDRDavecghSerializer() XDRDavecghSerializer {
 	return XDRDavecghSerializer{}
 }
