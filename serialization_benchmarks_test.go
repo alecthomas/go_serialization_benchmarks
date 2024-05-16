@@ -15,7 +15,6 @@ import (
 	"github.com/niubaoshu/gotiny"
 	"github.com/tinylib/msgp/msgp"
 	vmihailenco "github.com/vmihailenco/msgpack/v5"
-	"gopkg.in/mgo.v2/bson"
 )
 
 var (
@@ -332,26 +331,12 @@ func Benchmark_EasyJson_Unmarshal(b *testing.B) {
 
 // gopkg.in/mgo.v2/bson
 
-type BsonSerializer struct{}
-
-func (m BsonSerializer) TimePrecision() time.Duration {
-	return time.Millisecond
-}
-
-func (m BsonSerializer) Marshal(o interface{}) ([]byte, error) {
-	return bson.Marshal(o)
-}
-
-func (m BsonSerializer) Unmarshal(d []byte, o interface{}) error {
-	return bson.Unmarshal(d, o)
-}
-
 func Benchmark_Bson_Marshal(b *testing.B) {
-	benchMarshal(b, BsonSerializer{})
+	benchMarshal(b, newBsonSerializer())
 }
 
 func Benchmark_Bson_Unmarshal(b *testing.B) {
-	benchUnmarshal(b, BsonSerializer{})
+	benchUnmarshal(b, newBsonSerializer())
 }
 
 // go.mongodb.org/mongo-driver/mongo
