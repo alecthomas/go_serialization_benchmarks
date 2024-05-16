@@ -15,7 +15,6 @@ import (
 	"github.com/niubaoshu/gotiny"
 	"github.com/tinylib/msgp/msgp"
 	vmihailenco "github.com/vmihailenco/msgpack/v5"
-	mongobson "go.mongodb.org/mongo-driver/bson"
 	"gopkg.in/mgo.v2/bson"
 )
 
@@ -357,26 +356,12 @@ func Benchmark_Bson_Unmarshal(b *testing.B) {
 
 // go.mongodb.org/mongo-driver/mongo
 
-type MongoBsonSerializer struct{}
-
-func (m MongoBsonSerializer) TimePrecision() time.Duration {
-	return time.Millisecond
-}
-
-func (m MongoBsonSerializer) Marshal(o interface{}) ([]byte, error) {
-	return mongobson.Marshal(o)
-}
-
-func (m MongoBsonSerializer) Unmarshal(d []byte, o interface{}) error {
-	return mongobson.Unmarshal(d, o)
-}
-
 func Benchmark_MongoBson_Marshal(b *testing.B) {
-	benchMarshal(b, MongoBsonSerializer{})
+	benchMarshal(b, newMongoBSONSerializer())
 }
 
 func Benchmark_MongoBson_Unmarshal(b *testing.B) {
-	benchUnmarshal(b, MongoBsonSerializer{})
+	benchUnmarshal(b, newMongoBSONSerializer())
 }
 
 // encoding/gob
