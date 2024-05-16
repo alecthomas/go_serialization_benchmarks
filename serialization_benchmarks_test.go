@@ -30,7 +30,6 @@ import (
 	"go.dedis.ch/protobuf"
 	mongobson "go.mongodb.org/mongo-driver/bson"
 	"gopkg.in/mgo.v2/bson"
-	capnp "zombiezen.com/go/capnproto2"
 )
 
 var (
@@ -608,64 +607,6 @@ func Benchmark_CapNProto_Marshal(b *testing.B) {
 
 func Benchmark_CapNProto_Unmarshal(b *testing.B) {
 	benchUnmarshal(b, &CapNProtoSerializer{})
-}
-
-// zombiezen.com/go/capnproto2
-
-type CapNProto2Serializer struct {
-	arena capnp.Arena
-}
-
-func (x *CapNProto2Serializer) Marshal(o interface{}) ([]byte, error) {
-	a := o.(*A)
-	m, seg, err := capnp.NewMessage(capnp.SingleSegment(nil))
-	if err != nil {
-		return nil, err
-	}
-	c, err := NewCapnp2A(seg)
-	if err != nil {
-		return nil, err
-	}
-	c.SetName(a.Name)
-	c.SetBirthDay(a.BirthDay.UnixNano())
-	c.SetPhone(a.Phone)
-	c.SetSiblings(int32(a.Siblings))
-	c.SetSpouse(a.Spouse)
-	c.SetMoney(a.Money)
-	return m.Marshal()
-}
-
-func (x *CapNProto2Serializer) Unmarshal(d []byte, i interface{}) error {
-	a := i.(*A)
-	m, err := capnp.Unmarshal(d)
-	if err != nil {
-		return err
-	}
-	o, err := ReadRootCapnp2A(m)
-	if err != nil {
-		return err
-	}
-	a.Name, err = o.Name()
-	if err != nil {
-		return err
-	}
-	a.BirthDay = time.Unix(0, o.BirthDay())
-	a.Phone, err = o.Phone()
-	if err != nil {
-		return err
-	}
-	a.Siblings = int(o.Siblings())
-	a.Spouse = o.Spouse()
-	a.Money = o.Money()
-	return nil
-}
-
-func Benchmark_CapNProto2_Marshal(b *testing.B) {
-	benchMarshal(b, &CapNProto2Serializer{capnp.SingleSegment(nil)})
-}
-
-func Benchmark_CapNProto2_Unmarshal(b *testing.B) {
-	benchUnmarshal(b, &CapNProto2Serializer{capnp.SingleSegment(nil)})
 }
 
 // github.com/hprose/hprose-go/io
