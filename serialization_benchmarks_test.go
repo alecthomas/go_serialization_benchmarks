@@ -13,7 +13,6 @@ import (
 	"time"
 
 	"github.com/Sereal/Sereal/Go/sereal"
-	"github.com/alecthomas/binary"
 	"github.com/davecgh/go-xdr/xdr"
 	jsoniter "github.com/json-iterator/go"
 	easyjson "github.com/mailru/easyjson"
@@ -494,22 +493,12 @@ func Benchmark_Sereal_Unmarshal(b *testing.B) {
 
 // github.com/alecthomas/binary
 
-type BinarySerializer struct{}
-
-func (b BinarySerializer) Marshal(o interface{}) ([]byte, error) {
-	return binary.Marshal(o)
-}
-
-func (b BinarySerializer) Unmarshal(d []byte, o interface{}) error {
-	return binary.Unmarshal(d, o)
-}
-
 func Benchmark_Binary_Marshal(b *testing.B) {
-	benchMarshal(b, BinarySerializer{})
+	benchMarshal(b, newBinarySerializer())
 }
 
 func Benchmark_Binary_Unmarshal(b *testing.B) {
-	benchUnmarshal(b, BinarySerializer{})
+	benchUnmarshal(b, newBinarySerializer())
 }
 
 // github.com/google/flatbuffers/go
