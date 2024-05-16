@@ -559,18 +559,18 @@ func Benchmark_FastJson_Unmarshal(b *testing.B) {
 // github.com/deneonet/benc
 
 func Benchmark_BENC_Marshal(b *testing.B) {
-	benchMarshal(b, BENCSerializer{})
+	benchMarshal(b, NewBENCSerializer())
 }
 func Benchmark_BENC_Unmarshal(b *testing.B) {
-	benchUnmarshal(b, BENCSerializer{})
+	benchUnmarshal(b, NewBENCSerializer())
 }
 
 func Benchmark_BENCUnsafe_Marshal(b *testing.B) {
-	benchMarshal(b, BENCUnsafeSerializer{})
+	benchMarshal(b, NewBENCUnsafeSerializer())
 }
 
 func Benchmark_BENCUnsafe_Unmarshal(b *testing.B) {
-	benchUnmarshal(b, BENCUnsafeSerializer{})
+	benchUnmarshal(b, NewBENCUnsafeSerializer())
 }
 
 // github.com/mus-format/mus-go

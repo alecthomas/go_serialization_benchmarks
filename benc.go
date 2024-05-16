@@ -60,6 +60,10 @@ func (s BENCSerializer) Unmarshal(bs []byte, o interface{}) (err error) {
 	return
 }
 
+func NewBENCSerializer() BENCSerializer {
+	return BENCSerializer{}
+}
+
 type BENCUnsafeSerializer struct{}
 
 func (s BENCUnsafeSerializer) Marshal(o interface{}) (buf []byte, err error) {
@@ -111,4 +115,8 @@ func (s BENCUnsafeSerializer) Unmarshal(bs []byte, o interface{}) (err error) {
 	n, v.Money, err = bstd.UnmarshalFloat64(n, bs)
 	err = bstd.VerifyUnmarshal(n, bs)
 	return
+}
+
+func NewBENCUnsafeSerializer() BENCUnsafeSerializer {
+	return BENCUnsafeSerializer{}
 }
