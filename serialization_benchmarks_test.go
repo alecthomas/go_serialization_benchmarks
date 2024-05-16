@@ -10,7 +10,6 @@ import (
 	"time"
 
 	"github.com/niubaoshu/gotiny"
-	"github.com/tinylib/msgp/msgp"
 )
 
 var (
@@ -221,23 +220,12 @@ func Benchmark_Gotiny_Unmarshal(b *testing.B) {
 
 // github.com/tinylib/msgp
 
-type MsgpSerializer struct{}
-
-func (m MsgpSerializer) Marshal(o interface{}) ([]byte, error) {
-	return o.(msgp.Marshaler).MarshalMsg(nil)
-}
-
-func (m MsgpSerializer) Unmarshal(d []byte, o interface{}) error {
-	_, err := o.(msgp.Unmarshaler).UnmarshalMsg(d)
-	return err
-}
-
 func Benchmark_Msgp_Marshal(b *testing.B) {
-	benchMarshal(b, MsgpSerializer{})
+	benchMarshal(b, newMsgpSerializer())
 }
 
 func Benchmark_Msgp_Unmarshal(b *testing.B) {
-	benchUnmarshal(b, MsgpSerializer{})
+	benchUnmarshal(b, newMsgpSerializer())
 }
 
 // github.com/vmihailenco/msgpack
