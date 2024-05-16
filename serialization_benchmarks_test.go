@@ -5,11 +5,8 @@ import (
 	"math"
 	"math/rand"
 	"os"
-	"reflect"
 	"testing"
 	"time"
-
-	"github.com/niubaoshu/gotiny"
 )
 
 var (
@@ -189,33 +186,12 @@ See README.md for details on running the benchmarks.
 }
 
 // github.com/niubaoshu/gotiny
-
-type GotinySerializer struct {
-	dec *gotiny.Decoder
-}
-
-func (g GotinySerializer) Marshal(o interface{}) ([]byte, error) {
-	return gotiny.Marshal(o), nil
-}
-
-func (g GotinySerializer) Unmarshal(d []byte, o interface{}) error {
-	g.dec.Decode(d, o)
-	return nil
-}
-
-func NewGotinySerializer(o interface{}) Serializer {
-	ot := reflect.TypeOf(o)
-	return GotinySerializer{
-		dec: gotiny.NewDecoderWithType(ot),
-	}
-}
-
 func Benchmark_Gotiny_Marshal(b *testing.B) {
-	benchMarshal(b, NewGotinySerializer(A{}))
+	benchMarshal(b, NewGotinySerializer())
 }
 
 func Benchmark_Gotiny_Unmarshal(b *testing.B) {
-	benchUnmarshal(b, NewGotinySerializer(A{}))
+	benchUnmarshal(b, NewGotinySerializer())
 }
 
 // github.com/tinylib/msgp
