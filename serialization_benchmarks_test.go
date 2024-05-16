@@ -17,7 +17,6 @@ import (
 	easyjson "github.com/mailru/easyjson"
 	"github.com/niubaoshu/gotiny"
 	"github.com/tinylib/msgp/msgp"
-	"github.com/ugorji/go/codec"
 	vmihailenco "github.com/vmihailenco/msgpack/v5"
 	mongobson "go.mongodb.org/mongo-driver/bson"
 	"gopkg.in/mgo.v2/bson"
@@ -436,37 +435,20 @@ func Benchmark_XDRDavecgh_Unmarshal(b *testing.B) {
 
 // github.com/ugorji/go/codec
 
-type UgorjiCodecSerializer struct {
-	codec.Handle
-}
-
-func (u *UgorjiCodecSerializer) Marshal(o interface{}) ([]byte, error) {
-	var bs []byte
-	return bs, codec.NewEncoderBytes(&bs, u.Handle).Encode(o)
-}
-
-func (u *UgorjiCodecSerializer) Unmarshal(d []byte, o interface{}) error {
-	return codec.NewDecoderBytes(d, u.Handle).Decode(o)
-}
-
 func Benchmark_UgorjiCodecMsgpack_Marshal(b *testing.B) {
-	benchMarshal(b, &UgorjiCodecSerializer{&codec.MsgpackHandle{}})
+	benchMarshal(b, newUgorjiCodecMsgPack())
 }
 
 func Benchmark_UgorjiCodecMsgpack_Unmarshal(b *testing.B) {
-	benchUnmarshal(b, &UgorjiCodecSerializer{&codec.MsgpackHandle{}})
+	benchUnmarshal(b, newUgorjiCodecMsgPack())
 }
 
 func Benchmark_UgorjiCodecBinc_Marshal(b *testing.B) {
-	h := &codec.BincHandle{}
-	h.AsSymbols = 0
-	benchMarshal(b, &UgorjiCodecSerializer{h})
+	benchMarshal(b, newUgorjiCodecBinc())
 }
 
 func Benchmark_UgorjiCodecBinc_Unmarshal(b *testing.B) {
-	h := &codec.BincHandle{}
-	h.AsSymbols = 0
-	benchUnmarshal(b, &UgorjiCodecSerializer{h})
+	benchUnmarshal(b, newUgorjiCodecBinc())
 }
 
 // github.com/Sereal/Sereal/Go/sereal
