@@ -68,6 +68,10 @@ func (s MUSSerializer) Unmarshal(bs []byte, o interface{}) (err error) {
 	return
 }
 
+func NewMUSSerializer() Serializer {
+	return MUSSerializer{}
+}
+
 type MUSUnsafeSerializer struct{}
 
 func (s MUSUnsafeSerializer) Marshal(o interface{}) ([]byte, error) {
@@ -124,4 +128,8 @@ func (s MUSUnsafeSerializer) Unmarshal(bs []byte, o interface{}) (err error) {
 	v.Money, n1, err = unsafe.UnmarshalFloat64(bs[n:])
 	n += n1
 	return
+}
+
+func NewMUSUnsafeSerializer() Serializer {
+	return MUSUnsafeSerializer{}
 }

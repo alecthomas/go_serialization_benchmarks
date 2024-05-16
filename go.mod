@@ -32,7 +32,6 @@ require (
 	google.golang.org/protobuf v1.28.1
 	gopkg.in/mgo.v2 v2.0.0-20190816093944-a6b53ec6cb22
 	wellquite.org/bebop v0.0.0-20231109192402-a92af83691ec
-	zombiezen.com/go/capnproto2 v2.18.2+incompatible
 )
 
 require (
@@ -61,7 +60,6 @@ require (
 	github.com/prysmaticlabs/go-bitfield v0.0.0-20190825002834-fb724e897364 // indirect
 	github.com/vmihailenco/tagparser/v2 v2.0.0 // indirect
 	golang.org/x/exp v0.0.0-20231110203233-9a3e6036ecaa // indirect
-	golang.org/x/net v0.5.0 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 )
 

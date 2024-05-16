@@ -56,7 +56,7 @@ var avroSchemaJSON = `
 		}
 	`
 
-func NewAvroA() *AvroA {
+func NewAvroA() Serializer {
 	rec, err := goavro.NewRecord(goavro.RecordSchema(avroSchemaJSON))
 	if err != nil {
 		panic(err)
@@ -138,7 +138,7 @@ func avroUnmarshal(d []byte, o interface{}, unmarshalFunc func([]byte) (interfac
 	return nil
 }
 
-func NewAvro2Txt() *Avro2Txt {
+func NewAvro2Txt() Serializer {
 	codec, err := goavro2.NewCodec(avroSchemaJSON)
 	if err != nil {
 		panic(err)
@@ -158,7 +158,7 @@ func (a *Avro2Txt) String() string {
 	return "GoAvro2Text"
 }
 
-func NewAvro2Bin() *Avro2Bin {
+func NewAvro2Bin() Serializer {
 	codec, err := goavro2.NewCodec(avroSchemaJSON)
 	if err != nil {
 		panic(err)
