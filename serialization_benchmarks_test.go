@@ -36,35 +36,6 @@ func generate() []*A {
 	return a
 }
 
-type Serializer interface {
-	Marshal(o interface{}) ([]byte, error)
-	Unmarshal(d []byte, o interface{}) error
-}
-
-// SerializerTimePrecision is a serializer that specifies the max precision that
-// a time.Time is encodable. This will be used to truncate time fields.
-type SerializerTimePrecision interface {
-	// TimePrecision is the max precision a time.Time may be encoded.  When
-	// greater than zero, all time.Time fields are truncated down to this
-	// precision.
-	TimePrecision() time.Duration
-}
-
-// SerializerEnforcesTimezone is a serializer that enforces a specific timezone
-// when marshalling/unmarshalling time.Time fields.
-type SerializerEnforcesTimezone interface {
-	// ForcesUTC is true when the serializes forces a UTC timezone.
-	ForcesUTC() bool
-}
-
-// SerializerLimitsFloat64Precision is a serializer that enforces a maximum
-// precision when marshalling/unmarshalling float64 fields.
-type SerializerLimitsFloat64Precision interface {
-	// FractionalDigits returns the max number of fractional digits that
-	// the serializer may encode.
-	ReduceFloat64Precision() uint
-}
-
 func benchMarshal(b *testing.B, s Serializer) {
 	b.Helper()
 	data := generate()
