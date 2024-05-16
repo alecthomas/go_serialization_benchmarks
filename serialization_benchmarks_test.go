@@ -10,15 +10,13 @@ import (
 	"testing"
 	"time"
 
-	jsoniter "github.com/json-iterator/go"
 	"github.com/niubaoshu/gotiny"
 	"github.com/tinylib/msgp/msgp"
 	vmihailenco "github.com/vmihailenco/msgpack/v5"
 )
 
 var (
-	validate     = os.Getenv("VALIDATE")
-	jsoniterFast = jsoniter.ConfigFastest
+	validate = os.Getenv("VALIDATE")
 )
 
 func randString(l int) string {
@@ -286,26 +284,12 @@ func Benchmark_Json_Unmarshal(b *testing.B) {
 
 // github.com/json-iterator/go
 
-type JsonIterSerializer struct{}
-
-func (j JsonIterSerializer) Marshal(o interface{}) ([]byte, error) {
-	return jsoniterFast.Marshal(o)
-}
-
-func (j JsonIterSerializer) Unmarshal(d []byte, o interface{}) error {
-	return jsoniterFast.Unmarshal(d, o)
-}
-
-func (j JsonIterSerializer) ReduceFloat64Precision() uint {
-	return 6
-}
-
 func Benchmark_JsonIter_Marshal(b *testing.B) {
-	benchMarshal(b, JsonIterSerializer{})
+	benchMarshal(b, newJSONIterSerializer())
 }
 
 func Benchmark_JsonIter_Unmarshal(b *testing.B) {
-	benchUnmarshal(b, JsonIterSerializer{})
+	benchUnmarshal(b, newJSONIterSerializer())
 }
 
 // github.com/mailru/easyjson
