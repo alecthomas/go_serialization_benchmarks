@@ -20,6 +20,6 @@ func (m MongoBsonSerializer) Unmarshal(d []byte, o interface{}) error {
 	return mongobson.Unmarshal(d, o)
 }
 
-func NewMongoBSONSerializer() MongoBsonSerializer {
+func NewMongoBSONSerializer() Serializer {
 	return MongoBsonSerializer{}
 }

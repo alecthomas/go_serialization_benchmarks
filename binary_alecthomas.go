@@ -12,6 +12,6 @@ func (b BinarySerializer) Unmarshal(d []byte, o interface{}) error {
 	return binary.Unmarshal(d, o)
 }
 
-func NewBinarySerializer() BinarySerializer {
+func NewBinarySerializer() Serializer {
 	return BinarySerializer{}
 }

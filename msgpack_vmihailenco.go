@@ -14,6 +14,6 @@ func (m VmihailencoMsgpackSerializer) Unmarshal(d []byte, o interface{}) error {
 	return vmihailenco.Unmarshal(d, o)
 }
 
-func NewVmihailencoMsgpackSerialier() VmihailencoMsgpackSerializer {
+func NewVmihailencoMsgpackSerialier() Serializer {
 	return VmihailencoMsgpackSerializer{}
 }

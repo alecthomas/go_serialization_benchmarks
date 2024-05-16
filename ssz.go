@@ -49,6 +49,6 @@ func (s *SSZSerializer) Unmarshal(bs []byte, o interface{}) (err error) {
 	return
 }
 
-func NewSSZSerializer() *SSZSerializer {
+func NewSSZSerializer() Serializer {
 	return &SSZSerializer{}
 }

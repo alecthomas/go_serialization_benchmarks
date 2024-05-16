@@ -68,7 +68,7 @@ func (s MUSSerializer) Unmarshal(bs []byte, o interface{}) (err error) {
 	return
 }
 
-func NewMUSSerializer() MUSSerializer {
+func NewMUSSerializer() Serializer {
 	return MUSSerializer{}
 }
 
@@ -130,6 +130,6 @@ func (s MUSUnsafeSerializer) Unmarshal(bs []byte, o interface{}) (err error) {
 	return
 }
 
-func NewMUSUnsafeSerializer() MUSUnsafeSerializer {
+func NewMUSUnsafeSerializer() Serializer {
 	return MUSUnsafeSerializer{}
 }

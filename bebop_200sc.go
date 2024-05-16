@@ -45,6 +45,6 @@ func (s *Bebop200ScSerializer) ForceUTC() bool {
 	return true
 }
 
-func NewBebop200ScSerializer() *Bebop200ScSerializer {
+func NewBebop200ScSerializer() Serializer {
 	return &Bebop200ScSerializer{buf: make([]byte, 1024)}
 }

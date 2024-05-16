@@ -19,7 +19,7 @@ func (g GotinySerializer) Unmarshal(d []byte, o interface{}) error {
 	return nil
 }
 
-func NewGotinySerializer() GotinySerializer {
+func NewGotinySerializer() Serializer {
 	ot := reflect.TypeOf(A{})
 	return GotinySerializer{
 		dec: gotiny.NewDecoderWithType(ot),

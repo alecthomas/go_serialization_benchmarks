@@ -17,7 +17,7 @@ func (g *GobSerializer) Unmarshal(d []byte, o interface{}) error {
 	return gob.NewDecoder(bytes.NewReader(d)).Decode(o)
 }
 
-func NewGobSerializer() *GobSerializer {
+func NewGobSerializer() Serializer {
 	// registration required before first use
 	gob.Register(A{})
 	return &GobSerializer{}

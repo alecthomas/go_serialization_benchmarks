@@ -40,6 +40,6 @@ func (x CapNProtoSerializer) Unmarshal(d []byte, i interface{}) error {
 	return nil
 }
 
-func NewCapNProtoSerializer() CapNProtoSerializer {
+func NewCapNProtoSerializer() Serializer {
 	return CapNProtoSerializer{}
 }

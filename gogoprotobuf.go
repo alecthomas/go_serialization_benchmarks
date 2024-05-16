@@ -50,14 +50,14 @@ func (s *GogoProtoSerializer) Unmarshal(bs []byte, o interface{}) (err error) {
 	return
 }
 
-func NewGogoProtoSerializer() *GogoProtoSerializer {
+func NewGogoProtoSerializer() Serializer {
 	return &GogoProtoSerializer{
 		marshaller:   proto.Marshal,
 		unmarshaller: proto.Unmarshal,
 	}
 }
 
-func NewGogoJsonSerializer() *GogoProtoSerializer {
+func NewGogoJsonSerializer() Serializer {
 	marshaller := &jsonpb.Marshaler{}
 	buf := bytes.NewBuffer(make([]byte, 0, 1024))
 

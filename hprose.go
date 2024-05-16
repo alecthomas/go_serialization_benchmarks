@@ -53,7 +53,7 @@ func (s *HproseSerializer) Unmarshal(d []byte, i interface{}) (err error) {
 	return err
 }
 
-func NewHproseSerializer() *HproseSerializer {
+func NewHproseSerializer() Serializer {
 	buf := new(bytes.Buffer)
 	reader := hprose.NewReader(buf, true)
 	bufw := new(bytes.Buffer)

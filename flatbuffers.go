@@ -43,6 +43,6 @@ func (s *FlatBufferSerializer) Unmarshal(d []byte, i interface{}) error {
 	return nil
 }
 
-func NewFlatBuffersSerializer() *FlatBufferSerializer {
+func NewFlatBuffersSerializer() Serializer {
 	return &FlatBufferSerializer{flatbuffers.NewBuilder(0)}
 }

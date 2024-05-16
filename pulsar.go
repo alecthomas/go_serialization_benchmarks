@@ -47,6 +47,6 @@ func (s *PulsarSerializer) Unmarshal(bs []byte, o interface{}) (err error) {
 	return
 }
 
-func NewPulsarSerializer() *PulsarSerializer {
+func NewPulsarSerializer() Serializer {
 	return &PulsarSerializer{}
 }

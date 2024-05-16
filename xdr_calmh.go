@@ -38,6 +38,6 @@ func (s *XDRCalmhSerializer) Unmarshal(bs []byte, o interface{}) (err error) {
 	return
 }
 
-func NewXDRCalmhSerializer() *XDRCalmhSerializer {
+func NewXDRCalmhSerializer() Serializer {
 	return &XDRCalmhSerializer{}
 }

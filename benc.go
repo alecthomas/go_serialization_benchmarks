@@ -60,7 +60,7 @@ func (s BENCSerializer) Unmarshal(bs []byte, o interface{}) (err error) {
 	return
 }
 
-func NewBENCSerializer() BENCSerializer {
+func NewBENCSerializer() Serializer {
 	return BENCSerializer{}
 }
 
@@ -117,6 +117,6 @@ func (s BENCUnsafeSerializer) Unmarshal(bs []byte, o interface{}) (err error) {
 	return
 }
 
-func NewBENCUnsafeSerializer() BENCUnsafeSerializer {
+func NewBENCUnsafeSerializer() Serializer {
 	return BENCUnsafeSerializer{}
 }

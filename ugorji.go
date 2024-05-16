@@ -15,11 +15,11 @@ func (u *UgorjiCodecSerializer) Unmarshal(d []byte, o interface{}) error {
 	return codec.NewDecoderBytes(d, u.Handle).Decode(o)
 }
 
-func NewUgorjiCodecMsgPack() *UgorjiCodecSerializer {
+func NewUgorjiCodecMsgPack() Serializer {
 	return &UgorjiCodecSerializer{&codec.MsgpackHandle{}}
 }
 
-func NewUgorjiCodecBinc() *UgorjiCodecSerializer {
+func NewUgorjiCodecBinc() Serializer {
 	h := &codec.BincHandle{}
 	h.AsSymbols = 0
 	return &UgorjiCodecSerializer{h}

@@ -22,6 +22,6 @@ func (j JsonIterSerializer) ReduceFloat64Precision() uint {
 	return 6
 }
 
-func NewJSONIterSerializer() JsonIterSerializer {
+func NewJSONIterSerializer() Serializer {
 	return JsonIterSerializer{}
 }
