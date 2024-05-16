@@ -11,7 +11,6 @@ import (
 
 	"github.com/niubaoshu/gotiny"
 	"github.com/tinylib/msgp/msgp"
-	vmihailenco "github.com/vmihailenco/msgpack/v5"
 )
 
 var (
@@ -243,22 +242,12 @@ func Benchmark_Msgp_Unmarshal(b *testing.B) {
 
 // github.com/vmihailenco/msgpack
 
-type VmihailencoMsgpackSerializer struct{}
-
-func (m VmihailencoMsgpackSerializer) Marshal(o interface{}) ([]byte, error) {
-	return vmihailenco.Marshal(o)
-}
-
-func (m VmihailencoMsgpackSerializer) Unmarshal(d []byte, o interface{}) error {
-	return vmihailenco.Unmarshal(d, o)
-}
-
 func Benchmark_VmihailencoMsgpack_Marshal(b *testing.B) {
-	benchMarshal(b, VmihailencoMsgpackSerializer{})
+	benchMarshal(b, newVmihailencoMsgpackSerialier())
 }
 
 func Benchmark_VmihailencoMsgpack_Unmarshal(b *testing.B) {
-	benchUnmarshal(b, VmihailencoMsgpackSerializer{})
+	benchUnmarshal(b, newVmihailencoMsgpackSerialier())
 }
 
 // encoding/json
