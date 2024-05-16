@@ -576,19 +576,19 @@ func Benchmark_BENCUnsafe_Unmarshal(b *testing.B) {
 // github.com/mus-format/mus-go
 
 func Benchmark_MUS_Marshal(b *testing.B) {
-	benchMarshal(b, MUSSerializer{})
+	benchMarshal(b, NewMUSSerializer())
 }
 
 func Benchmark_MUS_Unmarshal(b *testing.B) {
-	benchUnmarshal(b, MUSSerializer{})
+	benchUnmarshal(b, NewMUSSerializer())
 }
 
 func Benchmark_MUSUnsafe_Marshal(b *testing.B) {
-	benchMarshal(b, MUSUnsafeSerializer{})
+	benchMarshal(b, NewMUSUnsafeSerializer())
 }
 
 func Benchmark_MUSUnsafe_Unmarshal(b *testing.B) {
-	benchUnmarshal(b, MUSUnsafeSerializer{})
+	benchUnmarshal(b, NewMUSUnsafeSerializer())
 }
 
 func Benchmark_Baseline_Marshal(b *testing.B) {
