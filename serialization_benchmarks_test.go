@@ -1,7 +1,6 @@
 package goserbench
 
 import (
-	"encoding/json"
 	"fmt"
 	"math"
 	"math/rand"
@@ -264,22 +263,12 @@ func Benchmark_VmihailencoMsgpack_Unmarshal(b *testing.B) {
 
 // encoding/json
 
-type JsonSerializer struct{}
-
-func (j JsonSerializer) Marshal(o interface{}) ([]byte, error) {
-	return json.Marshal(o)
-}
-
-func (j JsonSerializer) Unmarshal(d []byte, o interface{}) error {
-	return json.Unmarshal(d, o)
-}
-
 func Benchmark_Json_Marshal(b *testing.B) {
-	benchMarshal(b, JsonSerializer{})
+	benchMarshal(b, newJSONSerializer())
 }
 
 func Benchmark_Json_Unmarshal(b *testing.B) {
-	benchUnmarshal(b, JsonSerializer{})
+	benchUnmarshal(b, newJSONSerializer())
 }
 
 // github.com/json-iterator/go
