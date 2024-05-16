@@ -12,7 +12,6 @@ import (
 	"testing"
 	"time"
 
-	"github.com/davecgh/go-xdr/xdr"
 	jsoniter "github.com/json-iterator/go"
 	easyjson "github.com/mailru/easyjson"
 	"github.com/niubaoshu/gotiny"
@@ -414,23 +413,12 @@ func Benchmark_Gob_Unmarshal(b *testing.B) {
 
 // github.com/davecgh/go-xdr/xdr
 
-type XDRDavecghSerializer struct{}
-
-func (x XDRDavecghSerializer) Marshal(o interface{}) ([]byte, error) {
-	return xdr.Marshal(o)
-}
-
-func (x XDRDavecghSerializer) Unmarshal(d []byte, o interface{}) error {
-	_, err := xdr.Unmarshal(d, o)
-	return err
-}
-
 func Benchmark_XDRDavecgh_Marshal(b *testing.B) {
-	benchMarshal(b, XDRDavecghSerializer{})
+	benchMarshal(b, newXDRDavecghSerializer())
 }
 
 func Benchmark_XDRDavecgh_Unmarshal(b *testing.B) {
-	benchUnmarshal(b, XDRDavecghSerializer{})
+	benchUnmarshal(b, newXDRDavecghSerializer())
 }
 
 // github.com/ugorji/go/codec
