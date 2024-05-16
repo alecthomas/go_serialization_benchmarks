@@ -25,7 +25,6 @@ import (
 	"github.com/tinylib/msgp/msgp"
 	"github.com/ugorji/go/codec"
 	vmihailenco "github.com/vmihailenco/msgpack/v5"
-	"go.dedis.ch/protobuf"
 	mongobson "go.mongodb.org/mongo-driver/bson"
 	"gopkg.in/mgo.v2/bson"
 )
@@ -716,22 +715,12 @@ func Benchmark_Hprose2_Unmarshal(b *testing.B) {
 
 // go.dedis.ch/protobuf
 
-type ProtobufSerializer struct{}
-
-func (m ProtobufSerializer) Marshal(o interface{}) ([]byte, error) {
-	return protobuf.Encode(o)
-}
-
-func (m ProtobufSerializer) Unmarshal(d []byte, o interface{}) error {
-	return protobuf.Decode(d, o)
-}
-
 func Benchmark_Protobuf_Marshal(b *testing.B) {
-	benchMarshal(b, ProtobufSerializer{})
+	benchMarshal(b, newProtobufSerializer())
 }
 
 func Benchmark_Protobuf_Unmarshal(b *testing.B) {
-	benchUnmarshal(b, ProtobufSerializer{})
+	benchUnmarshal(b, newProtobufSerializer())
 }
 
 // github.com/cosmos/cosmos-proto
