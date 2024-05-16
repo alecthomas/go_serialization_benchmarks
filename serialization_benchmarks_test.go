@@ -11,7 +11,6 @@ import (
 	"time"
 
 	jsoniter "github.com/json-iterator/go"
-	easyjson "github.com/mailru/easyjson"
 	"github.com/niubaoshu/gotiny"
 	"github.com/tinylib/msgp/msgp"
 	vmihailenco "github.com/vmihailenco/msgpack/v5"
@@ -311,22 +310,12 @@ func Benchmark_JsonIter_Unmarshal(b *testing.B) {
 
 // github.com/mailru/easyjson
 
-type EasyJSONSerializer struct{}
-
-func (m EasyJSONSerializer) Marshal(o interface{}) ([]byte, error) {
-	return easyjson.Marshal(o.(easyjson.Marshaler))
-}
-
-func (m EasyJSONSerializer) Unmarshal(d []byte, o interface{}) error {
-	return easyjson.Unmarshal(d, o.(*A))
-}
-
 func Benchmark_EasyJson_Marshal(b *testing.B) {
-	benchMarshal(b, EasyJSONSerializer{})
+	benchMarshal(b, newEasyJSONSerializer())
 }
 
 func Benchmark_EasyJson_Unmarshal(b *testing.B) {
-	benchUnmarshal(b, EasyJSONSerializer{})
+	benchUnmarshal(b, newEasyJSONSerializer())
 }
 
 // gopkg.in/mgo.v2/bson
