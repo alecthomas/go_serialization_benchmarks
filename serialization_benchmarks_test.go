@@ -17,7 +17,6 @@ import (
 	"github.com/davecgh/go-xdr/xdr"
 	capn "github.com/glycerine/go-capnproto"
 	flatbuffers "github.com/google/flatbuffers/go"
-	"github.com/hprose/hprose-go"
 	jsoniter "github.com/json-iterator/go"
 	easyjson "github.com/mailru/easyjson"
 	"github.com/niubaoshu/gotiny"
@@ -607,65 +606,12 @@ func Benchmark_CapNProto_Unmarshal(b *testing.B) {
 
 // github.com/hprose/hprose-go/io
 
-type HproseSerializer struct {
-	writer *hprose.Writer
-	reader *hprose.Reader
-}
-
-func (s *HproseSerializer) Marshal(o interface{}) ([]byte, error) {
-	a := o.(*A)
-	writer := s.writer
-	buf := writer.Stream.(*bytes.Buffer)
-	l := buf.Len()
-	writer.WriteString(a.Name)
-	writer.WriteTime(a.BirthDay)
-	writer.WriteString(a.Phone)
-	writer.WriteInt64(int64(a.Siblings))
-	writer.WriteBool(a.Spouse)
-	writer.WriteFloat64(a.Money)
-	return buf.Bytes()[l:], nil
-}
-
-func (s *HproseSerializer) Unmarshal(d []byte, i interface{}) (err error) {
-	o := i.(*A)
-	reader := s.reader
-	reader.Stream = &hprose.BytesReader{Bytes: d, Pos: 0}
-	o.Name, err = reader.ReadString()
-	if err != nil {
-		return err
-	}
-	o.BirthDay, err = reader.ReadDateTime()
-	if err != nil {
-		return err
-	}
-	o.Phone, err = reader.ReadString()
-	if err != nil {
-		return err
-	}
-	o.Siblings, err = reader.ReadInt()
-	if err != nil {
-		return err
-	}
-	o.Spouse, err = reader.ReadBool()
-	if err != nil {
-		return err
-	}
-	o.Money, err = reader.ReadFloat64()
-	return err
-}
-
 func Benchmark_Hprose_Marshal(b *testing.B) {
-	buf := new(bytes.Buffer)
-	writer := hprose.NewWriter(buf, true)
-	benchMarshal(b, &HproseSerializer{writer: writer})
+	benchMarshal(b, newHproseSerializer())
 }
 
 func Benchmark_Hprose_Unmarshal(b *testing.B) {
-	buf := new(bytes.Buffer)
-	reader := hprose.NewReader(buf, true)
-	bufw := new(bytes.Buffer)
-	writer := hprose.NewWriter(bufw, true)
-	benchUnmarshal(b, &HproseSerializer{writer: writer, reader: reader})
+	benchUnmarshal(b, newHproseSerializer())
 }
 
 // github.com/hprose/hprose-golang/io
