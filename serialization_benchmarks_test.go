@@ -22,8 +22,6 @@ import (
 	jsoniter "github.com/json-iterator/go"
 	easyjson "github.com/mailru/easyjson"
 	"github.com/niubaoshu/gotiny"
-	shamaton "github.com/shamaton/msgpack/v2"
-	shamatongen "github.com/shamaton/msgpackgen/msgpack"
 	"github.com/tinylib/msgp/msgp"
 	"github.com/ugorji/go/codec"
 	vmihailenco "github.com/vmihailenco/msgpack/v5"
@@ -842,86 +840,42 @@ func Benchmark_Ikea_Unmarshal(b *testing.B) {
 
 // github.com/shamaton/msgpack - as map
 
-type ShamatonMapMsgpackSerializer struct{}
-
-func (m ShamatonMapMsgpackSerializer) Marshal(o interface{}) ([]byte, error) {
-	return shamaton.MarshalAsMap(o)
-}
-
-func (m ShamatonMapMsgpackSerializer) Unmarshal(d []byte, o interface{}) error {
-	return shamaton.UnmarshalAsMap(d, o)
-}
-
 func Benchmark_ShamatonMapMsgpack_Marshal(b *testing.B) {
-	benchMarshal(b, ShamatonMapMsgpackSerializer{})
+	benchMarshal(b, newShamatonMapMsgpackSerializer())
 }
 
 func Benchmark_ShamatonMapMsgpack_Unmarshal(b *testing.B) {
-	benchUnmarshal(b, ShamatonMapMsgpackSerializer{})
+	benchUnmarshal(b, newShamatonMapMsgpackSerializer())
 }
 
 // github.com/shamaton/msgpack - as array
 
-type ShamatonArrayMsgpackSerializer struct{}
-
-func (m ShamatonArrayMsgpackSerializer) Marshal(o interface{}) ([]byte, error) {
-	return shamaton.MarshalAsArray(o)
-}
-
-func (m ShamatonArrayMsgpackSerializer) Unmarshal(d []byte, o interface{}) error {
-	return shamaton.UnmarshalAsArray(d, o)
-}
-
 func Benchmark_ShamatonArrayMsgpack_Marshal(b *testing.B) {
-	benchMarshal(b, ShamatonArrayMsgpackSerializer{})
+	benchMarshal(b, newShamatonArrayMsgPackSerializer())
 }
 
 func Benchmark_ShamatonArrayMsgpack_Unmarshal(b *testing.B) {
-	benchUnmarshal(b, ShamatonArrayMsgpackSerializer{})
+	benchUnmarshal(b, newShamatonArrayMsgPackSerializer())
 }
 
 // github.com/shamaton/msgpackgen - as map
 
-type ShamatonMapMsgpackgenSerializer struct{}
-
-func (m ShamatonMapMsgpackgenSerializer) Marshal(o interface{}) ([]byte, error) {
-	return shamatongen.MarshalAsMap(o)
-}
-
-func (m ShamatonMapMsgpackgenSerializer) Unmarshal(d []byte, o interface{}) error {
-	return shamatongen.UnmarshalAsMap(d, o)
-}
-
 func Benchmark_ShamatonMapMsgpackgen_Marshal(b *testing.B) {
-	RegisterGeneratedResolver()
-	benchMarshal(b, ShamatonMapMsgpackgenSerializer{})
+	benchMarshal(b, newShamatonMapMsgPackgenSerializer())
 }
 
 func Benchmark_ShamatonMapMsgpackgen_Unmarshal(b *testing.B) {
-	RegisterGeneratedResolver()
-	benchUnmarshal(b, ShamatonMapMsgpackgenSerializer{})
+	benchUnmarshal(b, newShamatonMapMsgPackgenSerializer())
 }
 
 // github.com/shamaton/msgpackgen - as array
 
-type ShamatonArrayMsgpackgenSerializer struct{}
-
-func (m ShamatonArrayMsgpackgenSerializer) Marshal(o interface{}) ([]byte, error) {
-	return shamatongen.MarshalAsArray(o)
-}
-
-func (m ShamatonArrayMsgpackgenSerializer) Unmarshal(d []byte, o interface{}) error {
-	return shamatongen.UnmarshalAsArray(d, o)
-}
-
 func Benchmark_ShamatonArrayMsgpackgen_Marshal(b *testing.B) {
-	RegisterGeneratedResolver()
-	benchMarshal(b, ShamatonArrayMsgpackgenSerializer{})
+	benchMarshal(b, newShamatonArrayMsgpackgenSerializer())
 }
 
 func Benchmark_ShamatonArrayMsgpackgen_Unmarshal(b *testing.B) {
-	RegisterGeneratedResolver()
-	benchUnmarshal(b, ShamatonArrayMsgpackgenSerializer{})
+	benchUnmarshal(b, newShamatonArrayMsgpackgenSerializer())
 }
 
 // github.com/prysmaticlabs/go-ssz
