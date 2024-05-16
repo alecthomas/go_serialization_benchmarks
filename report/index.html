@@ -1,0 +1,136 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<script src="jquery.js"></script>
+
+    		<link href="jquery-ui.min.css" rel="stylesheet" />
+    		<link href="jquery-ui.structure.min.css" rel="stylesheet" />
+    		<link href="jquery-ui.theme.min.css" rel="stylesheet" />
+		<script src="jquery-ui.min.js"></script>
+
+    		<link href="pqgrid.min.css" rel="stylesheet" />
+    		<link href="pqgrid.ui.min.css" rel="stylesheet" />
+    		<link href="pqgrid-steelblue.css" rel="stylesheet" />
+		<script src="pqgrid.min.js"></script>
+
+    		<link href="pqselect.min.css" rel="stylesheet" />
+		<script src="pqselect.min.js"></script>
+
+		<script src="data.js"></script>
+		<script src="model.js"></script>
+
+    		<link href="custom.css" rel="stylesheet" />
+	</head>
+	<body>
+		<div id="grid_json"></div>
+		<script>
+			$(function(){
+				//main object to be passed to pqGrid constructor.
+				var obj = {
+				        width: "96%",
+				        height: "90%",
+				        colModel: colModel,
+				        dataModel: { data: data, sortIndx: "total_ns_op", sortDir: "up" },
+				 	numberCell: { resizable: true, width: 40, title: "#", minWidth: 25  },
+					title: "Go SmallStruct Serializers Benchmark Results",
+					resizable: true,
+					editable: false,
+					selectionModel: { type: "row"  },
+					filterModel: { on: true, mode: "AND", header: true  },
+
+					create: function (evt, ui) {
+						var $sel = $(".columnSelector"),
+						    opts = [];
+						this.getColModel().forEach(function(column){
+						    if (column.hidden !== true) {
+							opts.push(column.dataIndx);
+						    }
+						})
+						//initialize the selected options corresponding to visible columns in toolbar select list.
+						$sel.val(opts);
+
+						//convert it into pqSelect.
+						$sel.pqSelect({
+						    checkbox: true,
+						    multiplePlaceholder: 'Select visible columns',
+						    maxDisplay: 100,
+						    width: 'auto'
+						});
+
+						var grid = this;
+						var filter = grid.getColumn({ dataIndx: "time_support" }).filter;
+						filter.cache = null;
+						filter.options = grid.getData({ dataIndx: ["time_support"] });
+
+						filter = grid.getColumn({ dataIndx: "api_kind" }).filter;
+						filter.cache = null;
+						filter.options = grid.getData({ dataIndx: ["api_kind"] });
+
+						grid.refresh();
+				    	},
+
+					toolbar: {
+						items: [{
+						    type: 'select',
+						    cls: 'columnSelector',
+						    attr: "multiple='multiple'", style: "height:60px;",
+						    options: function (ui) {
+							//options in the select list correspond to all columns.
+							return this.getColModel().map(function(column){
+								var obj = {};
+								obj[ column.dataIndx ] = column.title;
+								return obj;
+							});
+						    },
+						    listener: function (evt) {
+							var grid = this;
+							grid.getColModel().forEach(function(column){
+								column.hidden = true;
+							})
+							//show columns corresponding to selected options in select list.
+							$(evt.target).find("option:selected").each(function(){
+									grid.getColumn({dataIndx: this.value}).hidden = false;
+							})
+							grid.refreshCM();
+							grid.refresh();
+						    }
+						}]
+					},
+				};
+				$("#grid_json").pqGrid(obj);
+			});
+		</script>
+
+		<h2>Metrics</h2>
+
+		<ul>
+			<li><b>Iterations</b>: The number of iterations used in the benchmark to reach (approximately) a 1 second run.</li>
+			<li><b>ns/Op</b>: How long (in nanoseconds) each operation took.</li>
+			<li><b>B/Op</b>: The allocation heap size (in bytes) per operation.</li>
+			<li><b>allocs/Op</b>: The number of heap allocations per operation.</li>
+			<li><b>Serialization Size</b>: The amount of bytes used to encode a marshalled value.</li>
+			<li><b>Unsafe Str Unmarshal</b>: Whether unmarshalled strings are safe to use or if their value is modified if the underlying backing byte array is modified.</li>
+			<li><b>Time Support</b>: How the serializer supports time.Time values. Options:
+				<ul>
+					<li><b>unix-ns</b>: Time since UNIX epoch as an int64, with nanosecond precision.</li>
+					<li><b>unix-ms</b>: Time since UNIX epoch as an int64, with millisecond precision</li>
+					<li><b>fullrange</b>: Full time.Time range, without timezone information</li>
+					<li><b>fulltzoffset</b>: Full time.Time range, including timezone offset information</li>
+					<li><b>RFC3339ns</b>: RFC3339 string with nanosecond precision</b>
+					<li><b>custom</b>: Custom encoding and restrictions</b>
+					<li><b>no</b>: No native support for time.Time values (user needs to convert)</li>
+					<li><b>unknown</b>: Unknown if/how the serializer encodes time.Time values</li>
+				</ul>
+			</li>
+			<li><b>API Kind</b>: How user code interacts/uses the serializer library. Options:
+				<ul>
+					<li><b>reflect</b>: Serializer uses Go's reflection features (no additional code needed).</li>
+					<li><b>codegen</b>: Code generation step creates the code to marshal/unmarshal structures</li>
+					<li><b>manual</b>: User must write the code to marshal/unmarshal structures</li>
+				</ul>
+			</li>
+
+		</ul>
+	</body>
+</html>
+
