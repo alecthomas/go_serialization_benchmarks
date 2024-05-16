@@ -1,8 +1,6 @@
 package goserbench
 
 import (
-	"bytes"
-	"encoding/gob"
 	"encoding/json"
 	"fmt"
 	"math"
@@ -383,32 +381,12 @@ func Benchmark_MongoBson_Unmarshal(b *testing.B) {
 
 // encoding/gob
 
-type GobSerializer struct{}
-
-func (g *GobSerializer) Marshal(o interface{}) ([]byte, error) {
-	var buf bytes.Buffer
-	err := gob.NewEncoder(&buf).Encode(o)
-	return buf.Bytes(), err
-}
-
-func (g *GobSerializer) Unmarshal(d []byte, o interface{}) error {
-	return gob.NewDecoder(bytes.NewReader(d)).Decode(o)
-}
-
-func NewGobSerializer() *GobSerializer {
-	// registration required before first use
-	gob.Register(A{})
-	return &GobSerializer{}
-}
-
 func Benchmark_Gob_Marshal(b *testing.B) {
-	s := NewGobSerializer()
-	benchMarshal(b, s)
+	benchMarshal(b, NewGobSerializer())
 }
 
 func Benchmark_Gob_Unmarshal(b *testing.B) {
-	s := NewGobSerializer()
-	benchUnmarshal(b, s)
+	benchUnmarshal(b, NewGobSerializer())
 }
 
 // github.com/davecgh/go-xdr/xdr
