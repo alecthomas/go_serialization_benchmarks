@@ -12,7 +12,6 @@ import (
 	"testing"
 	"time"
 
-	"github.com/Sereal/Sereal/Go/sereal"
 	"github.com/davecgh/go-xdr/xdr"
 	jsoniter "github.com/json-iterator/go"
 	easyjson "github.com/mailru/easyjson"
@@ -472,23 +471,12 @@ func Benchmark_UgorjiCodecBinc_Unmarshal(b *testing.B) {
 
 // github.com/Sereal/Sereal/Go/sereal
 
-type SerealSerializer struct{}
-
-func (s SerealSerializer) Marshal(o interface{}) ([]byte, error) {
-	return sereal.Marshal(o)
-}
-
-func (s SerealSerializer) Unmarshal(d []byte, o interface{}) error {
-	err := sereal.Unmarshal(d, o)
-	return err
-}
-
 func Benchmark_Sereal_Marshal(b *testing.B) {
-	benchMarshal(b, SerealSerializer{})
+	benchMarshal(b, newSerealSerializer())
 }
 
 func Benchmark_Sereal_Unmarshal(b *testing.B) {
-	benchUnmarshal(b, SerealSerializer{})
+	benchUnmarshal(b, newSerealSerializer())
 }
 
 // github.com/alecthomas/binary
