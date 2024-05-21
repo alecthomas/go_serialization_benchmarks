@@ -59,6 +59,6 @@ func (b *BaselineSerializer) Unmarshal(d []byte, o interface{}) error {
 	return nil
 }
 
-func NewBaselineSerializer() *BaselineSerializer {
+func NewBaselineSerializer() Serializer {
 	return &BaselineSerializer{b: make([]byte, 47)}
 }

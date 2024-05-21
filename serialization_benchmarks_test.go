@@ -156,416 +156,196 @@ See README.md for details on running the benchmarks.
 `)
 }
 
-// github.com/niubaoshu/gotiny
-func Benchmark_Gotiny_Marshal(b *testing.B) {
-	benchMarshal(b, NewGotinySerializer())
-}
-
-func Benchmark_Gotiny_Unmarshal(b *testing.B) {
-	benchUnmarshal(b, NewGotinySerializer())
-}
-
-// github.com/tinylib/msgp
-
-func Benchmark_Msgp_Marshal(b *testing.B) {
-	benchMarshal(b, NewMsgpSerializer())
-}
-
-func Benchmark_Msgp_Unmarshal(b *testing.B) {
-	benchUnmarshal(b, NewMsgpSerializer())
-}
-
-// github.com/vmihailenco/msgpack
-
-func Benchmark_VmihailencoMsgpack_Marshal(b *testing.B) {
-	benchMarshal(b, NewVmihailencoMsgpackSerialier())
-}
-
-func Benchmark_VmihailencoMsgpack_Unmarshal(b *testing.B) {
-	benchUnmarshal(b, NewVmihailencoMsgpackSerialier())
-}
-
-// encoding/json
-
-func Benchmark_Json_Marshal(b *testing.B) {
-	benchMarshal(b, NewJSONSerializer())
-}
-
-func Benchmark_Json_Unmarshal(b *testing.B) {
-	benchUnmarshal(b, NewJSONSerializer())
-}
-
-// github.com/json-iterator/go
-
-func Benchmark_JsonIter_Marshal(b *testing.B) {
-	benchMarshal(b, NewJSONIterSerializer())
-}
-
-func Benchmark_JsonIter_Unmarshal(b *testing.B) {
-	benchUnmarshal(b, NewJSONIterSerializer())
-}
-
-// github.com/mailru/easyjson
-
-func Benchmark_EasyJson_Marshal(b *testing.B) {
-	benchMarshal(b, NewEasyJSONSerializer())
-}
-
-func Benchmark_EasyJson_Unmarshal(b *testing.B) {
-	benchUnmarshal(b, NewEasyJSONSerializer())
-}
-
-// gopkg.in/mgo.v2/bson
-
-func Benchmark_Bson_Marshal(b *testing.B) {
-	benchMarshal(b, NewBsonSerializer())
-}
-
-func Benchmark_Bson_Unmarshal(b *testing.B) {
-	benchUnmarshal(b, NewBsonSerializer())
-}
-
-// go.mongodb.org/mongo-driver/mongo
-
-func Benchmark_MongoBson_Marshal(b *testing.B) {
-	benchMarshal(b, NewMongoBSONSerializer())
-}
-
-func Benchmark_MongoBson_Unmarshal(b *testing.B) {
-	benchUnmarshal(b, NewMongoBSONSerializer())
-}
-
-// encoding/gob
-
-func Benchmark_Gob_Marshal(b *testing.B) {
-	benchMarshal(b, NewGobSerializer())
-}
-
-func Benchmark_Gob_Unmarshal(b *testing.B) {
-	benchUnmarshal(b, NewGobSerializer())
-}
-
-// github.com/davecgh/go-xdr/xdr
-
-func Benchmark_XDRDavecgh_Marshal(b *testing.B) {
-	benchMarshal(b, NewXDRDavecghSerializer())
-}
-
-func Benchmark_XDRDavecgh_Unmarshal(b *testing.B) {
-	benchUnmarshal(b, NewXDRDavecghSerializer())
-}
-
-// github.com/ugorji/go/codec
-
-func Benchmark_UgorjiCodecMsgpack_Marshal(b *testing.B) {
-	benchMarshal(b, NewUgorjiCodecMsgPack())
-}
-
-func Benchmark_UgorjiCodecMsgpack_Unmarshal(b *testing.B) {
-	benchUnmarshal(b, NewUgorjiCodecMsgPack())
-}
-
-func Benchmark_UgorjiCodecBinc_Marshal(b *testing.B) {
-	benchMarshal(b, NewUgorjiCodecBinc())
-}
-
-func Benchmark_UgorjiCodecBinc_Unmarshal(b *testing.B) {
-	benchUnmarshal(b, NewUgorjiCodecBinc())
-}
-
-// github.com/Sereal/Sereal/Go/sereal
-
-func Benchmark_Sereal_Marshal(b *testing.B) {
-	benchMarshal(b, NewSerealSerializer())
-}
-
-func Benchmark_Sereal_Unmarshal(b *testing.B) {
-	benchUnmarshal(b, NewSerealSerializer())
-}
-
-// github.com/alecthomas/binary
-
-func Benchmark_Binary_Marshal(b *testing.B) {
-	benchMarshal(b, NewBinarySerializer())
-}
-
-func Benchmark_Binary_Unmarshal(b *testing.B) {
-	benchUnmarshal(b, NewBinarySerializer())
-}
-
-// github.com/google/flatbuffers/go
-
-func Benchmark_FlatBuffers_Marshal(b *testing.B) {
-	benchMarshal(b, NewFlatBuffersSerializer())
-}
-
-func Benchmark_FlatBuffers_Unmarshal(b *testing.B) {
-	benchUnmarshal(b, NewFlatBuffersSerializer())
-}
-
-// github.com/glycerine/go-capnproto
-
-func Benchmark_CapNProto_Marshal(b *testing.B) {
-	benchMarshal(b, NewCapNProtoSerializer())
-}
-
-func Benchmark_CapNProto_Unmarshal(b *testing.B) {
-	benchUnmarshal(b, NewCapNProtoSerializer())
-}
-
-// github.com/hprose/hprose-go/io
-
-func Benchmark_Hprose_Marshal(b *testing.B) {
-	benchMarshal(b, NewHproseSerializer())
-}
-
-func Benchmark_Hprose_Unmarshal(b *testing.B) {
-	benchUnmarshal(b, NewHproseSerializer())
-}
-
-// github.com/hprose/hprose-golang/io
-
-func Benchmark_Hprose2_Marshal(b *testing.B) {
-	benchMarshal(b, NewHProse2Serializer())
-}
-
-func Benchmark_Hprose2_Unmarshal(b *testing.B) {
-	benchUnmarshal(b, NewHProse2Serializer())
-}
-
-// go.dedis.ch/protobuf
-
-func Benchmark_Protobuf_Marshal(b *testing.B) {
-	benchMarshal(b, NewProtobufSerializer())
-}
-
-func Benchmark_Protobuf_Unmarshal(b *testing.B) {
-	benchUnmarshal(b, NewProtobufSerializer())
-}
-
-// github.com/cosmos/cosmos-proto
-
-func Benchmark_Pulsar_Marshal(b *testing.B) {
-	benchMarshal(b, NewPulsarSerializer())
-}
-
-func Benchmark_Pulsar_Unmarshal(b *testing.B) {
-	benchUnmarshal(b, NewPulsarSerializer())
-}
-
-// github.com/gogo/protobuf/proto
-
-func Benchmark_Gogoprotobuf_Marshal(b *testing.B) {
-	benchMarshal(b, NewGogoProtoSerializer())
-}
-
-func Benchmark_Gogoprotobuf_Unmarshal(b *testing.B) {
-	benchUnmarshal(b, NewGogoProtoSerializer())
-}
-
-func Benchmark_Gogojsonpb_Marshal(b *testing.B) {
-	benchMarshal(b, NewGogoJsonSerializer())
-}
-
-func Benchmark_Gogojsonpb_Unmarshal(b *testing.B) {
-	benchUnmarshal(b, NewGogoJsonSerializer())
-}
-
-// github.com/pascaldekloe/colfer
-
-func Benchmark_Colfer_Marshal(b *testing.B) {
-	benchMarshal(b, NewColferSerializer())
-}
-
-func Benchmark_Colfer_Unmarshal(b *testing.B) {
-	benchUnmarshal(b, NewColferSerializer())
-}
-
-// github.com/andyleap/gencode
-
-func Benchmark_Gencode_Marshal(b *testing.B) {
-	benchMarshal(b, NewGencodeSerializer())
-}
-
-func Benchmark_Gencode_Unmarshal(b *testing.B) {
-	benchUnmarshal(b, NewGencodeSerializer())
-}
-
-func Benchmark_GencodeUnsafe_Marshal(b *testing.B) {
-	benchMarshal(b, NewGencodeUnsafeSerializer())
-}
-
-func Benchmark_GencodeUnsafe_Unmarshal(b *testing.B) {
-	benchUnmarshal(b, NewGencodeUnsafeSerializer())
-}
-
-// github.com/calmh/xdr
-
-func Benchmark_XDRCalmh_Marshal(b *testing.B) {
-	benchMarshal(b, NewXDRCalmhSerializer())
-}
-
-func Benchmark_XDRCalmh_Unmarshal(b *testing.B) {
-	benchUnmarshal(b, NewXDRCalmhSerializer())
-}
-
-// gopkg.in/linkedin/goavro.v1
-
-func Benchmark_GoAvro_Marshal(b *testing.B) {
-	benchMarshal(b, NewAvroA())
-}
-
-func Benchmark_GoAvro_Unmarshal(b *testing.B) {
-	benchUnmarshal(b, NewAvroA())
-}
-
-// github.com/linkedin/goavro
-
-func Benchmark_GoAvro2Text_Marshal(b *testing.B) {
-	benchMarshal(b, NewAvro2Txt())
-}
-
-func Benchmark_GoAvro2Text_Unmarshal(b *testing.B) {
-	benchUnmarshal(b, NewAvro2Txt())
-}
-
-func Benchmark_GoAvro2Binary_Marshal(b *testing.B) {
-	benchMarshal(b, NewAvro2Bin())
-}
-
-func Benchmark_GoAvro2Binary_Unmarshal(b *testing.B) {
-	benchUnmarshal(b, NewAvro2Bin())
-}
-
-// github.com/ikkerens/ikeapack
-
-func Benchmark_Ikea_Marshal(b *testing.B) {
-	benchMarshal(b, NewIkeSerializer())
-}
-
-func Benchmark_Ikea_Unmarshal(b *testing.B) {
-	benchUnmarshal(b, NewIkeSerializer())
-}
-
-// github.com/shamaton/msgpack - as map
-
-func Benchmark_ShamatonMapMsgpack_Marshal(b *testing.B) {
-	benchMarshal(b, NewShamatonMapMsgpackSerializer())
-}
-
-func Benchmark_ShamatonMapMsgpack_Unmarshal(b *testing.B) {
-	benchUnmarshal(b, NewShamatonMapMsgpackSerializer())
-}
-
-// github.com/shamaton/msgpack - as array
-
-func Benchmark_ShamatonArrayMsgpack_Marshal(b *testing.B) {
-	benchMarshal(b, NewShamatonArrayMsgPackSerializer())
-}
-
-func Benchmark_ShamatonArrayMsgpack_Unmarshal(b *testing.B) {
-	benchUnmarshal(b, NewShamatonArrayMsgPackSerializer())
-}
-
-// github.com/shamaton/msgpackgen - as map
-
-func Benchmark_ShamatonMapMsgpackgen_Marshal(b *testing.B) {
-	benchMarshal(b, NewShamatonMapMsgPackgenSerializer())
-}
-
-func Benchmark_ShamatonMapMsgpackgen_Unmarshal(b *testing.B) {
-	benchUnmarshal(b, NewShamatonMapMsgPackgenSerializer())
-}
-
-// github.com/shamaton/msgpackgen - as array
-
-func Benchmark_ShamatonArrayMsgpackgen_Marshal(b *testing.B) {
-	benchMarshal(b, NewShamatonArrayMsgpackgenSerializer())
-}
-
-func Benchmark_ShamatonArrayMsgpackgen_Unmarshal(b *testing.B) {
-	benchUnmarshal(b, NewShamatonArrayMsgpackgenSerializer())
-}
-
-// github.com/prysmaticlabs/go-ssz
-
-func Benchmark_SSZ_Marshal(b *testing.B) {
-	benchMarshal(b, NewSSZSerializer())
-}
-
-func Benchmark_SSZ_Unmarshal(b *testing.B) {
-	benchUnmarshal(b, NewSSZSerializer())
-}
-
-// github.com/200sc/bebop
-
-func Benchmark_Bebop200sc_Marshal(b *testing.B) {
-	benchMarshal(b, NewBebop200ScSerializer())
-}
-
-func Benchmark_Bebop200sc_Unmarshal(b *testing.B) {
-	benchUnmarshal(b, NewBebop200ScSerializer())
-}
-
-// wellquite.org/bebop
-
-func Benchmark_BebopWellquite_Marshal(b *testing.B) {
-	benchMarshal(b, NewBebopWellquiteSerializer())
-}
-
-func Benchmark_BebopWellquite_Unmarshal(b *testing.B) {
-	benchUnmarshal(b, NewBebopWellquiteSerializer())
-}
-
-// github.com/valyala/fastjson
-
-func Benchmark_FastJson_Marshal(b *testing.B) {
-	benchMarshal(b, NewFastJSONSerializer())
-}
-
-func Benchmark_FastJson_Unmarshal(b *testing.B) {
-	benchUnmarshal(b, NewFastJSONSerializer())
-}
-
-// github.com/deneonet/benc
-
-func Benchmark_BENC_Marshal(b *testing.B) {
-	benchMarshal(b, NewBENCSerializer())
-}
-func Benchmark_BENC_Unmarshal(b *testing.B) {
-	benchUnmarshal(b, NewBENCSerializer())
-}
-
-func Benchmark_BENCUnsafe_Marshal(b *testing.B) {
-	benchMarshal(b, NewBENCUnsafeSerializer())
-}
-
-func Benchmark_BENCUnsafe_Unmarshal(b *testing.B) {
-	benchUnmarshal(b, NewBENCUnsafeSerializer())
-}
-
-// github.com/mus-format/mus-go
-
-func Benchmark_MUS_Marshal(b *testing.B) {
-	benchMarshal(b, NewMUSSerializer())
-}
-
-func Benchmark_MUS_Unmarshal(b *testing.B) {
-	benchUnmarshal(b, NewMUSSerializer())
-}
-
-func Benchmark_MUSUnsafe_Marshal(b *testing.B) {
-	benchMarshal(b, NewMUSUnsafeSerializer())
-}
-
-func Benchmark_MUSUnsafe_Unmarshal(b *testing.B) {
-	benchUnmarshal(b, NewMUSUnsafeSerializer())
-}
-
-func Benchmark_Baseline_Marshal(b *testing.B) {
-	benchMarshal(b, NewBaselineSerializer())
-}
-
-func Benchmark_Baseline_Unmarshal(b *testing.B) {
-	benchUnmarshal(b, NewBaselineSerializer())
+type BenchmarkCase struct {
+	Name string
+	URL  string
+	New  func() Serializer
+}
+
+var benchmarkCases = []BenchmarkCase{
+	{
+		Name: "gotiny",
+		URL:  "github.com/niubaoshu/gotiny",
+		New:  NewGotinySerializer,
+	}, {
+		Name: "msgp",
+		URL:  "github.com/tinylib/msgp",
+		New:  NewMsgpSerializer,
+	}, {
+		Name: "msgpack",
+		URL:  "github.com/vmihailenco/msgpack",
+		New:  NewVmihailencoMsgpackSerialier,
+	}, {
+		Name: "json",
+		URL:  "pkg.go/dev/encoding/json",
+		New:  NewJSONSerializer,
+	}, {
+		Name: "jsoniter",
+		URL:  "github.com/json-iterator/go",
+		New:  NewJSONIterSerializer,
+	}, {
+		Name: "easyjson",
+		URL:  "github.com/mailru/easyjson",
+		New:  NewEasyJSONSerializer,
+	}, {
+		Name: "bson",
+		URL:  "gopkg.in/mgo.v2/bson",
+		New:  NewBsonSerializer,
+	}, {
+		Name: "mongobson",
+		URL:  "go.mongodb.org/mongo-driver/mongo",
+		New:  NewMongoBSONSerializer,
+	}, {
+		Name: "gob",
+		URL:  "pkg.go.dev/encoding/gob",
+		New:  NewGobSerializer,
+	}, {
+		Name: "davecgh/xdr",
+		URL:  "github.com/davecgh/go-xdr/xdr",
+		New:  NewXDRDavecghSerializer,
+	}, {
+		Name: "ugorji/msgpack",
+		URL:  "github.com/ugorji/go/codec",
+		New:  NewUgorjiCodecMsgPack,
+	}, {
+		Name: "ugorji/binc",
+		URL:  "github.com/ugorji/go/codec",
+		New:  NewUgorjiCodecBinc,
+	}, {
+		Name: "sereal",
+		URL:  "github.com/Sereal/Sereal/Go/sereal",
+		New:  NewSerealSerializer,
+	}, {
+		Name: "alecthomas/binary",
+		URL:  "github.com/alecthomas/binary",
+		New:  NewBinarySerializer,
+	}, {
+		Name: "flatbuffers",
+		URL:  "github.com/google/flatbuffers/go",
+		New:  NewFlatBuffersSerializer,
+	}, {
+		Name: "capnproto",
+		URL:  "github.com/glycerine/go-capnproto",
+		New:  NewCapNProtoSerializer,
+	}, {
+		Name: "hprose",
+		URL:  "github.com/hprose/hprose-go/io",
+		New:  NewHproseSerializer,
+	}, {
+		Name: "hprose2",
+		URL:  "github.com/hprose/hprose-golang/io",
+		New:  NewHProse2Serializer,
+	}, {
+		Name: "dedis/protobuf",
+		URL:  "go.dedis.ch/protobuf",
+		New:  NewProtobufSerializer,
+	}, {
+		Name: "pulsar",
+		URL:  "github.com/cosmos/cosmos-proto",
+		New:  NewPulsarSerializer,
+	}, {
+		Name: "gogo/protobuf",
+		URL:  "github.com/gogo/protobuf/proto",
+		New:  NewGogoProtoSerializer,
+	}, {
+		Name: "gogo/jsonpb",
+		URL:  "github.com/gogo/protobuf/proto",
+		New:  NewGogoJsonSerializer,
+	}, {
+		Name: "colfer",
+		URL:  "github.com/pascaldekloe/colfer",
+		New:  NewColferSerializer,
+	}, {
+		Name: "gencode",
+		URL:  "github.com/andyleap/gencode",
+		New:  NewGencodeSerializer,
+	}, {
+		Name: "gencode/unsafe",
+		URL:  "github.com/andyleap/gencode",
+		New:  NewGencodeUnsafeSerializer,
+	}, {
+		Name: "calmh/xdr",
+		URL:  "github.com/calmh/xdr",
+		New:  NewXDRCalmhSerializer,
+	}, {
+		Name: "goavro",
+		URL:  "gopkg.in/linkedin/goavro.v1",
+		New:  NewAvroA,
+	}, {
+		Name: "avro2/text",
+		URL:  "github.com/linkedin/goavro",
+		New:  NewAvro2Txt,
+	}, {
+		Name: "avro2/binary",
+		URL:  "github.com/linkedin/goavro",
+		New:  NewAvro2Bin,
+	}, {
+		Name: "ikea",
+		URL:  "github.com/ikkerens/ikeapack",
+		New:  NewIkeSerializer,
+	}, {
+		Name: "shamaton/msgpack/map",
+		URL:  "github.com/shamaton/msgpack",
+		New:  NewShamatonMapMsgpackSerializer,
+	}, {
+		Name: "shamaton/msgpack/array",
+		URL:  "github.com/shamaton/msgpack",
+		New:  NewShamatonArrayMsgPackSerializer,
+	}, {
+		Name: "shamaton/msgpackgen/map",
+		URL:  "github.com/shamaton/msgpack",
+		New:  NewShamatonMapMsgPackgenSerializer,
+	}, {
+		Name: "shamaton/msgpackgen/array",
+		URL:  "github.com/shamaton/msgpack",
+		New:  NewShamatonArrayMsgpackgenSerializer,
+	}, {
+		Name: "ssz",
+		URL:  "github.com/prysmaticlabs/go-ssz",
+		New:  NewSSZSerializer,
+	}, {
+		Name: "200sc/bebop",
+		URL:  "github.com/200sc/bebop",
+		New:  NewBebop200ScSerializer,
+	}, {
+		Name: "wellquite/bebop",
+		URL:  "wellquite.org/bebop",
+		New:  NewBebopWellquiteSerializer,
+	}, {
+		Name: "fastjson",
+		URL:  "github.com/valyala/fastjson",
+		New:  NewFastJSONSerializer,
+	}, {
+		Name: "benc",
+		URL:  "github.com/deneonet/benc",
+		New:  NewBENCSerializer,
+	}, {
+		Name: "benc/usafe",
+		URL:  "github.com/deneonet/benc",
+		New:  NewBENCUnsafeSerializer,
+	}, {
+		Name: "mus",
+		URL:  "github.com/mus-format/mus-go",
+		New:  NewMUSSerializer,
+	}, {
+		Name: "mus/unsafe",
+		URL:  "github.com/mus-format/mus-go",
+		New:  NewMUSUnsafeSerializer,
+	}, {
+		Name: "baseline",
+		URL:  "",
+		New:  NewBaselineSerializer,
+	},
+}
+
+func BenchmarkSerializers(b *testing.B) {
+	for i := range benchmarkCases {
+		bc := benchmarkCases[i]
+		b.Run("marshal/"+bc.Name, func(b *testing.B) {
+			benchMarshal(b, bc.New())
+		})
+		b.Run("unmarshal/"+bc.Name, func(b *testing.B) {
+			benchUnmarshal(b, bc.New())
+		})
+	}
 }
