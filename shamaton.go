@@ -1,6 +1,7 @@
 package goserbench
 
 import (
+	"github.com/alecthomas/go_serialization_benchmarks/goserbench"
 	shamaton "github.com/shamaton/msgpack/v2"
 	shamatongen "github.com/shamaton/msgpackgen/msgpack"
 )
@@ -34,14 +35,37 @@ func NewShamatonArrayMsgPackSerializer() Serializer {
 	return ShamatonArrayMsgpackSerializer{}
 }
 
-type ShamatonMapMsgpackgenSerializer struct{}
+type ShamatonMapMsgpackgenSerializer struct {
+	a A
+}
 
 func (m ShamatonMapMsgpackgenSerializer) Marshal(o interface{}) ([]byte, error) {
-	return shamatongen.MarshalAsMap(o)
+	v := o.(*goserbench.SmallStruct)
+	a := &m.a
+	a.Name = v.Name
+	a.BirthDay = v.BirthDay
+	a.Phone = v.Phone
+	a.Siblings = v.Siblings
+	a.Spouse = v.Spouse
+	a.Money = v.Money
+	return shamatongen.MarshalAsMap(a)
 }
 
 func (m ShamatonMapMsgpackgenSerializer) Unmarshal(d []byte, o interface{}) error {
-	return shamatongen.UnmarshalAsMap(d, o)
+	a := &m.a
+	err := shamatongen.UnmarshalAsMap(d, a)
+	if err != nil {
+		return err
+	}
+
+	v := o.(*goserbench.SmallStruct)
+	v.Name = a.Name
+	v.BirthDay = a.BirthDay
+	v.Phone = a.Phone
+	v.Siblings = int(a.Siblings)
+	v.Spouse = a.Spouse
+	v.Money = a.Money
+	return nil
 }
 
 func NewShamatonMapMsgPackgenSerializer() Serializer {
@@ -49,15 +73,38 @@ func NewShamatonMapMsgPackgenSerializer() Serializer {
 	return ShamatonMapMsgpackgenSerializer{}
 }
 
-type ShamatonArrayMsgpackgenSerializer struct{}
+type ShamatonArrayMsgpackgenSerializer struct {
+	a A
+}
 
 func (m ShamatonArrayMsgpackgenSerializer) Marshal(o interface{}) ([]byte, error) {
-	return shamatongen.MarshalAsArray(o)
+	v := o.(*goserbench.SmallStruct)
+	a := &m.a
+	a.Name = v.Name
+	a.BirthDay = v.BirthDay
+	a.Phone = v.Phone
+	a.Siblings = v.Siblings
+	a.Spouse = v.Spouse
+	a.Money = v.Money
+	return shamatongen.MarshalAsArray(a)
 
 }
 
 func (m ShamatonArrayMsgpackgenSerializer) Unmarshal(d []byte, o interface{}) error {
-	return shamatongen.UnmarshalAsArray(d, o)
+	a := &m.a
+	err := shamatongen.UnmarshalAsArray(d, a)
+	if err != nil {
+		return err
+	}
+
+	v := o.(*goserbench.SmallStruct)
+	v.Name = a.Name
+	v.BirthDay = a.BirthDay
+	v.Phone = a.Phone
+	v.Siblings = int(a.Siblings)
+	v.Spouse = a.Spouse
+	v.Money = a.Money
+	return nil
 }
 
 func NewShamatonArrayMsgpackgenSerializer() Serializer {

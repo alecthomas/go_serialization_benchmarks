@@ -3,6 +3,7 @@ package goserbench
 import (
 	"time"
 
+	"github.com/alecthomas/go_serialization_benchmarks/goserbench"
 	bstd "github.com/deneonet/benc"
 	"github.com/deneonet/benc/bunsafe"
 )
@@ -10,7 +11,7 @@ import (
 type BENCSerializer struct{}
 
 func (s BENCSerializer) Marshal(o interface{}) (buf []byte, err error) {
-	v := o.(*A)
+	v := o.(*goserbench.SmallStruct)
 	n := bstd.SizeString(v.Name)
 	n += bstd.SizeInt64()
 	n += bstd.SizeString(v.Phone)
@@ -29,7 +30,7 @@ func (s BENCSerializer) Marshal(o interface{}) (buf []byte, err error) {
 }
 
 func (s BENCSerializer) Unmarshal(bs []byte, o interface{}) (err error) {
-	v := o.(*A)
+	v := o.(*goserbench.SmallStruct)
 	var n int
 	n, v.Name, err = bstd.UnmarshalString(0, bs)
 	if err != nil {
@@ -67,7 +68,7 @@ func NewBENCSerializer() Serializer {
 type BENCUnsafeSerializer struct{}
 
 func (s BENCUnsafeSerializer) Marshal(o interface{}) (buf []byte, err error) {
-	v := o.(*A)
+	v := o.(*goserbench.SmallStruct)
 	n := bstd.SizeString(v.Name)
 	n += bstd.SizeInt64()
 	n += bstd.SizeString(v.Phone)
@@ -87,7 +88,7 @@ func (s BENCUnsafeSerializer) Marshal(o interface{}) (buf []byte, err error) {
 
 func (s BENCUnsafeSerializer) Unmarshal(bs []byte, o interface{}) (err error) {
 	var n int
-	v := o.(*A)
+	v := o.(*goserbench.SmallStruct)
 	n, v.Name, err = bunsafe.UnmarshalString(0, bs)
 	if err != nil {
 		return

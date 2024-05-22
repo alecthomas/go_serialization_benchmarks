@@ -1,6 +1,10 @@
 package goserbench
 
-import "time"
+import (
+	"time"
+
+	"github.com/alecthomas/go_serialization_benchmarks/goserbench"
+)
 
 type GencodeSerializer struct {
 	buf []byte
@@ -8,7 +12,7 @@ type GencodeSerializer struct {
 }
 
 func (s *GencodeSerializer) Marshal(o interface{}) ([]byte, error) {
-	v := o.(*A)
+	v := o.(*goserbench.SmallStruct)
 	a := &s.a
 	a.Name = v.Name
 	a.BirthDay = v.BirthDay
@@ -26,7 +30,7 @@ func (s *GencodeSerializer) Unmarshal(bs []byte, o interface{}) (err error) {
 		return
 	}
 
-	v := o.(*A)
+	v := o.(*goserbench.SmallStruct)
 	v.Name = a.Name
 	v.BirthDay = a.BirthDay
 	v.Phone = a.Phone
@@ -46,7 +50,7 @@ type GencodeUnsafeSerializer struct {
 }
 
 func (s *GencodeUnsafeSerializer) Marshal(o interface{}) ([]byte, error) {
-	v := o.(*A)
+	v := o.(*goserbench.SmallStruct)
 	a := &s.a
 	a.Name = v.Name
 	a.BirthDay = v.BirthDay.UnixNano()
@@ -64,7 +68,7 @@ func (s *GencodeUnsafeSerializer) Unmarshal(bs []byte, o interface{}) (err error
 		return
 	}
 
-	v := o.(*A)
+	v := o.(*goserbench.SmallStruct)
 	v.Name = a.Name
 	v.BirthDay = time.Unix(0, a.BirthDay)
 	v.Phone = a.Phone

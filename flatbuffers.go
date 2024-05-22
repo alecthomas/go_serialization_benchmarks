@@ -3,6 +3,7 @@ package goserbench
 import (
 	"time"
 
+	"github.com/alecthomas/go_serialization_benchmarks/goserbench"
 	flatbuffers "github.com/google/flatbuffers/go"
 )
 
@@ -11,7 +12,7 @@ type FlatBufferSerializer struct {
 }
 
 func (s *FlatBufferSerializer) Marshal(o interface{}) ([]byte, error) {
-	a := o.(*A)
+	a := o.(*goserbench.SmallStruct)
 	builder := s.builder
 	builder.Bytes = nil // free
 	builder.Reset()
@@ -31,7 +32,7 @@ func (s *FlatBufferSerializer) Marshal(o interface{}) ([]byte, error) {
 }
 
 func (s *FlatBufferSerializer) Unmarshal(d []byte, i interface{}) error {
-	a := i.(*A)
+	a := i.(*goserbench.SmallStruct)
 	o := FlatBufferA{}
 	o.Init(d, flatbuffers.GetUOffsetT(d))
 	a.Name = string(o.Name())

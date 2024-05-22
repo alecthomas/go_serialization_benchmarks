@@ -3,6 +3,7 @@ package goserbench
 import (
 	"bytes"
 
+	"github.com/alecthomas/go_serialization_benchmarks/goserbench"
 	"github.com/hprose/hprose-go"
 )
 
@@ -12,7 +13,7 @@ type HproseSerializer struct {
 }
 
 func (s *HproseSerializer) Marshal(o interface{}) ([]byte, error) {
-	a := o.(*A)
+	a := o.(*goserbench.SmallStruct)
 	writer := s.writer
 	buf := writer.Stream.(*bytes.Buffer)
 	l := buf.Len()
@@ -26,7 +27,7 @@ func (s *HproseSerializer) Marshal(o interface{}) ([]byte, error) {
 }
 
 func (s *HproseSerializer) Unmarshal(d []byte, i interface{}) (err error) {
-	o := i.(*A)
+	o := i.(*goserbench.SmallStruct)
 	reader := s.reader
 	reader.Stream = &hprose.BytesReader{Bytes: d, Pos: 0}
 	o.Name, err = reader.ReadString()

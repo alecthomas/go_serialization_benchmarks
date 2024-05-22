@@ -5,6 +5,8 @@ import (
 	"math"
 	"time"
 	"unsafe"
+
+	"github.com/alecthomas/go_serialization_benchmarks/goserbench"
 )
 
 // BaselineSerializer is a baseline test for marshalling/unmarshalling. It
@@ -36,7 +38,7 @@ func getBool(b []byte) bool {
 }
 
 func (b *BaselineSerializer) Marshal(o interface{}) ([]byte, error) {
-	a := o.(*A)
+	a := o.(*goserbench.SmallStruct)
 	buf := b.b[:0]
 	buf = binary.LittleEndian.AppendUint64(buf, uint64(a.BirthDay.UnixNano()))
 	buf = binary.LittleEndian.AppendUint64(buf, math.Float64bits(a.Money))
@@ -48,7 +50,7 @@ func (b *BaselineSerializer) Marshal(o interface{}) ([]byte, error) {
 }
 
 func (b *BaselineSerializer) Unmarshal(d []byte, o interface{}) error {
-	a := o.(*A)
+	a := o.(*goserbench.SmallStruct)
 	a.BirthDay = time.Unix(0, int64(binary.LittleEndian.Uint64(d[:8])))
 	a.Money = math.Float64frombits(binary.LittleEndian.Uint64(d[8:16]))
 	a.Siblings = int(binary.LittleEndian.Uint32(d[16:20]))

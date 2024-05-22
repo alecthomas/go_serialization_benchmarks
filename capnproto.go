@@ -4,13 +4,14 @@ import (
 	"bytes"
 	"time"
 
+	"github.com/alecthomas/go_serialization_benchmarks/goserbench"
 	capn "github.com/glycerine/go-capnproto"
 )
 
 type CapNProtoSerializer struct{}
 
 func (x CapNProtoSerializer) Marshal(o interface{}) ([]byte, error) {
-	a := o.(*A)
+	a := o.(*goserbench.SmallStruct)
 	seg := capn.NewBuffer(nil)
 	c := NewRootCapnpA(seg)
 	c.SetName(a.Name)
@@ -25,7 +26,7 @@ func (x CapNProtoSerializer) Marshal(o interface{}) ([]byte, error) {
 }
 
 func (x CapNProtoSerializer) Unmarshal(d []byte, i interface{}) error {
-	a := i.(*A)
+	a := i.(*goserbench.SmallStruct)
 	s, _, err := capn.ReadFromMemoryZeroCopy(d)
 	if err != nil {
 		return err
