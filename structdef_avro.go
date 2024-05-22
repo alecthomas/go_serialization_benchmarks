@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"time"
 
+	"github.com/alecthomas/go_serialization_benchmarks/goserbench"
 	goavro "github.com/linkedin/goavro"
 	goavro2 "github.com/linkedin/goavro/v2"
 )
@@ -69,7 +70,7 @@ func NewAvroA() Serializer {
 }
 
 func (a *AvroA) Marshal(o interface{}) ([]byte, error) {
-	object := o.(*A)
+	object := o.(*goserbench.SmallStruct)
 	a.record.Set("name", object.Name)
 	a.record.Set("birthday", int64(object.BirthDay.UnixNano()))
 	a.record.Set("phone", object.Phone)
@@ -84,7 +85,7 @@ func (a *AvroA) Marshal(o interface{}) ([]byte, error) {
 }
 
 func (a *AvroA) Unmarshal(d []byte, o interface{}) error {
-	object := o.(*A)
+	object := o.(*goserbench.SmallStruct)
 	b := bytes.NewBuffer(d)
 	i, err := a.codec.Decode(b)
 	if err != nil {
@@ -111,7 +112,7 @@ func (a *AvroA) String() string {
 }
 
 func avroMarshal(o interface{}, marshalFunc func([]byte, interface{}) ([]byte, error)) ([]byte, error) {
-	object := o.(*A)
+	object := o.(*goserbench.SmallStruct)
 	return marshalFunc(nil, map[string]interface{}{
 		"name":     object.Name,
 		"birthday": int64(object.BirthDay.UnixNano()),
@@ -123,7 +124,7 @@ func avroMarshal(o interface{}, marshalFunc func([]byte, interface{}) ([]byte, e
 }
 
 func avroUnmarshal(d []byte, o interface{}, unmarshalFunc func([]byte) (interface{}, []byte, error)) error {
-	object := o.(*A)
+	object := o.(*goserbench.SmallStruct)
 	r, _, err := unmarshalFunc(d)
 	if err != nil {
 		return err

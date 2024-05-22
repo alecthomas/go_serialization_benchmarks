@@ -1,6 +1,7 @@
 package goserbench
 
 import (
+	"github.com/alecthomas/go_serialization_benchmarks/goserbench"
 	hprose2 "github.com/hprose/hprose-golang/io"
 )
 
@@ -10,7 +11,7 @@ type Hprose2Serializer struct {
 }
 
 func (s Hprose2Serializer) Marshal(o interface{}) ([]byte, error) {
-	a := o.(*A)
+	a := o.(*goserbench.SmallStruct)
 	writer := s.writer
 	writer.Clear()
 	writer.WriteString(a.Name)
@@ -23,7 +24,7 @@ func (s Hprose2Serializer) Marshal(o interface{}) ([]byte, error) {
 }
 
 func (s Hprose2Serializer) Unmarshal(d []byte, i interface{}) error {
-	o := i.(*A)
+	o := i.(*goserbench.SmallStruct)
 	reader := s.reader
 	reader.Init(d)
 	o.Name = reader.ReadString()

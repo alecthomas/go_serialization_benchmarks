@@ -2,151 +2,15 @@ package goserbench
 
 import (
 	"fmt"
-	"math"
-	"math/rand"
 	"os"
 	"testing"
-	"time"
+
+	"github.com/alecthomas/go_serialization_benchmarks/goserbench"
 )
 
 var (
 	validate = os.Getenv("VALIDATE")
 )
-
-func randString(l int) string {
-	buf := make([]byte, l)
-	for i := 0; i < (l+1)/2; i++ {
-		buf[i] = byte(rand.Intn(256))
-	}
-	return fmt.Sprintf("%x", buf)[:l]
-}
-
-func generate() []*A {
-	a := make([]*A, 0, 1000)
-	for i := 0; i < 1000; i++ {
-		a = append(a, &A{
-			Name:     randString(16),
-			BirthDay: time.Now(),
-			Phone:    randString(10),
-			Siblings: rand.Intn(5),
-			Spouse:   rand.Intn(2) == 1,
-			Money:    rand.Float64(),
-		})
-	}
-	return a
-}
-
-func benchMarshal(b *testing.B, s Serializer) {
-	b.Helper()
-	data := generate()
-
-	b.ReportAllocs()
-	b.ResetTimer()
-	var serialSize int
-	for i := 0; i < b.N; i++ {
-		o := data[rand.Intn(len(data))]
-		bytes, err := s.Marshal(o)
-		if err != nil {
-			b.Fatalf("marshal error %s for %#v", err, o)
-		}
-		serialSize += len(bytes)
-	}
-	b.ReportMetric(float64(serialSize)/float64(b.N), "B/serial")
-}
-
-func cmpTags(a, b map[string]string) bool {
-	if len(a) != len(b) {
-		return false
-	}
-	for k, v := range a {
-		if bv, ok := b[k]; !ok || bv != v {
-			return false
-		}
-	}
-	return true
-}
-
-func cmpAliases(a, b []string) bool {
-	if len(a) != len(b) {
-		return false
-	}
-	for i, v := range a {
-		if b[i] != v {
-			return false
-		}
-	}
-	return true
-}
-
-func benchUnmarshal(b *testing.B, s Serializer) {
-	b.Helper()
-	b.StopTimer()
-
-	var timePrecision time.Duration
-	if stp, ok := s.(SerializerTimePrecision); ok {
-		timePrecision = stp.TimePrecision()
-	}
-	var forcesUTC bool
-	if set, ok := s.(SerializerEnforcesTimezone); ok {
-		forcesUTC = set.ForcesUTC()
-	}
-
-	data := generate()
-	ser := make([][]byte, len(data))
-	var serialSize int
-	for i, d := range data {
-		// Reduce the precision of the Birthday field when the
-		// serializer cannot represent time with nanosecond precision.
-		if timePrecision > 0 {
-			d.BirthDay = d.BirthDay.Truncate(timePrecision)
-		}
-
-		// Enforce Timezone when serializer requires it.
-		if forcesUTC {
-			d.BirthDay = d.BirthDay.UTC()
-		}
-
-		// Reduce precision of fractional fields when the serializer
-		// cannot represent the full float64 range.
-		if slfp, ok := s.(SerializerLimitsFloat64Precision); ok {
-			fracDigits := slfp.ReduceFloat64Precision()
-			i, f := math.Modf(d.Money)
-			power := math.Pow(10, float64(fracDigits))
-			newf := math.Trunc(f*power) / power
-			d.Money = float64(i) + newf
-		}
-
-		o, err := s.Marshal(d)
-		if err != nil {
-			b.Fatal(err)
-		}
-		t := make([]byte, len(o))
-		serialSize += copy(t, o)
-		ser[i] = t
-	}
-	o := &A{}
-
-	b.ReportMetric(float64(serialSize)/float64(len(data)), "B/serial")
-	b.ReportAllocs()
-	b.StartTimer()
-
-	for i := 0; i < b.N; i++ {
-		n := rand.Intn(len(ser))
-		*o = A{}
-		err := s.Unmarshal(ser[n], o)
-		if err != nil {
-			b.Fatalf("unmarshal error %s for %#x / %q", err, ser[n], ser[n])
-		}
-		// Validate unmarshalled data.
-		if validate != "" {
-			i := data[n]
-			correct := o.Name == i.Name && o.Phone == i.Phone && o.Siblings == i.Siblings && o.Spouse == i.Spouse && o.Money == i.Money && o.BirthDay.Equal(i.BirthDay) //&& cmpTags(o.Tags, i.Tags) && cmpAliases(o.Aliases, i.Aliases)
-			if !correct {
-				b.Fatalf("unmarshaled object differed:\n%v\n%v", i, o)
-			}
-		}
-	}
-}
 
 func TestMessage(t *testing.T) {
 	fmt.Print(`A test suite for benchmarking various Go serialization methods.
@@ -342,10 +206,10 @@ func BenchmarkSerializers(b *testing.B) {
 	for i := range benchmarkCases {
 		bc := benchmarkCases[i]
 		b.Run("marshal/"+bc.Name, func(b *testing.B) {
-			benchMarshal(b, bc.New())
+			goserbench.BenchMarshalSmallStruct(b, bc.New())
 		})
 		b.Run("unmarshal/"+bc.Name, func(b *testing.B) {
-			benchUnmarshal(b, bc.New())
+			goserbench.BenchUnmarshalSmallStruct(b, bc.New(), validate == "")
 		})
 	}
 }

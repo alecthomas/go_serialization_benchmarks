@@ -1,6 +1,10 @@
 package goserbench
 
-import "time"
+import (
+	"time"
+
+	"github.com/alecthomas/go_serialization_benchmarks/goserbench"
+)
 
 type BebopWellquiteSerializer struct {
 	a   BebopBufWellquite
@@ -8,7 +12,7 @@ type BebopWellquiteSerializer struct {
 }
 
 func (s *BebopWellquiteSerializer) Marshal(o interface{}) (buf []byte, err error) {
-	v := o.(*A)
+	v := o.(*goserbench.SmallStruct)
 	a := &s.a
 	a.Name = v.Name
 	a.BirthDay = v.BirthDay
@@ -26,7 +30,7 @@ func (s *BebopWellquiteSerializer) Unmarshal(bs []byte, o interface{}) (err erro
 		return
 	}
 
-	v := o.(*A)
+	v := o.(*goserbench.SmallStruct)
 	v.Name = a.Name
 	v.BirthDay = a.BirthDay
 	v.Phone = a.Phone

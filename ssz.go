@@ -4,6 +4,7 @@ import (
 	"math"
 	"time"
 
+	"github.com/alecthomas/go_serialization_benchmarks/goserbench"
 	ssz "github.com/prysmaticlabs/go-ssz"
 )
 
@@ -21,7 +22,7 @@ type SSZSerializer struct {
 }
 
 func (s *SSZSerializer) Marshal(o interface{}) (buf []byte, err error) {
-	v := o.(*A)
+	v := o.(*goserbench.SmallStruct)
 	a := &s.a
 	a.Name = v.Name
 	a.BirthDay = uint64(v.BirthDay.UnixNano())
@@ -39,7 +40,7 @@ func (s *SSZSerializer) Unmarshal(bs []byte, o interface{}) (err error) {
 		return
 	}
 
-	v := o.(*A)
+	v := o.(*goserbench.SmallStruct)
 	v.Name = a.Name
 	v.BirthDay = time.Unix(0, int64(a.BirthDay))
 	v.Phone = a.Phone

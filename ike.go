@@ -5,6 +5,7 @@ import (
 	"math"
 	"time"
 
+	"github.com/alecthomas/go_serialization_benchmarks/goserbench"
 	ikea "github.com/ikkerens/ikeapack"
 )
 
@@ -23,7 +24,7 @@ type IkeSerializer struct {
 }
 
 func (s *IkeSerializer) Marshal(o interface{}) (buf []byte, err error) {
-	v := o.(*A)
+	v := o.(*goserbench.SmallStruct)
 	a := &s.a
 	a.Name = v.Name
 	a.BirthDay = v.BirthDay.UnixNano()
@@ -49,7 +50,7 @@ func (s *IkeSerializer) Unmarshal(bs []byte, o interface{}) (err error) {
 		return
 	}
 
-	v := o.(*A)
+	v := o.(*goserbench.SmallStruct)
 	v.Name = a.Name
 	v.BirthDay = time.Unix(0, a.BirthDay)
 	v.Phone = a.Phone

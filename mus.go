@@ -3,6 +3,7 @@ package goserbench
 import (
 	"time"
 
+	"github.com/alecthomas/go_serialization_benchmarks/goserbench"
 	"github.com/mus-format/mus-go/ord"
 	"github.com/mus-format/mus-go/raw"
 	"github.com/mus-format/mus-go/unsafe"
@@ -12,7 +13,7 @@ import (
 type MUSSerializer struct{}
 
 func (s MUSSerializer) Marshal(o interface{}) ([]byte, error) {
-	v := o.(*A)
+	v := o.(*goserbench.SmallStruct)
 	n := ord.SizeString(v.Name)
 	n += raw.SizeInt64(v.BirthDay.UnixNano())
 	n += ord.SizeString(v.Phone)
@@ -30,7 +31,7 @@ func (s MUSSerializer) Marshal(o interface{}) ([]byte, error) {
 }
 
 func (s MUSSerializer) Unmarshal(bs []byte, o interface{}) (err error) {
-	v := o.(*A)
+	v := o.(*goserbench.SmallStruct)
 
 	var n int
 
@@ -75,7 +76,7 @@ func NewMUSSerializer() Serializer {
 type MUSUnsafeSerializer struct{}
 
 func (s MUSUnsafeSerializer) Marshal(o interface{}) ([]byte, error) {
-	v := o.(*A)
+	v := o.(*goserbench.SmallStruct)
 	n := unsafe.SizeString(v.Name)
 	n += unsafe.SizeInt64(v.BirthDay.UnixNano())
 	n += unsafe.SizeString(v.Phone)
@@ -94,7 +95,7 @@ func (s MUSUnsafeSerializer) Marshal(o interface{}) ([]byte, error) {
 
 func (s MUSUnsafeSerializer) Unmarshal(bs []byte, o interface{}) (err error) {
 	var n int
-	v := o.(*A)
+	v := o.(*goserbench.SmallStruct)
 
 	v.Name, n, err = unsafe.UnmarshalString(bs)
 	if err != nil {

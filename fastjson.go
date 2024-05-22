@@ -3,6 +3,7 @@ package goserbench
 import (
 	"time"
 
+	"github.com/alecthomas/go_serialization_benchmarks/goserbench"
 	"github.com/valyala/fastjson"
 )
 
@@ -13,7 +14,7 @@ type FastJSONSerializer struct {
 }
 
 func (s *FastJSONSerializer) Marshal(o interface{}) (buf []byte, err error) {
-	v := o.(*A)
+	v := o.(*goserbench.SmallStruct)
 	object, arena := s.object, s.arena
 	object.Set("name", arena.NewString(v.Name))
 	object.Set("birthday", arena.NewNumberInt(int(v.BirthDay.UnixNano())))
@@ -31,7 +32,7 @@ func (s *FastJSONSerializer) Marshal(o interface{}) (buf []byte, err error) {
 }
 
 func (s *FastJSONSerializer) Unmarshal(bs []byte, o interface{}) (err error) {
-	v := o.(*A)
+	v := o.(*goserbench.SmallStruct)
 	val, err := fastjson.ParseBytes(bs)
 	if err != nil {
 		return err

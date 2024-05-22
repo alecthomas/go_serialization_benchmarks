@@ -2,6 +2,16 @@ package goserbench
 
 import "time"
 
+// SmallStruct is a test structure of small size.
+type SmallStruct struct {
+	Name     string
+	BirthDay time.Time
+	Phone    string
+	Siblings int
+	Spouse   bool
+	Money    float64
+}
+
 // Serializer is the main interface for the serializer benchmarks.
 type Serializer interface {
 	// Marshal should marshal the given object (a *A) into a byte slice.

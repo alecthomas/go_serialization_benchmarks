@@ -1,5 +1,7 @@
 package goserbench
 
+import "github.com/alecthomas/go_serialization_benchmarks/goserbench"
+
 type ColferSerializer struct {
 	a ColferA
 }
@@ -9,7 +11,7 @@ func (s *ColferSerializer) ForceUTC() bool {
 }
 
 func (s *ColferSerializer) Marshal(o interface{}) (buf []byte, err error) {
-	v := o.(*A)
+	v := o.(*goserbench.SmallStruct)
 	a := &s.a
 	a.Name = v.Name
 	a.BirthDay = v.BirthDay
@@ -31,7 +33,7 @@ func (s *ColferSerializer) Unmarshal(bs []byte, o interface{}) (err error) {
 		return
 	}
 
-	v := o.(*A)
+	v := o.(*goserbench.SmallStruct)
 	v.Name = a.Name
 	v.BirthDay = a.BirthDay
 	v.Phone = a.Phone
