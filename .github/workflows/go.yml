@@ -1,0 +1,21 @@
+name: Build and Test
+on: [push, pull_request]
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Go CI
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        go: ["1.21", "1.22"]
+    steps:
+      - name: Check out source
+        uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b #v4.1.4
+      - name: Set up Go
+        uses: actions/setup-go@cdcb36043654635271a94b9a6d1392de5bb323a7 #v5.0.1
+        with:
+          go-version: ${{ matrix.go }}
+      - name: Verify benchmarks validate
+        run: VALIDATE=1 go test -v -bench . -run bench -benchtime 1ms

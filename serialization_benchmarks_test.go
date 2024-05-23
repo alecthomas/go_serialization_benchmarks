@@ -9,7 +9,7 @@ import (
 )
 
 var (
-	validate = os.Getenv("VALIDATE")
+	validate = os.Getenv("VALIDATE") != ""
 )
 
 func TestMessage(t *testing.T) {
@@ -209,7 +209,7 @@ func BenchmarkSerializers(b *testing.B) {
 			goserbench.BenchMarshalSmallStruct(b, bc.New())
 		})
 		b.Run("unmarshal/"+bc.Name, func(b *testing.B) {
-			goserbench.BenchUnmarshalSmallStruct(b, bc.New(), validate == "")
+			goserbench.BenchUnmarshalSmallStruct(b, bc.New(), validate)
 		})
 	}
 }
