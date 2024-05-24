@@ -15,6 +15,8 @@ import (
 	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/fastjson"
 	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/gencode"
 	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/gogo"
+	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/hprose"
+	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/hprose2"
 	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/ikea"
 	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/mus"
 	protobufdedis "github.com/alecthomas/go_serialization_benchmarks/internal/serializers/protobuf_dedis"
@@ -110,11 +112,11 @@ var benchmarkCases = []BenchmarkCase{
 	}, {
 		Name: "hprose",
 		URL:  "github.com/hprose/hprose-go/io",
-		New:  NewHproseSerializer,
+		New:  hprose.NewHproseSerializer,
 	}, {
 		Name: "hprose2",
 		URL:  "github.com/hprose/hprose-golang/io",
-		New:  NewHProse2Serializer,
+		New:  hprose2.NewHProse2Serializer,
 	}, {
 		Name: "dedis/protobuf",
 		URL:  "go.dedis.ch/protobuf",

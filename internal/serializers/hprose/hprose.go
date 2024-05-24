@@ -1,4 +1,4 @@
-package goserbench
+package hprose
 
 import (
 	"bytes"
@@ -54,7 +54,7 @@ func (s *HproseSerializer) Unmarshal(d []byte, i interface{}) (err error) {
 	return err
 }
 
-func NewHproseSerializer() Serializer {
+func NewHproseSerializer() goserbench.Serializer {
 	buf := new(bytes.Buffer)
 	reader := hprose.NewReader(buf, true)
 	bufw := new(bytes.Buffer)

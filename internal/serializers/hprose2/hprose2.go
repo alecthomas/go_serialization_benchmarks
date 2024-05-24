@@ -1,4 +1,4 @@
-package goserbench
+package hprose2
 
 import (
 	"github.com/alecthomas/go_serialization_benchmarks/goserbench"
@@ -36,7 +36,7 @@ func (s Hprose2Serializer) Unmarshal(d []byte, i interface{}) error {
 	return nil
 }
 
-func NewHProse2Serializer() Serializer {
+func NewHProse2Serializer() goserbench.Serializer {
 	writer := hprose2.NewWriter(true)
 	reader := hprose2.NewReader(nil, true)
 	return Hprose2Serializer{writer: writer, reader: reader}
