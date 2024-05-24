@@ -27,6 +27,7 @@ import (
 	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/sereal"
 	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/shamaton"
 	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/ssz"
+	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/stdlib"
 	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/ugorji"
 	xdrcalmh "github.com/alecthomas/go_serialization_benchmarks/internal/serializers/xdr_calmh"
 	xdrdavecgh "github.com/alecthomas/go_serialization_benchmarks/internal/serializers/xdr_davecgh"
@@ -66,7 +67,7 @@ var benchmarkCases = []BenchmarkCase{
 	}, {
 		Name: "json",
 		URL:  "pkg.go/dev/encoding/json",
-		New:  NewJSONSerializer,
+		New:  stdlib.NewJSONSerializer,
 	}, {
 		Name: "jsoniter",
 		URL:  "github.com/json-iterator/go",
@@ -86,7 +87,7 @@ var benchmarkCases = []BenchmarkCase{
 	}, {
 		Name: "gob",
 		URL:  "pkg.go.dev/encoding/gob",
-		New:  NewGobSerializer,
+		New:  stdlib.NewGobSerializer,
 	}, {
 		Name: "davecgh/xdr",
 		URL:  "github.com/davecgh/go-xdr/xdr",

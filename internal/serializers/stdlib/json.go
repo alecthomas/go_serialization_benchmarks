@@ -1,6 +1,10 @@
-package goserbench
+package stdlib
 
-import "encoding/json"
+import (
+	"encoding/json"
+
+	"github.com/alecthomas/go_serialization_benchmarks/goserbench"
+)
 
 type JsonSerializer struct{}
 
@@ -12,6 +16,6 @@ func (j JsonSerializer) Unmarshal(d []byte, o interface{}) error {
 	return json.Unmarshal(d, o)
 }
 
-func NewJSONSerializer() Serializer {
+func NewJSONSerializer() goserbench.Serializer {
 	return JsonSerializer{}
 }

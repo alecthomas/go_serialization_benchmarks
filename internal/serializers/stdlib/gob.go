@@ -1,8 +1,10 @@
-package goserbench
+package stdlib
 
 import (
 	"bytes"
 	"encoding/gob"
+
+	"github.com/alecthomas/go_serialization_benchmarks/goserbench"
 )
 
 type GobSerializer struct{}
@@ -17,8 +19,8 @@ func (g *GobSerializer) Unmarshal(d []byte, o interface{}) error {
 	return gob.NewDecoder(bytes.NewReader(d)).Decode(o)
 }
 
-func NewGobSerializer() Serializer {
+func NewGobSerializer() goserbench.Serializer {
 	// registration required before first use
-	gob.Register(A{})
+	gob.Register(goserbench.SmallStruct{})
 	return &GobSerializer{}
 }
