@@ -1,4 +1,4 @@
-package goserbench
+package mus
 
 import (
 	"time"
@@ -69,7 +69,7 @@ func (s MUSSerializer) Unmarshal(bs []byte, o interface{}) (err error) {
 	return
 }
 
-func NewMUSSerializer() Serializer {
+func NewMUSSerializer() goserbench.Serializer {
 	return MUSSerializer{}
 }
 
@@ -131,6 +131,6 @@ func (s MUSUnsafeSerializer) Unmarshal(bs []byte, o interface{}) (err error) {
 	return
 }
 
-func NewMUSUnsafeSerializer() Serializer {
+func NewMUSUnsafeSerializer() goserbench.Serializer {
 	return MUSUnsafeSerializer{}
 }

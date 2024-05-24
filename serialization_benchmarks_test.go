@@ -7,6 +7,7 @@ import (
 
 	"github.com/alecthomas/go_serialization_benchmarks/goserbench"
 	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/baseline"
+	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/mus"
 )
 
 var (
@@ -191,11 +192,11 @@ var benchmarkCases = []BenchmarkCase{
 	}, {
 		Name: "mus",
 		URL:  "github.com/mus-format/mus-go",
-		New:  NewMUSSerializer,
+		New:  mus.NewMUSSerializer,
 	}, {
 		Name: "mus/unsafe",
 		URL:  "github.com/mus-format/mus-go",
-		New:  NewMUSUnsafeSerializer,
+		New:  mus.NewMUSUnsafeSerializer,
 	}, {
 		Name: "baseline",
 		URL:  "",
