@@ -8,6 +8,7 @@ import (
 	"github.com/alecthomas/go_serialization_benchmarks/goserbench"
 	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/baseline"
 	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/benc"
+	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/fastjson"
 	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/mus"
 )
 
@@ -181,7 +182,7 @@ var benchmarkCases = []BenchmarkCase{
 	}, {
 		Name: "fastjson",
 		URL:  "github.com/valyala/fastjson",
-		New:  NewFastJSONSerializer,
+		New:  fastjson.NewFastJSONSerializer,
 	}, {
 		Name: "benc",
 		URL:  "github.com/deneonet/benc",

@@ -1,4 +1,4 @@
-package goserbench
+package fastjson
 
 import (
 	"time"
@@ -46,7 +46,7 @@ func (s *FastJSONSerializer) Unmarshal(bs []byte, o interface{}) (err error) {
 	return nil
 }
 
-func NewFastJSONSerializer() Serializer {
+func NewFastJSONSerializer() goserbench.Serializer {
 	var arena fastjson.Arena
 	return &FastJSONSerializer{
 		object: arena.NewObject(),
