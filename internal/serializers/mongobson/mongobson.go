@@ -1,8 +1,9 @@
-package goserbench
+package mongobson
 
 import (
 	"time"
 
+	"github.com/alecthomas/go_serialization_benchmarks/goserbench"
 	mongobson "go.mongodb.org/mongo-driver/bson"
 )
 
@@ -20,6 +21,6 @@ func (m MongoBsonSerializer) Unmarshal(d []byte, o interface{}) error {
 	return mongobson.Unmarshal(d, o)
 }
 
-func NewMongoBSONSerializer() Serializer {
+func NewMongoBSONSerializer() goserbench.Serializer {
 	return MongoBsonSerializer{}
 }

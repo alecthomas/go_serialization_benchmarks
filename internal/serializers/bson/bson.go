@@ -1,8 +1,9 @@
-package goserbench
+package bson
 
 import (
 	"time"
 
+	"github.com/alecthomas/go_serialization_benchmarks/goserbench"
 	"gopkg.in/mgo.v2/bson"
 )
 
@@ -20,6 +21,6 @@ func (m BsonSerializer) Unmarshal(d []byte, o interface{}) error {
 	return bson.Unmarshal(d, o)
 }
 
-func NewBsonSerializer() Serializer {
+func NewBsonSerializer() goserbench.Serializer {
 	return BsonSerializer{}
 }

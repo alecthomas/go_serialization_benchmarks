@@ -12,6 +12,7 @@ import (
 	bebopwellquite "github.com/alecthomas/go_serialization_benchmarks/internal/serializers/bebop_wellquite"
 	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/benc"
 	binaryalecthomas "github.com/alecthomas/go_serialization_benchmarks/internal/serializers/binary_alecthomas"
+	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/bson"
 	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/capnproto"
 	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/colfer"
 	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/fastjson"
@@ -21,6 +22,7 @@ import (
 	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/hprose"
 	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/hprose2"
 	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/ikea"
+	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/mongobson"
 	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/mus"
 	protobufdedis "github.com/alecthomas/go_serialization_benchmarks/internal/serializers/protobuf_dedis"
 	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/pulsar"
@@ -79,11 +81,11 @@ var benchmarkCases = []BenchmarkCase{
 	}, {
 		Name: "bson",
 		URL:  "gopkg.in/mgo.v2/bson",
-		New:  NewBsonSerializer,
+		New:  bson.NewBsonSerializer,
 	}, {
 		Name: "mongobson",
 		URL:  "go.mongodb.org/mongo-driver/mongo",
-		New:  NewMongoBSONSerializer,
+		New:  mongobson.NewMongoBSONSerializer,
 	}, {
 		Name: "gob",
 		URL:  "pkg.go.dev/encoding/gob",
