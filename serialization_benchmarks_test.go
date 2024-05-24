@@ -27,6 +27,7 @@ import (
 	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/sereal"
 	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/shamaton"
 	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/ssz"
+	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/ugorji"
 	xdrcalmh "github.com/alecthomas/go_serialization_benchmarks/internal/serializers/xdr_calmh"
 )
 
@@ -92,11 +93,11 @@ var benchmarkCases = []BenchmarkCase{
 	}, {
 		Name: "ugorji/msgpack",
 		URL:  "github.com/ugorji/go/codec",
-		New:  NewUgorjiCodecMsgPack,
+		New:  ugorji.NewUgorjiCodecMsgPack,
 	}, {
 		Name: "ugorji/binc",
 		URL:  "github.com/ugorji/go/codec",
-		New:  NewUgorjiCodecBinc,
+		New:  ugorji.NewUgorjiCodecBinc,
 	}, {
 		Name: "sereal",
 		URL:  "github.com/Sereal/Sereal/Go/sereal",
