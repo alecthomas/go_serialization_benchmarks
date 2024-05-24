@@ -55,7 +55,7 @@ See README.md for details on running the benchmarks.
 type BenchmarkCase struct {
 	Name string
 	URL  string
-	New  func() Serializer
+	New  func() goserbench.Serializer
 }
 
 var benchmarkCases = []BenchmarkCase{
