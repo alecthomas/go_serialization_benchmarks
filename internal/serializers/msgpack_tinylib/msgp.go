@@ -1,4 +1,4 @@
-package goserbench
+package msgpacktinylib
 
 import (
 	"github.com/alecthomas/go_serialization_benchmarks/goserbench"
@@ -37,6 +37,6 @@ func (m MsgpSerializer) Unmarshal(d []byte, o interface{}) error {
 	return err
 }
 
-func NewMsgpSerializer() Serializer {
+func NewMsgpSerializer() goserbench.Serializer {
 	return MsgpSerializer{}
 }

@@ -25,6 +25,7 @@ import (
 	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/ikea"
 	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/jsoniter"
 	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/mongobson"
+	msgpacktinylib "github.com/alecthomas/go_serialization_benchmarks/internal/serializers/msgpack_tinylib"
 	msgpackvmihailenco "github.com/alecthomas/go_serialization_benchmarks/internal/serializers/msgpack_vmihailenco"
 	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/mus"
 	protobufdedis "github.com/alecthomas/go_serialization_benchmarks/internal/serializers/protobuf_dedis"
@@ -64,7 +65,7 @@ var benchmarkCases = []BenchmarkCase{
 	}, {
 		Name: "msgp",
 		URL:  "github.com/tinylib/msgp",
-		New:  NewMsgpSerializer,
+		New:  msgpacktinylib.NewMsgpSerializer,
 	}, {
 		Name: "msgpack",
 		URL:  "github.com/vmihailenco/msgpack",
