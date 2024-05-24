@@ -1,4 +1,4 @@
-package goserbench
+package bebopwellquite
 
 import (
 	"time"
@@ -44,7 +44,7 @@ func (s *BebopWellquiteSerializer) TimePrecision() time.Duration {
 	return 100 * time.Nanosecond
 }
 
-func NewBebopWellquiteSerializer() Serializer {
+func NewBebopWellquiteSerializer() goserbench.Serializer {
 	return &BebopWellquiteSerializer{
 		buf: make([]byte, 1024),
 	}

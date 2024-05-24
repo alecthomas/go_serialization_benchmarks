@@ -7,6 +7,7 @@ import (
 
 	"github.com/alecthomas/go_serialization_benchmarks/goserbench"
 	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/baseline"
+	bebopwellquite "github.com/alecthomas/go_serialization_benchmarks/internal/serializers/bebop_wellquite"
 	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/benc"
 	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/fastjson"
 	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/mus"
@@ -178,7 +179,7 @@ var benchmarkCases = []BenchmarkCase{
 	}, {
 		Name: "wellquite/bebop",
 		URL:  "wellquite.org/bebop",
-		New:  NewBebopWellquiteSerializer,
+		New:  bebopwellquite.NewBebopWellquiteSerializer,
 	}, {
 		Name: "fastjson",
 		URL:  "github.com/valyala/fastjson",
