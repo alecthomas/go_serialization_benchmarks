@@ -6,6 +6,7 @@ import (
 	"testing"
 
 	"github.com/alecthomas/go_serialization_benchmarks/goserbench"
+	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/baseline"
 )
 
 var (
@@ -198,7 +199,7 @@ var benchmarkCases = []BenchmarkCase{
 	}, {
 		Name: "baseline",
 		URL:  "",
-		New:  NewBaselineSerializer,
+		New:  baseline.NewBaselineSerializer,
 	},
 }
 

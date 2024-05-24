@@ -1,4 +1,4 @@
-package goserbench
+package baseline
 
 import (
 	"encoding/binary"
@@ -61,6 +61,6 @@ func (b *BaselineSerializer) Unmarshal(d []byte, o interface{}) error {
 	return nil
 }
 
-func NewBaselineSerializer() Serializer {
+func NewBaselineSerializer() goserbench.Serializer {
 	return &BaselineSerializer{b: make([]byte, 47)}
 }
