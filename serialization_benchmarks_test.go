@@ -17,6 +17,7 @@ import (
 	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/gogo"
 	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/ikea"
 	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/mus"
+	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/pulsar"
 	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/shamaton"
 	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/ssz"
 	xdrcalmh "github.com/alecthomas/go_serialization_benchmarks/internal/serializers/xdr_calmh"
@@ -120,7 +121,7 @@ var benchmarkCases = []BenchmarkCase{
 	}, {
 		Name: "pulsar",
 		URL:  "github.com/cosmos/cosmos-proto",
-		New:  NewPulsarSerializer,
+		New:  pulsar.NewPulsarSerializer,
 	}, {
 		Name: "gogo/protobuf",
 		URL:  "github.com/gogo/protobuf/proto",

@@ -1,8 +1,8 @@
 syntax = "proto3";
 
-package goserbench;
+package pulsar;
 
-option go_package = "github.com/alecthomas/go_serialization_benchmarks;goserbench";
+option go_package = "github.com/alecthomas/go_serialization_benchmarks/internal/pulsar;pulsar";
 
 message PulsarBufA {
   string name = 1;

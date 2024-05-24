@@ -1,4 +1,4 @@
-package goserbench
+package pulsar
 
 import (
 	"time"
@@ -48,6 +48,6 @@ func (s *PulsarSerializer) Unmarshal(bs []byte, o interface{}) (err error) {
 	return
 }
 
-func NewPulsarSerializer() Serializer {
+func NewPulsarSerializer() goserbench.Serializer {
 	return &PulsarSerializer{}
 }
