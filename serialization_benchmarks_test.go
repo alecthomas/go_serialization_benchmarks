@@ -25,6 +25,7 @@ import (
 	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/ikea"
 	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/jsoniter"
 	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/mongobson"
+	msgpackvmihailenco "github.com/alecthomas/go_serialization_benchmarks/internal/serializers/msgpack_vmihailenco"
 	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/mus"
 	protobufdedis "github.com/alecthomas/go_serialization_benchmarks/internal/serializers/protobuf_dedis"
 	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/pulsar"
@@ -67,7 +68,7 @@ var benchmarkCases = []BenchmarkCase{
 	}, {
 		Name: "msgpack",
 		URL:  "github.com/vmihailenco/msgpack",
-		New:  NewVmihailencoMsgpackSerialier,
+		New:  msgpackvmihailenco.NewVmihailencoMsgpackSerialier,
 	}, {
 		Name: "json",
 		URL:  "pkg.go/dev/encoding/json",

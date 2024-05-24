@@ -1,6 +1,7 @@
-package goserbench
+package msgpackvmihailenco
 
 import (
+	"github.com/alecthomas/go_serialization_benchmarks/goserbench"
 	vmihailenco "github.com/vmihailenco/msgpack/v5"
 )
 
@@ -14,6 +15,6 @@ func (m VmihailencoMsgpackSerializer) Unmarshal(d []byte, o interface{}) error {
 	return vmihailenco.Unmarshal(d, o)
 }
 
-func NewVmihailencoMsgpackSerialier() Serializer {
+func NewVmihailencoMsgpackSerialier() goserbench.Serializer {
 	return VmihailencoMsgpackSerializer{}
 }
