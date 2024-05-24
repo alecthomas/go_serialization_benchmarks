@@ -1,4 +1,4 @@
-package goserbench
+package ssz
 
 import (
 	"math"
@@ -50,6 +50,6 @@ func (s *SSZSerializer) Unmarshal(bs []byte, o interface{}) (err error) {
 	return
 }
 
-func NewSSZSerializer() Serializer {
+func NewSSZSerializer() goserbench.Serializer {
 	return &SSZSerializer{}
 }

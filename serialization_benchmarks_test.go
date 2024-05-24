@@ -12,6 +12,7 @@ import (
 	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/benc"
 	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/fastjson"
 	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/mus"
+	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/ssz"
 )
 
 var (
@@ -172,7 +173,7 @@ var benchmarkCases = []BenchmarkCase{
 	}, {
 		Name: "ssz",
 		URL:  "github.com/prysmaticlabs/go-ssz",
-		New:  NewSSZSerializer,
+		New:  ssz.NewSSZSerializer,
 	}, {
 		Name: "200sc/bebop",
 		URL:  "github.com/200sc/bebop",
