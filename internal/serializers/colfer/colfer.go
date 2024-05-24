@@ -1,4 +1,4 @@
-package goserbench
+package colfer
 
 import "github.com/alecthomas/go_serialization_benchmarks/goserbench"
 
@@ -43,6 +43,6 @@ func (s *ColferSerializer) Unmarshal(bs []byte, o interface{}) (err error) {
 	return
 }
 
-func NewColferSerializer() Serializer {
+func NewColferSerializer() goserbench.Serializer {
 	return &ColferSerializer{}
 }

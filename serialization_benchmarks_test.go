@@ -11,6 +11,7 @@ import (
 	bebop200sc "github.com/alecthomas/go_serialization_benchmarks/internal/serializers/bebop_200sc"
 	bebopwellquite "github.com/alecthomas/go_serialization_benchmarks/internal/serializers/bebop_wellquite"
 	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/benc"
+	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/colfer"
 	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/fastjson"
 	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/gencode"
 	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/ikea"
@@ -130,7 +131,7 @@ var benchmarkCases = []BenchmarkCase{
 	}, {
 		Name: "colfer",
 		URL:  "github.com/pascaldekloe/colfer",
-		New:  NewColferSerializer,
+		New:  colfer.NewColferSerializer,
 	}, {
 		Name: "gencode",
 		URL:  "github.com/andyleap/gencode",
