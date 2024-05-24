@@ -1,8 +1,9 @@
-package goserbench
+package gotiny
 
 import (
 	reflect "reflect"
 
+	"github.com/alecthomas/go_serialization_benchmarks/goserbench"
 	"github.com/cybriq/gotiny"
 )
 
@@ -19,8 +20,8 @@ func (g GotinySerializer) Unmarshal(d []byte, o interface{}) error {
 	return nil
 }
 
-func NewGotinySerializer() Serializer {
-	ot := reflect.TypeOf(A{})
+func NewGotinySerializer() goserbench.Serializer {
+	ot := reflect.TypeOf(goserbench.SmallStruct{})
 	return GotinySerializer{
 		dec: gotiny.NewDecoderWithType(ot),
 	}

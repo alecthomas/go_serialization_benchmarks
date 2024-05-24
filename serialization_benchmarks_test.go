@@ -20,6 +20,7 @@ import (
 	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/flatbuffers"
 	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/gencode"
 	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/gogo"
+	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/gotiny"
 	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/hprose"
 	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/hprose2"
 	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/ikea"
@@ -61,7 +62,7 @@ var benchmarkCases = []BenchmarkCase{
 	{
 		Name: "gotiny",
 		URL:  "github.com/niubaoshu/gotiny",
-		New:  NewGotinySerializer,
+		New:  gotiny.NewGotinySerializer,
 	}, {
 		Name: "msgp",
 		URL:  "github.com/tinylib/msgp",
