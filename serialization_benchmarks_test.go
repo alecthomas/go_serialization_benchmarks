@@ -7,6 +7,7 @@ import (
 
 	"github.com/alecthomas/go_serialization_benchmarks/goserbench"
 	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/baseline"
+	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/benc"
 	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/mus"
 )
 
@@ -184,11 +185,11 @@ var benchmarkCases = []BenchmarkCase{
 	}, {
 		Name: "benc",
 		URL:  "github.com/deneonet/benc",
-		New:  NewBENCSerializer,
+		New:  benc.NewBENCSerializer,
 	}, {
 		Name: "benc/usafe",
 		URL:  "github.com/deneonet/benc",
-		New:  NewBENCUnsafeSerializer,
+		New:  benc.NewBENCUnsafeSerializer,
 	}, {
 		Name: "mus",
 		URL:  "github.com/mus-format/mus-go",

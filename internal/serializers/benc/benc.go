@@ -1,4 +1,4 @@
-package goserbench
+package benc
 
 import (
 	"time"
@@ -61,7 +61,7 @@ func (s BENCSerializer) Unmarshal(bs []byte, o interface{}) (err error) {
 	return
 }
 
-func NewBENCSerializer() Serializer {
+func NewBENCSerializer() goserbench.Serializer {
 	return BENCSerializer{}
 }
 
@@ -118,6 +118,6 @@ func (s BENCUnsafeSerializer) Unmarshal(bs []byte, o interface{}) (err error) {
 	return
 }
 
-func NewBENCUnsafeSerializer() Serializer {
+func NewBENCUnsafeSerializer() goserbench.Serializer {
 	return BENCUnsafeSerializer{}
 }
