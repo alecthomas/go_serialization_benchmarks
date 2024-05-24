@@ -15,6 +15,7 @@ import (
 	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/bson"
 	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/capnproto"
 	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/colfer"
+	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/easyjson"
 	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/fastjson"
 	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/flatbuffers"
 	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/gencode"
@@ -22,6 +23,7 @@ import (
 	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/hprose"
 	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/hprose2"
 	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/ikea"
+	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/jsoniter"
 	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/mongobson"
 	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/mus"
 	protobufdedis "github.com/alecthomas/go_serialization_benchmarks/internal/serializers/protobuf_dedis"
@@ -73,11 +75,11 @@ var benchmarkCases = []BenchmarkCase{
 	}, {
 		Name: "jsoniter",
 		URL:  "github.com/json-iterator/go",
-		New:  NewJSONIterSerializer,
+		New:  jsoniter.NewJSONIterSerializer,
 	}, {
 		Name: "easyjson",
 		URL:  "github.com/mailru/easyjson",
-		New:  NewEasyJSONSerializer,
+		New:  easyjson.NewEasyJSONSerializer,
 	}, {
 		Name: "bson",
 		URL:  "gopkg.in/mgo.v2/bson",

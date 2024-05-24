@@ -1,6 +1,7 @@
-package goserbench
+package jsoniter
 
 import (
+	"github.com/alecthomas/go_serialization_benchmarks/goserbench"
 	jsoniter "github.com/json-iterator/go"
 )
 
@@ -22,6 +23,6 @@ func (j JsonIterSerializer) ReduceFloat64Precision() uint {
 	return 6
 }
 
-func NewJSONIterSerializer() Serializer {
+func NewJSONIterSerializer() goserbench.Serializer {
 	return JsonIterSerializer{}
 }

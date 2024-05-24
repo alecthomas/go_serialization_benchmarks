@@ -1,4 +1,4 @@
-package goserbench
+package easyjson
 
 import (
 	"github.com/alecthomas/go_serialization_benchmarks/goserbench"
@@ -38,6 +38,6 @@ func (m EasyJSONSerializer) Unmarshal(d []byte, o interface{}) error {
 	return nil
 }
 
-func NewEasyJSONSerializer() Serializer {
+func NewEasyJSONSerializer() goserbench.Serializer {
 	return EasyJSONSerializer{}
 }
