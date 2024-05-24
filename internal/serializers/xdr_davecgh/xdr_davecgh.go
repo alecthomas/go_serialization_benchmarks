@@ -1,6 +1,9 @@
-package goserbench
+package xdrdavecgh
 
-import "github.com/davecgh/go-xdr/xdr"
+import (
+	"github.com/alecthomas/go_serialization_benchmarks/goserbench"
+	"github.com/davecgh/go-xdr/xdr"
+)
 
 type XDRDavecghSerializer struct{}
 
@@ -13,6 +16,6 @@ func (x XDRDavecghSerializer) Unmarshal(d []byte, o interface{}) error {
 	return err
 }
 
-func NewXDRDavecghSerializer() Serializer {
+func NewXDRDavecghSerializer() goserbench.Serializer {
 	return XDRDavecghSerializer{}
 }

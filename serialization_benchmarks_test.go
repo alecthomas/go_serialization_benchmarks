@@ -29,6 +29,7 @@ import (
 	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/ssz"
 	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/ugorji"
 	xdrcalmh "github.com/alecthomas/go_serialization_benchmarks/internal/serializers/xdr_calmh"
+	xdrdavecgh "github.com/alecthomas/go_serialization_benchmarks/internal/serializers/xdr_davecgh"
 )
 
 var (
@@ -89,7 +90,7 @@ var benchmarkCases = []BenchmarkCase{
 	}, {
 		Name: "davecgh/xdr",
 		URL:  "github.com/davecgh/go-xdr/xdr",
-		New:  NewXDRDavecghSerializer,
+		New:  xdrdavecgh.NewXDRDavecghSerializer,
 	}, {
 		Name: "ugorji/msgpack",
 		URL:  "github.com/ugorji/go/codec",
