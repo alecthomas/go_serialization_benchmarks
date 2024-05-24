@@ -1,4 +1,4 @@
-package goserbench
+package xdrcalmh
 
 import (
 	"math"
@@ -40,6 +40,6 @@ func (s *XDRCalmhSerializer) Unmarshal(bs []byte, o interface{}) (err error) {
 	return
 }
 
-func NewXDRCalmhSerializer() Serializer {
+func NewXDRCalmhSerializer() goserbench.Serializer {
 	return &XDRCalmhSerializer{}
 }

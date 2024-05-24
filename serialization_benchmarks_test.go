@@ -16,6 +16,7 @@ import (
 	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/mus"
 	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/shamaton"
 	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/ssz"
+	xdrcalmh "github.com/alecthomas/go_serialization_benchmarks/internal/serializers/xdr_calmh"
 )
 
 var (
@@ -140,7 +141,7 @@ var benchmarkCases = []BenchmarkCase{
 	}, {
 		Name: "calmh/xdr",
 		URL:  "github.com/calmh/xdr",
-		New:  NewXDRCalmhSerializer,
+		New:  xdrcalmh.NewXDRCalmhSerializer,
 	}, {
 		Name: "goavro",
 		URL:  "gopkg.in/linkedin/goavro.v1",

@@ -1,4 +1,4 @@
-package goserbench
+package xdrcalmh
 
 type XDRA struct {
 	Name     string
