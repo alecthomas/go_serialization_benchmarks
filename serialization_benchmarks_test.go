@@ -11,6 +11,7 @@ import (
 	bebop200sc "github.com/alecthomas/go_serialization_benchmarks/internal/serializers/bebop_200sc"
 	bebopwellquite "github.com/alecthomas/go_serialization_benchmarks/internal/serializers/bebop_wellquite"
 	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/benc"
+	binaryalecthomas "github.com/alecthomas/go_serialization_benchmarks/internal/serializers/binary_alecthomas"
 	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/capnproto"
 	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/colfer"
 	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/fastjson"
@@ -102,7 +103,7 @@ var benchmarkCases = []BenchmarkCase{
 	}, {
 		Name: "alecthomas/binary",
 		URL:  "github.com/alecthomas/binary",
-		New:  NewBinarySerializer,
+		New:  binaryalecthomas.NewBinarySerializer,
 	}, {
 		Name: "flatbuffers",
 		URL:  "github.com/google/flatbuffers/go",
