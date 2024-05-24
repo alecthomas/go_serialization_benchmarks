@@ -1,4 +1,4 @@
-package goserbench
+package avro
 
 import (
 	"bytes"
@@ -57,7 +57,7 @@ var avroSchemaJSON = `
 		}
 	`
 
-func NewAvroA() Serializer {
+func NewAvroA() goserbench.Serializer {
 	rec, err := goavro.NewRecord(goavro.RecordSchema(avroSchemaJSON))
 	if err != nil {
 		panic(err)
@@ -139,7 +139,7 @@ func avroUnmarshal(d []byte, o interface{}, unmarshalFunc func([]byte) (interfac
 	return nil
 }
 
-func NewAvro2Txt() Serializer {
+func NewAvro2Txt() goserbench.Serializer {
 	codec, err := goavro2.NewCodec(avroSchemaJSON)
 	if err != nil {
 		panic(err)
@@ -159,7 +159,7 @@ func (a *Avro2Txt) String() string {
 	return "GoAvro2Text"
 }
 
-func NewAvro2Bin() Serializer {
+func NewAvro2Bin() goserbench.Serializer {
 	codec, err := goavro2.NewCodec(avroSchemaJSON)
 	if err != nil {
 		panic(err)

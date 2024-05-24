@@ -6,6 +6,7 @@ import (
 	"testing"
 
 	"github.com/alecthomas/go_serialization_benchmarks/goserbench"
+	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/avro"
 	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/baseline"
 	bebop200sc "github.com/alecthomas/go_serialization_benchmarks/internal/serializers/bebop_200sc"
 	bebopwellquite "github.com/alecthomas/go_serialization_benchmarks/internal/serializers/bebop_wellquite"
@@ -143,15 +144,15 @@ var benchmarkCases = []BenchmarkCase{
 	}, {
 		Name: "goavro",
 		URL:  "gopkg.in/linkedin/goavro.v1",
-		New:  NewAvroA,
+		New:  avro.NewAvroA,
 	}, {
 		Name: "avro2/text",
 		URL:  "github.com/linkedin/goavro",
-		New:  NewAvro2Txt,
+		New:  avro.NewAvro2Txt,
 	}, {
 		Name: "avro2/binary",
 		URL:  "github.com/linkedin/goavro",
-		New:  NewAvro2Bin,
+		New:  avro.NewAvro2Bin,
 	}, {
 		Name: "ikea",
 		URL:  "github.com/ikkerens/ikeapack",
