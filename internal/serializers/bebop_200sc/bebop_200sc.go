@@ -1,4 +1,4 @@
-package goserbench
+package bebop200sc
 
 import (
 	"time"
@@ -49,6 +49,6 @@ func (s *Bebop200ScSerializer) ForceUTC() bool {
 	return true
 }
 
-func NewBebop200ScSerializer() Serializer {
+func NewBebop200ScSerializer() goserbench.Serializer {
 	return &Bebop200ScSerializer{buf: make([]byte, 1024)}
 }
