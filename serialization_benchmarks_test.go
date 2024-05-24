@@ -24,6 +24,7 @@ import (
 	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/mus"
 	protobufdedis "github.com/alecthomas/go_serialization_benchmarks/internal/serializers/protobuf_dedis"
 	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/pulsar"
+	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/sereal"
 	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/shamaton"
 	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/ssz"
 	xdrcalmh "github.com/alecthomas/go_serialization_benchmarks/internal/serializers/xdr_calmh"
@@ -99,7 +100,7 @@ var benchmarkCases = []BenchmarkCase{
 	}, {
 		Name: "sereal",
 		URL:  "github.com/Sereal/Sereal/Go/sereal",
-		New:  NewSerealSerializer,
+		New:  sereal.NewSerealSerializer,
 	}, {
 		Name: "alecthomas/binary",
 		URL:  "github.com/alecthomas/binary",

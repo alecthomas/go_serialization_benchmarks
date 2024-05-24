@@ -1,6 +1,9 @@
-package goserbench
+package sereal
 
-import "github.com/Sereal/Sereal/Go/sereal"
+import (
+	"github.com/Sereal/Sereal/Go/sereal"
+	"github.com/alecthomas/go_serialization_benchmarks/goserbench"
+)
 
 type SerealSerializer struct{}
 
@@ -13,6 +16,6 @@ func (s SerealSerializer) Unmarshal(d []byte, o interface{}) error {
 	return err
 }
 
-func NewSerealSerializer() Serializer {
+func NewSerealSerializer() goserbench.Serializer {
 	return SerealSerializer{}
 }
