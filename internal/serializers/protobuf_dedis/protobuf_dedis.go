@@ -1,6 +1,7 @@
-package goserbench
+package protobufdedis
 
 import (
+	"github.com/alecthomas/go_serialization_benchmarks/goserbench"
 	"go.dedis.ch/protobuf"
 )
 
@@ -14,6 +15,6 @@ func (m ProtobufSerializer) Unmarshal(d []byte, o interface{}) error {
 	return protobuf.Decode(d, o)
 }
 
-func NewProtobufSerializer() Serializer {
+func NewProtobufSerializer() goserbench.Serializer {
 	return ProtobufSerializer{}
 }

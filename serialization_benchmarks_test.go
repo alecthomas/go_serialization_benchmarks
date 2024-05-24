@@ -17,6 +17,7 @@ import (
 	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/gogo"
 	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/ikea"
 	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/mus"
+	protobufdedis "github.com/alecthomas/go_serialization_benchmarks/internal/serializers/protobuf_dedis"
 	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/pulsar"
 	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/shamaton"
 	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/ssz"
@@ -117,7 +118,7 @@ var benchmarkCases = []BenchmarkCase{
 	}, {
 		Name: "dedis/protobuf",
 		URL:  "go.dedis.ch/protobuf",
-		New:  NewProtobufSerializer,
+		New:  protobufdedis.NewProtobufSerializer,
 	}, {
 		Name: "pulsar",
 		URL:  "github.com/cosmos/cosmos-proto",
