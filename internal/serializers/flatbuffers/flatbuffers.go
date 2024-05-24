@@ -1,4 +1,4 @@
-package goserbench
+package flatbuffers
 
 import (
 	"time"
@@ -44,6 +44,6 @@ func (s *FlatBufferSerializer) Unmarshal(d []byte, i interface{}) error {
 	return nil
 }
 
-func NewFlatBuffersSerializer() Serializer {
+func NewFlatBuffersSerializer() goserbench.Serializer {
 	return &FlatBufferSerializer{flatbuffers.NewBuilder(0)}
 }

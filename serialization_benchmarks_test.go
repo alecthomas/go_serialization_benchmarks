@@ -14,6 +14,7 @@ import (
 	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/capnproto"
 	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/colfer"
 	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/fastjson"
+	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/flatbuffers"
 	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/gencode"
 	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/gogo"
 	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/hprose"
@@ -105,7 +106,7 @@ var benchmarkCases = []BenchmarkCase{
 	}, {
 		Name: "flatbuffers",
 		URL:  "github.com/google/flatbuffers/go",
-		New:  NewFlatBuffersSerializer,
+		New:  flatbuffers.NewFlatBuffersSerializer,
 	}, {
 		Name: "capnproto",
 		URL:  "github.com/glycerine/go-capnproto",
