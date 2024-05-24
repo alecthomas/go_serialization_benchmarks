@@ -1,4 +1,4 @@
-package goserbench
+package gogo
 
 import (
 	"bytes"
@@ -51,14 +51,14 @@ func (s *GogoProtoSerializer) Unmarshal(bs []byte, o interface{}) (err error) {
 	return
 }
 
-func NewGogoProtoSerializer() Serializer {
+func NewGogoProtoSerializer() goserbench.Serializer {
 	return &GogoProtoSerializer{
 		marshaller:   proto.Marshal,
 		unmarshaller: proto.Unmarshal,
 	}
 }
 
-func NewGogoJsonSerializer() Serializer {
+func NewGogoJsonSerializer() goserbench.Serializer {
 	marshaller := &jsonpb.Marshaler{}
 	buf := bytes.NewBuffer(make([]byte, 0, 1024))
 

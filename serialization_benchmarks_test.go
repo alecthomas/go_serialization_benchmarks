@@ -14,6 +14,7 @@ import (
 	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/colfer"
 	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/fastjson"
 	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/gencode"
+	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/gogo"
 	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/ikea"
 	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/mus"
 	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/shamaton"
@@ -123,11 +124,11 @@ var benchmarkCases = []BenchmarkCase{
 	}, {
 		Name: "gogo/protobuf",
 		URL:  "github.com/gogo/protobuf/proto",
-		New:  NewGogoProtoSerializer,
+		New:  gogo.NewGogoProtoSerializer,
 	}, {
 		Name: "gogo/jsonpb",
 		URL:  "github.com/gogo/protobuf/proto",
-		New:  NewGogoJsonSerializer,
+		New:  gogo.NewGogoJsonSerializer,
 	}, {
 		Name: "colfer",
 		URL:  "github.com/pascaldekloe/colfer",
