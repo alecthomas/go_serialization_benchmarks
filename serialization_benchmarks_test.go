@@ -11,6 +11,7 @@ import (
 	bebop200sc "github.com/alecthomas/go_serialization_benchmarks/internal/serializers/bebop_200sc"
 	bebopwellquite "github.com/alecthomas/go_serialization_benchmarks/internal/serializers/bebop_wellquite"
 	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/benc"
+	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/capnproto"
 	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/colfer"
 	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/fastjson"
 	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/gencode"
@@ -108,7 +109,7 @@ var benchmarkCases = []BenchmarkCase{
 	}, {
 		Name: "capnproto",
 		URL:  "github.com/glycerine/go-capnproto",
-		New:  NewCapNProtoSerializer,
+		New:  capnproto.NewCapNProtoSerializer,
 	}, {
 		Name: "hprose",
 		URL:  "github.com/hprose/hprose-go/io",

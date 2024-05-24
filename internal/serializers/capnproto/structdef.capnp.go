@@ -1,4 +1,4 @@
-package goserbench
+package capnproto
 
 // AUTO GENERATED - DO NOT EDIT
 

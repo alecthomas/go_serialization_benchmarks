@@ -1,4 +1,4 @@
-package goserbench
+package capnproto
 
 import (
 	"bytes"
@@ -41,6 +41,6 @@ func (x CapNProtoSerializer) Unmarshal(d []byte, i interface{}) error {
 	return nil
 }
 
-func NewCapNProtoSerializer() Serializer {
+func NewCapNProtoSerializer() goserbench.Serializer {
 	return CapNProtoSerializer{}
 }

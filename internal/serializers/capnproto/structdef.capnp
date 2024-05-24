@@ -1,6 +1,6 @@
 using Go = import "/github.com/glycerine/go-capnproto/go.capnp";
-$Go.package("goserbench");
-$Go.import("github.com/alecthomas/go_serialization_benchmarks");
+$Go.package("capnproto");
+$Go.import("github.com/alecthomas/go_serialization_benchmarks/internal/capnproto");
 
 @0x99ea7c74456111bd;
 
