@@ -1,4 +1,4 @@
-package goserbench
+package ikea
 
 import (
 	"bytes"
@@ -18,12 +18,12 @@ type IkeA struct {
 	Money    uint64 // NOTE: Ike does not support float64 - it needs to be converted to an int type.
 }
 
-type IkeSerializer struct {
+type IkeaSerializer struct {
 	a   IkeA
 	buf *bytes.Buffer
 }
 
-func (s *IkeSerializer) Marshal(o interface{}) (buf []byte, err error) {
+func (s *IkeaSerializer) Marshal(o interface{}) (buf []byte, err error) {
 	v := o.(*goserbench.SmallStruct)
 	a := &s.a
 	a.Name = v.Name
@@ -41,7 +41,7 @@ func (s *IkeSerializer) Marshal(o interface{}) (buf []byte, err error) {
 	return
 }
 
-func (s *IkeSerializer) Unmarshal(bs []byte, o interface{}) (err error) {
+func (s *IkeaSerializer) Unmarshal(bs []byte, o interface{}) (err error) {
 	a := &s.a
 	s.buf.Reset()
 	s.buf.Write(bs)
@@ -60,6 +60,6 @@ func (s *IkeSerializer) Unmarshal(bs []byte, o interface{}) (err error) {
 	return
 }
 
-func NewIkeSerializer() Serializer {
-	return &IkeSerializer{buf: bytes.NewBuffer(make([]byte, 0, 1024))}
+func NewIkeaSerializer() goserbench.Serializer {
+	return &IkeaSerializer{buf: bytes.NewBuffer(make([]byte, 0, 1024))}
 }

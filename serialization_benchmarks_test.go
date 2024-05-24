@@ -11,6 +11,7 @@ import (
 	bebopwellquite "github.com/alecthomas/go_serialization_benchmarks/internal/serializers/bebop_wellquite"
 	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/benc"
 	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/fastjson"
+	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/ikea"
 	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/mus"
 	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/shamaton"
 	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/ssz"
@@ -154,7 +155,7 @@ var benchmarkCases = []BenchmarkCase{
 	}, {
 		Name: "ikea",
 		URL:  "github.com/ikkerens/ikeapack",
-		New:  NewIkeSerializer,
+		New:  ikea.NewIkeaSerializer,
 	}, {
 		Name: "shamaton/msgpack/map",
 		URL:  "github.com/shamaton/msgpack",
