@@ -12,6 +12,7 @@ import (
 	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/benc"
 	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/fastjson"
 	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/mus"
+	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/shamaton"
 	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/ssz"
 )
 
@@ -157,19 +158,19 @@ var benchmarkCases = []BenchmarkCase{
 	}, {
 		Name: "shamaton/msgpack/map",
 		URL:  "github.com/shamaton/msgpack",
-		New:  NewShamatonMapMsgpackSerializer,
+		New:  shamaton.NewShamatonMapMsgpackSerializer,
 	}, {
 		Name: "shamaton/msgpack/array",
 		URL:  "github.com/shamaton/msgpack",
-		New:  NewShamatonArrayMsgPackSerializer,
+		New:  shamaton.NewShamatonArrayMsgPackSerializer,
 	}, {
 		Name: "shamaton/msgpackgen/map",
 		URL:  "github.com/shamaton/msgpack",
-		New:  NewShamatonMapMsgPackgenSerializer,
+		New:  shamaton.NewShamatonMapMsgPackgenSerializer,
 	}, {
 		Name: "shamaton/msgpackgen/array",
 		URL:  "github.com/shamaton/msgpack",
-		New:  NewShamatonArrayMsgpackgenSerializer,
+		New:  shamaton.NewShamatonArrayMsgpackgenSerializer,
 	}, {
 		Name: "ssz",
 		URL:  "github.com/prysmaticlabs/go-ssz",

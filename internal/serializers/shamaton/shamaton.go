@@ -1,4 +1,4 @@
-package goserbench
+package shamaton
 
 import (
 	"github.com/alecthomas/go_serialization_benchmarks/goserbench"
@@ -16,7 +16,7 @@ func (m ShamatonMapMsgpackSerializer) Unmarshal(d []byte, o interface{}) error {
 	return shamaton.UnmarshalAsMap(d, o)
 }
 
-func NewShamatonMapMsgpackSerializer() Serializer {
+func NewShamatonMapMsgpackSerializer() goserbench.Serializer {
 	return ShamatonMapMsgpackSerializer{}
 }
 
@@ -30,7 +30,7 @@ func (m ShamatonArrayMsgpackSerializer) Unmarshal(d []byte, o interface{}) error
 	return shamaton.UnmarshalAsArray(d, o)
 }
 
-func NewShamatonArrayMsgPackSerializer() Serializer {
+func NewShamatonArrayMsgPackSerializer() goserbench.Serializer {
 	RegisterGeneratedResolver()
 	return ShamatonArrayMsgpackSerializer{}
 }
@@ -68,7 +68,7 @@ func (m ShamatonMapMsgpackgenSerializer) Unmarshal(d []byte, o interface{}) erro
 	return nil
 }
 
-func NewShamatonMapMsgPackgenSerializer() Serializer {
+func NewShamatonMapMsgPackgenSerializer() goserbench.Serializer {
 	RegisterGeneratedResolver()
 	return ShamatonMapMsgpackgenSerializer{}
 }
@@ -107,6 +107,6 @@ func (m ShamatonArrayMsgpackgenSerializer) Unmarshal(d []byte, o interface{}) er
 	return nil
 }
 
-func NewShamatonArrayMsgpackgenSerializer() Serializer {
+func NewShamatonArrayMsgpackgenSerializer() goserbench.Serializer {
 	return ShamatonArrayMsgpackgenSerializer{}
 }
