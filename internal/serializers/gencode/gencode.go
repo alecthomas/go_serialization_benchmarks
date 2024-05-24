@@ -1,4 +1,4 @@
-package goserbench
+package gencode
 
 import (
 	"time"
@@ -40,7 +40,7 @@ func (s *GencodeSerializer) Unmarshal(bs []byte, o interface{}) (err error) {
 	return
 }
 
-func NewGencodeSerializer() Serializer {
+func NewGencodeSerializer() goserbench.Serializer {
 	return &GencodeSerializer{buf: make([]byte, 0, 1024)}
 }
 
@@ -78,6 +78,6 @@ func (s *GencodeUnsafeSerializer) Unmarshal(bs []byte, o interface{}) (err error
 	return
 }
 
-func NewGencodeUnsafeSerializer() Serializer {
+func NewGencodeUnsafeSerializer() goserbench.Serializer {
 	return &GencodeUnsafeSerializer{buf: make([]byte, 0, 1024)}
 }

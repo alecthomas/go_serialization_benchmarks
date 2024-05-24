@@ -12,6 +12,7 @@ import (
 	bebopwellquite "github.com/alecthomas/go_serialization_benchmarks/internal/serializers/bebop_wellquite"
 	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/benc"
 	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/fastjson"
+	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/gencode"
 	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/ikea"
 	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/mus"
 	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/shamaton"
@@ -133,11 +134,11 @@ var benchmarkCases = []BenchmarkCase{
 	}, {
 		Name: "gencode",
 		URL:  "github.com/andyleap/gencode",
-		New:  NewGencodeSerializer,
+		New:  gencode.NewGencodeSerializer,
 	}, {
 		Name: "gencode/unsafe",
 		URL:  "github.com/andyleap/gencode",
-		New:  NewGencodeUnsafeSerializer,
+		New:  gencode.NewGencodeUnsafeSerializer,
 	}, {
 		Name: "calmh/xdr",
 		URL:  "github.com/calmh/xdr",

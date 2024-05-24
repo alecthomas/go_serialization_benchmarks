@@ -1,4 +1,4 @@
-package goserbench
+package gencode
 
 import (
 	"io"
@@ -12,16 +12,16 @@ var (
 	_ = time.Now()
 )
 
-type GencodeUnsafeA struct {
+type GencodeA struct {
 	Name     string
-	BirthDay int64
+	BirthDay time.Time
 	Phone    string
 	Siblings int32
 	Spouse   bool
 	Money    float64
 }
 
-func (d *GencodeUnsafeA) Size() (s uint64) {
+func (d *GencodeA) Size() (s uint64) {
 
 	{
 		l := uint64(len(d.Name))
@@ -67,10 +67,10 @@ func (d *GencodeUnsafeA) Size() (s uint64) {
 		s++
 
 	}
-	s += 17
+	s += 24
 	return
 }
-func (d *GencodeUnsafeA) Marshal(buf []byte) ([]byte, error) {
+func (d *GencodeA) Marshal(buf []byte) ([]byte, error) {
 	size := d.Size()
 	{
 		if uint64(cap(buf)) >= size {
@@ -101,9 +101,11 @@ func (d *GencodeUnsafeA) Marshal(buf []byte) ([]byte, error) {
 		i += l
 	}
 	{
-
-		*(*int64)(unsafe.Pointer(&buf[i+0])) = d.BirthDay
-
+		b, err := d.BirthDay.MarshalBinary()
+		if err != nil {
+			return nil, err
+		}
+		copy(buf[i+0:], b)
 	}
 	{
 		l := uint64(len(d.Phone))
@@ -113,15 +115,15 @@ func (d *GencodeUnsafeA) Marshal(buf []byte) ([]byte, error) {
 			t := uint64(l)
 
 			for t >= 0x80 {
-				buf[i+8] = byte(t) | 0x80
+				buf[i+15] = byte(t) | 0x80
 				t >>= 7
 				i++
 			}
-			buf[i+8] = byte(t)
+			buf[i+15] = byte(t)
 			i++
 
 		}
-		copy(buf[i+8:], d.Phone)
+		copy(buf[i+15:], d.Phone)
 		i += l
 	}
 	{
@@ -134,30 +136,46 @@ func (d *GencodeUnsafeA) Marshal(buf []byte) ([]byte, error) {
 		}
 
 		for t >= 0x80 {
-			buf[i+8] = byte(t) | 0x80
+			buf[i+15] = byte(t) | 0x80
 			t >>= 7
 			i++
 		}
-		buf[i+8] = byte(t)
+		buf[i+15] = byte(t)
 		i++
 
 	}
 	{
 		if d.Spouse {
-			buf[i+8] = 1
+			buf[i+15] = 1
 		} else {
-			buf[i+8] = 0
+			buf[i+15] = 0
 		}
 	}
 	{
 
-		*(*float64)(unsafe.Pointer(&buf[i+9])) = d.Money
+		v := *(*uint64)(unsafe.Pointer(&(d.Money)))
+
+		buf[i+0+16] = byte(v >> 0)
+
+		buf[i+1+16] = byte(v >> 8)
+
+		buf[i+2+16] = byte(v >> 16)
+
+		buf[i+3+16] = byte(v >> 24)
+
+		buf[i+4+16] = byte(v >> 32)
+
+		buf[i+5+16] = byte(v >> 40)
+
+		buf[i+6+16] = byte(v >> 48)
+
+		buf[i+7+16] = byte(v >> 56)
 
 	}
-	return buf[:i+17], nil
+	return buf[:i+24], nil
 }
 
-func (d *GencodeUnsafeA) Unmarshal(buf []byte) (uint64, error) {
+func (d *GencodeA) Unmarshal(buf []byte) (uint64, error) {
 	i := uint64(0)
 
 	{
@@ -181,9 +199,7 @@ func (d *GencodeUnsafeA) Unmarshal(buf []byte) (uint64, error) {
 		i += l
 	}
 	{
-
-		d.BirthDay = *(*int64)(unsafe.Pointer(&buf[i+0]))
-
+		d.BirthDay.UnmarshalBinary(buf[i+0 : i+0+15])
 	}
 	{
 		l := uint64(0)
@@ -191,10 +207,10 @@ func (d *GencodeUnsafeA) Unmarshal(buf []byte) (uint64, error) {
 		{
 
 			bs := uint8(7)
-			t := uint64(buf[i+8] & 0x7F)
-			for buf[i+8]&0x80 == 0x80 {
+			t := uint64(buf[i+15] & 0x7F)
+			for buf[i+15]&0x80 == 0x80 {
 				i++
-				t |= uint64(buf[i+8]&0x7F) << bs
+				t |= uint64(buf[i+15]&0x7F) << bs
 				bs += 7
 			}
 			i++
@@ -202,16 +218,16 @@ func (d *GencodeUnsafeA) Unmarshal(buf []byte) (uint64, error) {
 			l = t
 
 		}
-		d.Phone = string(buf[i+8 : i+8+l])
+		d.Phone = string(buf[i+15 : i+15+l])
 		i += l
 	}
 	{
 
 		bs := uint8(7)
-		t := uint32(buf[i+8] & 0x7F)
-		for buf[i+8]&0x80 == 0x80 {
+		t := uint32(buf[i+15] & 0x7F)
+		for buf[i+15]&0x80 == 0x80 {
 			i++
-			t |= uint32(buf[i+8]&0x7F) << bs
+			t |= uint32(buf[i+15]&0x7F) << bs
 			bs += 7
 		}
 		i++
@@ -223,12 +239,13 @@ func (d *GencodeUnsafeA) Unmarshal(buf []byte) (uint64, error) {
 
 	}
 	{
-		d.Spouse = buf[i+8] == 1
+		d.Spouse = buf[i+15] == 1
 	}
 	{
 
-		d.Money = *(*float64)(unsafe.Pointer(&buf[i+9]))
+		v := 0 | (uint64(buf[i+0+16]) << 0) | (uint64(buf[i+1+16]) << 8) | (uint64(buf[i+2+16]) << 16) | (uint64(buf[i+3+16]) << 24) | (uint64(buf[i+4+16]) << 32) | (uint64(buf[i+5+16]) << 40) | (uint64(buf[i+6+16]) << 48) | (uint64(buf[i+7+16]) << 56)
+		d.Money = *(*float64)(unsafe.Pointer(&v))
 
 	}
-	return i + 17, nil
+	return i + 24, nil
 }
