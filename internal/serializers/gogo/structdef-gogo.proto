@@ -1,0 +1,20 @@
+syntax = "proto2";
+
+package goserbench;
+
+option go_package = "github.com/alecthomas/go_serialization_benchmarks/internal/gogo;gogo";
+
+import "github.com/gogo/protobuf/gogoproto/gogo.proto";
+
+option (gogoproto.unmarshaler_all) = true;
+option (gogoproto.sizer_all) = true;
+option (gogoproto.marshaler_all) = true;
+
+message GogoProtoBufA {
+  required string name = 1 [(gogoproto.nullable) = false];
+  required int64 birthDay = 2 [(gogoproto.nullable) = false];
+  required string phone = 3 [(gogoproto.nullable) = false];
+  required int32 siblings = 4 [(gogoproto.nullable) = false];
+  required bool spouse = 5 [(gogoproto.nullable) = false];
+  required double money = 6 [(gogoproto.nullable) = false];
+}

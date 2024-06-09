@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+package pulsar;
+
+option go_package = "github.com/alecthomas/go_serialization_benchmarks/internal/pulsar;pulsar";
+
+message PulsarBufA {
+  string name = 1;
+  int64 birthDay = 2;
+  string phone = 3;
+  int32 siblings = 4;
+  bool spouse = 5;
+  double money = 6;
+}
