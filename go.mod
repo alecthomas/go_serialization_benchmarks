@@ -1,6 +1,6 @@
 module github.com/alecthomas/go_serialization_benchmarks
 
-go 1.21.4
+go 1.22.4
 
 require (
 	github.com/200sc/bebop v0.5.0
@@ -33,6 +33,8 @@ require (
 	gopkg.in/mgo.v2 v2.0.0-20190816093944-a6b53ec6cb22
 	wellquite.org/bebop v0.0.0-20231109192402-a92af83691ec
 )
+
+require github.com/nazarifard/copi v0.0.0-20240609072615-763316f77579 // indirect
 
 require (
 	github.com/DataDog/zstd v1.5.2 // indirect
