@@ -199,6 +199,10 @@ var benchmarkCases = []BenchmarkCase{
 		Name: "baseline",
 		URL:  "",
 		New:  NewBaselineSerializer,
+	}, {
+		Name: "copi",
+		URL:  "github.com/nazarifard/copi",
+		New:  NewCopiSerializer,
 	},
 }
 
