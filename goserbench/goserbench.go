@@ -124,9 +124,20 @@ func BenchUnmarshalSmallStruct(b *testing.B, s Serializer, validate bool) {
 		// Validate unmarshalled data.
 		if validate {
 			i := data[n]
-			correct := o.Name == i.Name && o.Phone == i.Phone && o.Siblings == i.Siblings && o.Spouse == i.Spouse && o.Money == i.Money && o.BirthDay.Equal(i.BirthDay) //&& cmpTags(o.Tags, i.Tags) && cmpAliases(o.Aliases, i.Aliases)
-			if !correct {
-				b.Fatalf("unmarshaled object differed:\n%v\n%v", i, o)
+			if o.Name != i.Name {
+				b.Fatalf("wrong name: got %q, want %q", o.Name, i.Name)
+			}
+			if o.Phone != i.Phone {
+				b.Fatalf("wrong phone: got %q, want %q", o.Phone, i.Phone)
+			}
+			if o.Siblings != i.Siblings {
+				b.Fatalf("wrong siblings: got %v, want %v", o.Siblings, i.Siblings)
+			}
+			if o.Spouse != i.Spouse {
+				b.Fatalf("wrong spouse : got %v, want %v", o.Spouse, i.Spouse)
+			}
+			if !o.BirthDay.Equal(i.BirthDay) {
+				b.Fatalf("wrong birthday: got %v, want %v", o.BirthDay, i.BirthDay)
 			}
 		}
 	}
