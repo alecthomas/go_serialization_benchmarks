@@ -6,6 +6,7 @@ require (
 	github.com/200sc/bebop v0.5.0
 	github.com/Sereal/Sereal v0.0.0-20230201113653-fa72c87b650e
 	github.com/alecthomas/binary v0.0.0-20221018225505-74871811ee56
+	github.com/alecthomas/go_serialization_benchmarks/goserbench v0.0.0
 	github.com/calmh/xdr v1.1.0
 	github.com/davecgh/go-xdr v0.0.0-20161123171359-e6a2ba005892
 	github.com/glycerine/go-capnproto v0.0.0-20190118050403-2d07de3aa7fc
@@ -18,8 +19,6 @@ require (
 	github.com/linkedin/goavro v1.0.5
 	github.com/linkedin/goavro/v2 v2.12.0
 	github.com/mailru/easyjson v0.7.7
-	github.com/mojura/enkodo v0.5.6
-	github.com/niubaoshu/gotiny v0.0.3
 	github.com/prysmaticlabs/go-ssz v0.0.0-20190827151743-72881c4223d8
 	github.com/shamaton/msgpack/v2 v2.1.1
 	github.com/shamaton/msgpackgen v0.3.0
@@ -34,15 +33,12 @@ require (
 	wellquite.org/bebop v0.0.0-20231109192402-a92af83691ec
 )
 
-require (
-	github.com/nazarifard/copi v0.0.0-20240609072615-763316f77579 // indirect
-	github.com/nazarifard/fastape v0.0.0-20240611084216-abaecf150e5b // indirect
-)
+replace github.com/alecthomas/go_serialization_benchmarks/goserbench => ./goserbench
 
 require (
 	github.com/DataDog/zstd v1.5.2 // indirect
 	github.com/cosmos/cosmos-proto v1.0.0-beta.3
-	github.com/cybriq/gotiny v0.0.5 // indirect
+	github.com/cybriq/gotiny v0.0.5
 	github.com/deneonet/benc v1.0.2
 	github.com/glycerine/goconvey v0.0.0-20190410193231-58a59202ab31 // indirect
 	github.com/glycerine/rbtree v0.0.0-20190406191118-ceb71889d809 // indirect
@@ -59,6 +55,7 @@ require (
 	github.com/modern-go/reflect2 v1.0.2 // indirect
 	github.com/mus-format/mus-common-go v0.0.0-20230426111652-d1324c6517b3 // indirect
 	github.com/mus-format/mus-go v0.0.0-20230426134740-6572513fca3d
+	github.com/nazarifard/fastape v0.0.0-20240611084216-abaecf150e5b
 	github.com/philhofer/fwd v1.1.2 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/protolambda/zssz v0.1.1 // indirect
