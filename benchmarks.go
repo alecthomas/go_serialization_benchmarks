@@ -1,10 +1,6 @@
 package goserbench
 
 import (
-	"fmt"
-	"os"
-	"testing"
-
 	"github.com/alecthomas/go_serialization_benchmarks/goserbench"
 	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/avro"
 	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/baseline"
@@ -40,18 +36,6 @@ import (
 	xdrcalmh "github.com/alecthomas/go_serialization_benchmarks/internal/serializers/xdr_calmh"
 	xdrdavecgh "github.com/alecthomas/go_serialization_benchmarks/internal/serializers/xdr_davecgh"
 )
-
-var (
-	validate = os.Getenv("VALIDATE") != ""
-)
-
-func TestMessage(t *testing.T) {
-	fmt.Print(`A test suite for benchmarking various Go serialization methods.
-
-See README.md for details on running the benchmarks.
-
-`)
-}
 
 type BenchmarkCase struct {
 	Name string
@@ -237,16 +221,4 @@ var benchmarkCases = []BenchmarkCase{
 		URL:  "github.com/nazarifard/fastape",
 		New:  fastape.NewTape,
 	},
-}
-
-func BenchmarkSerializers(b *testing.B) {
-	for i := range benchmarkCases {
-		bc := benchmarkCases[i]
-		b.Run("marshal/"+bc.Name, func(b *testing.B) {
-			goserbench.BenchMarshalSmallStruct(b, bc.New())
-		})
-		b.Run("unmarshal/"+bc.Name, func(b *testing.B) {
-			goserbench.BenchUnmarshalSmallStruct(b, bc.New(), validate)
-		})
-	}
 }
