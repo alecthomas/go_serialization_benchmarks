@@ -15,8 +15,8 @@ import (
 	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/bson"
 	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/capnproto"
 	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/colfer"
-	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/copi"
 	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/easyjson"
+	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/fastape"
 	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/fastjson"
 	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/flatbuffers"
 	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/gencode"
@@ -233,9 +233,9 @@ var benchmarkCases = []BenchmarkCase{
 		URL:  "",
 		New:  baseline.NewBaselineSerializer,
 	}, {
-		Name: "copi",
-		URL:  "github.com/nazarifard/copi",
-		New:  copi.NewCopiSerializer,
+		Name: "fastape",
+		URL:  "github.com/nazarifard/fastape",
+		New:  fastape.NewTape,
 	},
 }
 
