@@ -34,6 +34,7 @@ This is a test suite for benchmarking various Go serialization methods.
 - [github.com/mus-format/mus-go](https://github.com/mus-format/mus-go)
 - [wellquite.org/bebop](https://fossil.wellquite.org/bebop) (generated code)
 - [github.com/deneonet/benc](https://github.com/deneonet/benc)
+- [github.com/nazarifard/fastape](https://github.com/nazarifard/fastape)
 
 ## Running the benchmarks
 
