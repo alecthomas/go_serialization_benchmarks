@@ -15,7 +15,7 @@ type IkeA struct {
 	Phone    string
 	Siblings int32
 	Spouse   bool
-	Money    uint64 // NOTE: Ike does not support float64 - it needs to be converted to an int type.
+	Money    uint64
 }
 
 type IkeaSerializer struct {
