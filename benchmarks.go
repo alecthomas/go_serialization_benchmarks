@@ -415,8 +415,9 @@ var benchmarkCases = []BenchmarkCase{
 		URL:  "github.com/mus-format/mus-go",
 		New:  mus.NewMUSUnsafeSerializer,
 
-		TimeSupport: TSNoSupport,
-		APIKind:     AKManual,
+		UnsafeStringUnmarshal: true,
+		TimeSupport:           TSNoSupport,
+		APIKind:               AKManual,
 	}, {
 		Name: "baseline",
 		URL:  "",
