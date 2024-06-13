@@ -6,7 +6,8 @@ This is a test suite for benchmarking various Go serialization methods.
 
 # Current Serialization Results
 
-http://htmlpreview.github.io/?https://github.com/alecthomas/go_serialization_benchmarks/report/index.html
+https://htmlpreview.github.io/?https://github.com/alecthomas/go_serialization_benchmarks/blob/master/report/index.html
+
 
 ## Running the benchmarks
 
