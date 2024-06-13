@@ -97,7 +97,7 @@ type BenchmarkCase struct {
 	URL  string
 	New  func() goserbench.Serializer
 
-	// UnsafeStringUnmarshal records whether the serializer uses usafe
+	// UnsafeStringUnmarshal records whether the serializer uses unsafe
 	// strings during unmarshal. Unsafe strings are modified if the
 	// underlying byte slice is modified.
 	UnsafeStringUnmarshal bool
@@ -396,7 +396,7 @@ var benchmarkCases = []BenchmarkCase{
 		TimeSupport: TSNoSupport,
 		APIKind:     AKManual,
 	}, {
-		Name: "benc/usafe",
+		Name: "benc/unsafe",
 		URL:  "github.com/deneonet/benc",
 		New:  benc.NewBENCUnsafeSerializer,
 
