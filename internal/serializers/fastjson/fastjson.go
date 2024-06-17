@@ -51,6 +51,15 @@ func NewFastJSONSerializer() goserbench.Serializer {
 	return &FastJSONSerializer{
 		object: arena.NewObject(),
 		arena:  arena,
+	}
+}
+
+func NewFastJSONReuseSerializer() goserbench.Serializer {
+	var arena fastjson.Arena
+	return &FastJSONSerializer{
+		object: arena.NewObject(),
+		arena:  arena,
 		buf:    make([]byte, 0, 1024),
 	}
+
 }

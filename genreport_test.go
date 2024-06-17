@@ -22,6 +22,7 @@ type reportLine struct {
 	UnmarshalIterCount    int    `json:"unmarshal_iter_count"`
 	TotalIterCount        int    `json:"total_iter_count"`
 	UnsafeStringUnmarshal bool   `json:"unsafe_string_unmarshal"`
+	BufferReuseMarshal    bool   `json:"buffer_reuse_marshal"`
 	MarshalNsOp           int64  `json:"marshal_ns_op"`
 	UnmarshalNsOp         int64  `json:"unmarshal_ns_op"`
 	TotalNsOp             int64  `json:"total_ns_op"`
@@ -61,6 +62,7 @@ func generateReport() error {
 			UnmarshalNsOp:         unmarshalRes.NsPerOp(),
 			TotalNsOp:             marshalRes.NsPerOp() + unmarshalRes.NsPerOp(),
 			UnsafeStringUnmarshal: bench.UnsafeStringUnmarshal,
+			BufferReuseMarshal:    bench.BufferReuseMarshal,
 			SerializationSize:     int64(marshalRes.Extra["B/serial"]),
 			MarshalAllocBytes:     marshalRes.AllocedBytesPerOp(),
 			UnmarshalAllocBytes:   unmarshalRes.AllocedBytesPerOp(),

@@ -102,6 +102,10 @@ type BenchmarkCase struct {
 	// underlying byte slice is modified.
 	UnsafeStringUnmarshal bool
 
+	// BufferReuseMarshal reocrds whether the serializer re-uses the
+	// marshalling buffer.
+	BufferReuseMarshal bool
+
 	// TimeSupport records the type of support time.Time values have on
 	// this encoder.
 	TimeSupport TimeSupport
@@ -284,10 +288,11 @@ var benchmarkCases = []BenchmarkCase{
 		TimeSupport: TSFullTzOffset,
 		APIKind:     AKCodegen,
 	}, {
-		Name: "gencode/unsafe",
+		Name: "gencode/unsafe_reuse",
 		URL:  "github.com/andyleap/gencode",
 		New:  gencode.NewGencodeUnsafeSerializer,
 
+		BufferReuseMarshal:    true,
 		UnsafeStringUnmarshal: true,
 		TimeSupport:           TSFullTzOffset,
 		APIKind:               AKCodegen,
@@ -372,6 +377,17 @@ var benchmarkCases = []BenchmarkCase{
 			"time.Time values are encoded with 100 nanosecond precision.",
 		},
 	}, {
+		Name: "200sc/bebop/reuse",
+		URL:  "github.com/200sc/bebop",
+		New:  bebop200sc.NewBebop200ScReuseSerializer,
+
+		BufferReuseMarshal: true,
+		TimeSupport:        TSCustom,
+		APIKind:            AKCodegen,
+		Notes: []string{
+			"time.Time values are encoded with 100 nanosecond precision.",
+		},
+	}, {
 		Name: "wellquite/bebop",
 		URL:  "wellquite.org/bebop",
 		New:  bebopwellquite.NewBebopWellquiteSerializer,
@@ -382,12 +398,31 @@ var benchmarkCases = []BenchmarkCase{
 			"time.Time values are encoded with 100 nanosecond precision.",
 		},
 	}, {
+		Name: "wellquite/bebop/reuse",
+		URL:  "wellquite.org/bebop",
+		New:  bebopwellquite.NewBebopWellquiteReuseSerializer,
+
+		BufferReuseMarshal: true,
+		TimeSupport:        TSCustom,
+		APIKind:            AKCodegen,
+		Notes: []string{
+			"time.Time values are encoded with 100 nanosecond precision.",
+		},
+	}, {
 		Name: "fastjson",
 		URL:  "github.com/valyala/fastjson",
 		New:  fastjson.NewFastJSONSerializer,
 
 		TimeSupport: TSNoSupport,
 		APIKind:     AKManual,
+	}, {
+		Name: "fastjson/reuse",
+		URL:  "github.com/valyala/fastjson",
+		New:  fastjson.NewFastJSONReuseSerializer,
+
+		BufferReuseMarshal: true,
+		TimeSupport:        TSNoSupport,
+		APIKind:            AKManual,
 	}, {
 		Name: "benc",
 		URL:  "github.com/deneonet/benc",
@@ -411,18 +446,31 @@ var benchmarkCases = []BenchmarkCase{
 		TimeSupport: TSNoSupport,
 		APIKind:     AKManual,
 	}, {
-		Name: "mus/unsafe",
+		Name: "mus/unsafe_reuse",
 		URL:  "github.com/mus-format/mus-go",
 		New:  mus.NewMUSUnsafeSerializer,
 
-		TimeSupport: TSNoSupport,
-		APIKind:     AKManual,
+		BufferReuseMarshal:    true,
+		UnsafeStringUnmarshal: true,
+		TimeSupport:           TSNoSupport,
+		APIKind:               AKManual,
 	}, {
 		Name: "baseline",
 		URL:  "",
 		New:  baseline.NewBaselineSerializer,
 
+		TimeSupport: TSNoSupport,
+		APIKind:     AKManual,
+		Notes: []string{
+			"This is a manually written encoding, designed to be the fastest possible for this benchmark.",
+		},
+	}, {
+		Name: "baseline/unsafe_reuse",
+		URL:  "",
+		New:  baseline.NewBaselineUnsafeSerializer,
+
 		UnsafeStringUnmarshal: true,
+		BufferReuseMarshal:    true,
 		TimeSupport:           TSNoSupport,
 		APIKind:               AKManual,
 		Notes: []string{

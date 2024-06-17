@@ -110,6 +110,7 @@
 			<li><b>allocs/Op</b>: The number of heap allocations per operation.</li>
 			<li><b>Serialization Size</b>: The amount of bytes used to encode a marshalled value.</li>
 			<li><b>Unsafe Str Unmarshal</b>: Whether unmarshalled strings are safe to use or if their value is modified if the underlying backing byte array is modified.</li>
+			<li><b>Buffer Reuse Marshal</b>: Whether marshalling reuses its internal buffer for every operation.</li>
 			<li><b>Time Support</b>: How the serializer supports time.Time values. Options:
 				<ul>
 					<li><b>unix-ns</b>: Time since UNIX epoch as an int64, with nanosecond precision.</li>
