@@ -45,6 +45,10 @@ func (s *BebopWellquiteSerializer) TimePrecision() time.Duration {
 }
 
 func NewBebopWellquiteSerializer() goserbench.Serializer {
+	return &BebopWellquiteSerializer{}
+}
+
+func NewBebopWellquiteReuseSerializer() goserbench.Serializer {
 	return &BebopWellquiteSerializer{
 		buf: make([]byte, 1024),
 	}

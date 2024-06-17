@@ -15,9 +15,11 @@ import (
 //
 // This is useful as an upper bound on the performance achievable for standard
 // marshalling/unmarshalling operations.
-type BaselineSerializer struct {
-	b []byte
-}
+type BaselineSerializer struct{}
+
+// maxSmallStructSerializeSize is the max size of a small struct serialized
+// with the baseline serializer.
+const maxSmallStructSerializeSize = 8 + 8 + 4 + 1 + goserbench.MaxSmallStructPhoneSize + goserbench.MaxSmallStructNameSize
 
 // appendBool appends a bool to b.
 func appendBool(b []byte, v bool) []byte {
@@ -39,7 +41,7 @@ func getBool(b []byte) bool {
 
 func (b *BaselineSerializer) Marshal(o interface{}) ([]byte, error) {
 	a := o.(*goserbench.SmallStruct)
-	buf := b.b[:0]
+	buf := make([]byte, 0, maxSmallStructSerializeSize)
 	buf = binary.LittleEndian.AppendUint64(buf, uint64(a.BirthDay.UnixNano()))
 	buf = binary.LittleEndian.AppendUint64(buf, math.Float64bits(a.Money))
 	buf = binary.LittleEndian.AppendUint32(buf, uint32(a.Siblings))
@@ -54,6 +56,39 @@ func (b *BaselineSerializer) Unmarshal(d []byte, o interface{}) error {
 	a.BirthDay = time.Unix(0, int64(binary.LittleEndian.Uint64(d[:8])))
 	a.Money = math.Float64frombits(binary.LittleEndian.Uint64(d[8:16]))
 	a.Siblings = int(binary.LittleEndian.Uint32(d[16:20]))
+	a.Name = string(d[20:36])
+	a.Phone = string(d[36:46])
+	a.Spouse = getBool(d[46:])
+	return nil
+}
+
+func NewBaselineSerializer() goserbench.Serializer {
+	return &BaselineSerializer{}
+}
+
+// BaselineUnsafeSerializer is similar to BaselizeSerializer, but it reuses
+// the marshalling buffer and unmarshals unsafe strings.
+type BaselineUnsafeSerializer struct {
+	buf []byte
+}
+
+func (b *BaselineUnsafeSerializer) Marshal(o interface{}) ([]byte, error) {
+	a := o.(*goserbench.SmallStruct)
+	buf := b.buf
+	buf = binary.LittleEndian.AppendUint64(buf, uint64(a.BirthDay.UnixNano()))
+	buf = binary.LittleEndian.AppendUint64(buf, math.Float64bits(a.Money))
+	buf = binary.LittleEndian.AppendUint32(buf, uint32(a.Siblings))
+	buf = append(buf, []byte(a.Name)...)
+	buf = append(buf, []byte(a.Phone)...)
+	buf = appendBool(buf, a.Spouse)
+	return buf, nil
+}
+
+func (b *BaselineUnsafeSerializer) Unmarshal(d []byte, o interface{}) error {
+	a := o.(*goserbench.SmallStruct)
+	a.BirthDay = time.Unix(0, int64(binary.LittleEndian.Uint64(d[:8])))
+	a.Money = math.Float64frombits(binary.LittleEndian.Uint64(d[8:16]))
+	a.Siblings = int(binary.LittleEndian.Uint32(d[16:20]))
 	nameSlice, phoneSlice := d[20:36], d[36:46]
 	a.Name = *(*string)(unsafe.Pointer(&nameSlice))
 	a.Phone = *(*string)(unsafe.Pointer(&phoneSlice))
@@ -61,6 +96,8 @@ func (b *BaselineSerializer) Unmarshal(d []byte, o interface{}) error {
 	return nil
 }
 
-func NewBaselineSerializer() goserbench.Serializer {
-	return &BaselineSerializer{b: make([]byte, 47)}
+func NewBaselineUnsafeSerializer() goserbench.Serializer {
+	return &BaselineUnsafeSerializer{
+		buf: make([]byte, 0, maxSmallStructSerializeSize),
+	}
 }

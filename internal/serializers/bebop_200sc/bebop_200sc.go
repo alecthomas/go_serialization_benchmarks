@@ -20,6 +20,9 @@ func (s *Bebop200ScSerializer) Marshal(o interface{}) (buf []byte, err error) {
 	a.Siblings = int32(v.Siblings)
 	a.Spouse = v.Spouse
 	a.Money = v.Money
+	if s.buf == nil {
+		return a.MarshalBebop(), nil
+	}
 	n := a.MarshalBebopTo(s.buf)
 	return s.buf[:n], nil
 }
@@ -50,5 +53,9 @@ func (s *Bebop200ScSerializer) ForceUTC() bool {
 }
 
 func NewBebop200ScSerializer() goserbench.Serializer {
+	return &Bebop200ScSerializer{}
+}
+
+func NewBebop200ScReuseSerializer() goserbench.Serializer {
 	return &Bebop200ScSerializer{buf: make([]byte, 1024)}
 }

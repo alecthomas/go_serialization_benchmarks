@@ -7,8 +7,7 @@ import (
 )
 
 type GencodeSerializer struct {
-	buf []byte
-	a   GencodeA
+	a GencodeA
 }
 
 func (s *GencodeSerializer) Marshal(o interface{}) ([]byte, error) {
@@ -20,7 +19,7 @@ func (s *GencodeSerializer) Marshal(o interface{}) ([]byte, error) {
 	a.Siblings = int32(v.Siblings)
 	a.Spouse = v.Spouse
 	a.Money = v.Money
-	return a.Marshal(s.buf)
+	return a.Marshal(nil)
 }
 
 func (s *GencodeSerializer) Unmarshal(bs []byte, o interface{}) (err error) {
@@ -41,7 +40,7 @@ func (s *GencodeSerializer) Unmarshal(bs []byte, o interface{}) (err error) {
 }
 
 func NewGencodeSerializer() goserbench.Serializer {
-	return &GencodeSerializer{buf: make([]byte, 0, 1024)}
+	return &GencodeSerializer{}
 }
 
 type GencodeUnsafeSerializer struct {

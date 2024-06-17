@@ -73,7 +73,9 @@ func NewMUSSerializer() goserbench.Serializer {
 	return MUSSerializer{}
 }
 
-type MUSUnsafeSerializer struct{}
+type MUSUnsafeSerializer struct {
+	buf []byte
+}
 
 func (s MUSUnsafeSerializer) Marshal(o interface{}) ([]byte, error) {
 	v := o.(*goserbench.SmallStruct)
@@ -83,7 +85,7 @@ func (s MUSUnsafeSerializer) Marshal(o interface{}) ([]byte, error) {
 	n += unsafe.SizeInt32(int32(v.Siblings))
 	n += unsafe.SizeBool(v.Spouse)
 	n += unsafe.SizeFloat64(v.Money)
-	buf := make([]byte, n)
+	buf := s.buf[:n]
 	n = unsafe.MarshalString(v.Name, buf)
 	n += unsafe.MarshalInt64(v.BirthDay.UnixNano(), buf[n:])
 	n += unsafe.MarshalString(v.Phone, buf[n:])
@@ -132,5 +134,5 @@ func (s MUSUnsafeSerializer) Unmarshal(bs []byte, o interface{}) (err error) {
 }
 
 func NewMUSUnsafeSerializer() goserbench.Serializer {
-	return MUSUnsafeSerializer{}
+	return MUSUnsafeSerializer{buf: make([]byte, 1024)}
 }

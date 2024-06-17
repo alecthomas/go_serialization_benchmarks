@@ -82,6 +82,11 @@ var colModel = [
 		width: 100,
 		type: "checkbox",
 		dataIndx: "unsafe_string_unmarshal",
+	},  {
+		title: "Buffer Reuse Marshal",
+		width: 100,
+		type: "checkbox",
+		dataIndx: "buffer_reuse_marshal",
 	}, {
 		title: "Time Support",
 		width: 100,
