@@ -35,6 +35,7 @@ require (
 )
 
 require (
+	github.com/chmike/ditp v0.0.0-20240618130435-627cf7ce9ad6 // indirect
 	github.com/nazarifard/copi v0.0.0-20240609072615-763316f77579 // indirect
 	github.com/nazarifard/fastape v0.0.0-20240611084216-abaecf150e5b // indirect
 )

@@ -34,6 +34,8 @@ github.com/bketelsen/crypt v0.0.3-0.20200106085610-5cbc8cc4026c/go.mod h1:MKsuJm
 github.com/calmh/xdr v1.1.0 h1:U/Dd4CXNLoo8EiQ4ulJUXkgO1/EyQLgDKLgpY1SOoJE=
 github.com/calmh/xdr v1.1.0/go.mod h1:E8sz2ByAdXC8MbANf1LCRYzedSnnc+/sXXJs/PVqoeg=
 github.com/cespare/xxhash v1.1.0/go.mod h1:XrSqR1VqqWfGrhpAt58auRo0WTKS1nRRg3ghfAqPWnc=
+github.com/chmike/ditp v0.0.0-20240618130435-627cf7ce9ad6 h1:FIQLUAh5cGcvt6Sm4wD2TUbDDJjCnmpv1A/lnJDBMh0=
+github.com/chmike/ditp v0.0.0-20240618130435-627cf7ce9ad6/go.mod h1:Az8w1aHUmNFs7+C7v41Y/cpXIBafvOs+7J7M/KGsM1c=
 github.com/client9/misspell v0.3.4/go.mod h1:qj6jICC3Q7zFZvVWo7KLAzC3yx5G7kyvSDkc90ppPyw=
 github.com/coreos/bbolt v1.3.2/go.mod h1:iRUV2dpdMOn7Bo10OQBFzIJO9kkE559Wcmn+qkEiiKk=
 github.com/coreos/etcd v3.3.13+incompatible/go.mod h1:uF7uidLiAD3TWHmW31ZFd/JWoc32PjwdhPthX9715RE=
