@@ -207,6 +207,8 @@ github.com/nazarifard/copi v0.0.0-20240609072615-763316f77579 h1:toqD8/J9DygfET+
 github.com/nazarifard/copi v0.0.0-20240609072615-763316f77579/go.mod h1:RZX6PlUi+vF52MjBneuJcoszjuejOPWdMnAKaJOccGc=
 github.com/nazarifard/fastape v0.0.0-20240611084216-abaecf150e5b h1:Roh7HBLqAxLpo/qxWztQlzt6QUBGTCX9AXxCaJf+pB8=
 github.com/nazarifard/fastape v0.0.0-20240611084216-abaecf150e5b/go.mod h1:F54tpGg4uMgsYNUqD07iNENNGcS2GJobr+td/iZ5Xm4=
+github.com/nazarifard/fastape v0.0.0-20240618210653-607305a3ae51 h1:QocQlmZXhuz9I8TOqe+df2kDqq5HWeWWwZnT0uVNUxw=
+github.com/nazarifard/fastape v0.0.0-20240618210653-607305a3ae51/go.mod h1:F54tpGg4uMgsYNUqD07iNENNGcS2GJobr+td/iZ5Xm4=
 github.com/neelance/astrewrite v0.0.0-20160511093645-99348263ae86/go.mod h1:kHJEU3ofeGjhHklVoIGuVj85JJwZ6kWPaJwCIxgnFmo=
 github.com/neelance/sourcemap v0.0.0-20200213170602-2833bce08e4c/go.mod h1:Qr6/a/Q4r9LP1IltGz7tA7iOK1WonHEYhu1HRBA7ZiM=
 github.com/niubaoshu/goutils v0.0.0-20180828035119-e8e576f66c2b h1:T7vmCmpGIvqlOOp5SXatALP+HYc/40ZHbxmgy+p+sN0=

@@ -36,7 +36,7 @@ require (
 
 require (
 	github.com/nazarifard/copi v0.0.0-20240609072615-763316f77579 // indirect
-	github.com/nazarifard/fastape v0.0.0-20240611084216-abaecf150e5b // indirect
+	github.com/nazarifard/fastape v0.0.0-20240618210653-607305a3ae51 // indirect
 )
 
 require (
