@@ -460,10 +460,18 @@ var benchmarkCases = []BenchmarkCase{
 		URL:  "github.com/chmike/ditp",
 		New:  idr.NewIDRSerializer,
 
+		TimeSupport: TSFullTzOffset,
+		APIKind:     AKManual,
+		Notes:       []string{"Low level IDR encoding demo"},
+	}, {
+		Name: "idr/reuse",
+		URL:  "github.com/chmike/ditp",
+		New:  idr.NewIDRSerializerReuse,
+
 		BufferReuseMarshal: true,
 		TimeSupport:        TSFullTzOffset,
 		APIKind:            AKManual,
-		Notes:              []string{"low level IDR encoding demo with same nsec time encoding as benc"},
+		Notes:              []string{"Low level IDR encoding demo"},
 	}, {
 		Name: "baseline",
 		URL:  "",
