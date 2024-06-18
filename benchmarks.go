@@ -20,6 +20,7 @@ import (
 	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/gotiny"
 	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/hprose"
 	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/hprose2"
+	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/idr"
 	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/ikea"
 	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/jsoniter"
 	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/mongobson"
@@ -454,6 +455,23 @@ var benchmarkCases = []BenchmarkCase{
 		UnsafeStringUnmarshal: true,
 		TimeSupport:           TSNoSupport,
 		APIKind:               AKManual,
+	}, {
+		Name: "idr",
+		URL:  "github.com/chmike/ditp",
+		New:  idr.NewIDRSerializer,
+
+		TimeSupport: TSFullTzOffset,
+		APIKind:     AKManual,
+		Notes:       []string{"Low level IDR encoding demo"},
+	}, {
+		Name: "idr/reuse",
+		URL:  "github.com/chmike/ditp",
+		New:  idr.NewIDRSerializerReuse,
+
+		BufferReuseMarshal: true,
+		TimeSupport:        TSFullTzOffset,
+		APIKind:            AKManual,
+		Notes:              []string{"Low level IDR encoding demo"},
 	}, {
 		Name: "baseline",
 		URL:  "",
