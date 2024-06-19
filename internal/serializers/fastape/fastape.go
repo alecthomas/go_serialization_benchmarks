@@ -1,35 +1,43 @@
 package fastape
 
 import (
+	"time"
+
 	"github.com/alecthomas/go_serialization_benchmarks/goserbench"
 	"github.com/nazarifard/fastape"
 )
 
 type smallStructTape struct {
 	NameTape     fastape.StringTape
-	BirthDayTape fastape.TimeTape
+	BirthDayTape fastape.UnitTape[int64]
 	PhoneTape    fastape.StringTape
 	SiblingsTape fastape.UnitTape[byte]
 	SpouseTape   fastape.UnitTape[bool]
 	MoneyTape    fastape.UnitTape[float64]
+	buf          []byte
 }
 
 func (cp *smallStructTape) Marshal(o interface{}) (buf []byte, err error) {
 	p := o.(*goserbench.SmallStruct)
 
-	sizeof := cp.NameTape.Sizeof(p.Name) +
-		cp.BirthDayTape.Sizeof(p.BirthDay) +
-		cp.PhoneTape.Sizeof(p.Phone) +
-		cp.SiblingsTape.Sizeof(byte(p.Siblings)) +
-		cp.SpouseTape.Sizeof(p.Spouse) +
-		cp.MoneyTape.Sizeof(p.Money)
+	birthday := p.BirthDay.UnixNano()
+	if cp.buf != nil {
+		buf = cp.buf //bufer reuse
+	} else {
+		sizeof := cp.NameTape.Sizeof(p.Name) +
+			cp.BirthDayTape.Sizeof(birthday) +
+			cp.PhoneTape.Sizeof(p.Phone) +
+			cp.SiblingsTape.Sizeof(byte(p.Siblings)) +
+			cp.SpouseTape.Sizeof(p.Spouse) +
+			cp.MoneyTape.Sizeof(p.Money)
 
-	buf = make([]byte, sizeof)
+		buf = make([]byte, sizeof)
+	}
 
 	k, n := 0, 0
 	k, _ = cp.NameTape.Roll(p.Name, buf[n:])
 	n += k
-	k, _ = cp.BirthDayTape.Roll(p.BirthDay, buf[n:])
+	k, _ = cp.BirthDayTape.Roll(birthday, buf[n:])
 	n += k
 	k, _ = cp.PhoneTape.Roll(p.Phone, buf[n:])
 	n += k
@@ -52,7 +60,9 @@ func (cp smallStructTape) Unmarshal(bs []byte, o interface{}) (err error) {
 		return err
 	}
 
-	k, err = cp.BirthDayTape.Unroll(bs[n:], &p.BirthDay)
+	var nano int64
+	k, err = cp.BirthDayTape.Unroll(bs[n:], &nano)
+	p.BirthDay = time.Unix(0, nano)
 	n += k
 	if err != nil {
 		return err
@@ -89,4 +99,18 @@ func (cp smallStructTape) Unmarshal(bs []byte, o interface{}) (err error) {
 
 func NewTape() goserbench.Serializer {
 	return &smallStructTape{}
+}
+
+func NewTape_Reuse() goserbench.Serializer {
+	const maxSize = 0 +
+		8 + //date
+		8 + //money
+		1 + //sibling
+		1 + //spouse
+		1 + goserbench.MaxSmallStructPhoneSize +
+		1 + goserbench.MaxSmallStructNameSize
+
+	return &smallStructTape{
+		buf: make([]byte, maxSize),
+	}
 }

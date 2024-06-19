@@ -120,6 +120,23 @@ type BenchmarkCase struct {
 
 var benchmarkCases = []BenchmarkCase{
 	{
+		Name: "fastape",
+		URL:  "github.com/nazarifard/fastape",
+		New:  fastape.NewTape,
+
+		UnsafeStringUnmarshal: true,
+		TimeSupport:           TSUnixNs,
+		APIKind:               AKManual,
+	}, {
+		Name: "fastape_reuse",
+		URL:  "github.com/nazarifard/fastape",
+		New:  fastape.NewTape_Reuse,
+
+		UnsafeStringUnmarshal: true,
+		TimeSupport:           TSUnixNs,
+		APIKind:               AKManual,
+	},
+	{
 		Name: "gotiny",
 		URL:  "github.com/niubaoshu/gotiny",
 		New:  gotiny.NewGotinySerializer,
@@ -476,13 +493,5 @@ var benchmarkCases = []BenchmarkCase{
 		Notes: []string{
 			"This is a manually written encoding, designed to be the fastest possible for this benchmark.",
 		},
-	}, {
-		Name: "fastape",
-		URL:  "github.com/nazarifard/fastape",
-		New:  fastape.NewTape,
-
-		UnsafeStringUnmarshal: true,
-		TimeSupport:           TSUnixNs,
-		APIKind:               AKManual,
 	},
 }
