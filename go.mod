@@ -7,7 +7,11 @@ require (
 	github.com/Sereal/Sereal v0.0.0-20230201113653-fa72c87b650e
 	github.com/alecthomas/binary v0.0.0-20221018225505-74871811ee56
 	github.com/calmh/xdr v1.1.0
+	github.com/chmike/ditp v0.0.0-20240618130435-627cf7ce9ad6
+	github.com/cosmos/cosmos-proto v1.0.0-beta.3
+	github.com/cybriq/gotiny v0.0.5
 	github.com/davecgh/go-xdr v0.0.0-20161123171359-e6a2ba005892
+	github.com/deneonet/benc v1.0.2
 	github.com/glycerine/go-capnproto v0.0.0-20190118050403-2d07de3aa7fc
 	github.com/gogo/protobuf v1.3.2
 	github.com/google/flatbuffers v23.1.21+incompatible
@@ -18,8 +22,7 @@ require (
 	github.com/linkedin/goavro v1.0.5
 	github.com/linkedin/goavro/v2 v2.12.0
 	github.com/mailru/easyjson v0.7.7
-	github.com/mojura/enkodo v0.5.6
-	github.com/niubaoshu/gotiny v0.0.3
+	github.com/nazarifard/fastape v0.0.0-20240611084216-abaecf150e5b
 	github.com/prysmaticlabs/go-ssz v0.0.0-20190827151743-72881c4223d8
 	github.com/shamaton/msgpack/v2 v2.1.1
 	github.com/shamaton/msgpackgen v0.3.0
@@ -35,16 +38,7 @@ require (
 )
 
 require (
-	github.com/chmike/ditp v0.0.0-20240618130435-627cf7ce9ad6 // indirect
-	github.com/nazarifard/copi v0.0.0-20240609072615-763316f77579 // indirect
-	github.com/nazarifard/fastape v0.0.0-20240611084216-abaecf150e5b // indirect
-)
-
-require (
 	github.com/DataDog/zstd v1.5.2 // indirect
-	github.com/cosmos/cosmos-proto v1.0.0-beta.3
-	github.com/cybriq/gotiny v0.0.5 // indirect
-	github.com/deneonet/benc v1.0.2
 	github.com/glycerine/goconvey v0.0.0-20190410193231-58a59202ab31 // indirect
 	github.com/glycerine/rbtree v0.0.0-20190406191118-ceb71889d809 // indirect
 	github.com/golang/snappy v0.0.4 // indirect
@@ -67,10 +61,4 @@ require (
 	github.com/vmihailenco/tagparser/v2 v2.0.0 // indirect
 	golang.org/x/exp v0.0.0-20231110203233-9a3e6036ecaa // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
-)
-
-replace (
-	github.com/itsmontoya/mum v0.5.6 => github.com/mojura/enkodo v0.5.6
-	github.com/niubaoshu/gotiny v0.0.3 => github.com/cybriq/gotiny v0.0.6-0.20220412231127-0a1864225fc8
-	github.com/stretchrcom/testify v1.7.1 => github.com/stretchr/testify v1.7.1
 )
