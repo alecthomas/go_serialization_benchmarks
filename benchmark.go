@@ -1,10 +1,6 @@
 // This file is used to generate the report and is ignored by default on tests.
-//
-// Generate the report by running `go test -tags genreport`.
 
-//go:build genreport
-
-package goserbench
+package main
 
 import (
 	"encoding/json"
@@ -39,7 +35,7 @@ type reportLine struct {
 	Notes                 string `json:"notes"`
 }
 
-func generateReport() error {
+func BenchmarkSerializers(generateReport bool, validate bool) error {
 	data := make([]reportLine, len(benchmarkCases))
 	for i, bench := range benchmarkCases {
 		marshalRes := testing.Benchmark(func(b *testing.B) {
@@ -48,7 +44,7 @@ func generateReport() error {
 		fmt.Printf("%10s -   Marshal - %s %s\n", bench.Name, marshalRes.String(),
 			marshalRes.MemString())
 		unmarshalRes := testing.Benchmark(func(b *testing.B) {
-			goserbench.BenchUnmarshalSmallStruct(b, bench.New(), false)
+			goserbench.BenchUnmarshalSmallStruct(b, bench.New(), validate)
 		})
 		fmt.Printf("%10s - Unmarshal - %s %s\n", bench.Name, unmarshalRes.String(),
 			unmarshalRes.MemString())
@@ -78,6 +74,12 @@ func generateReport() error {
 		}
 	}
 
+	if !generateReport {
+		return nil
+	}
+
+	fmt.Printf("\nSaved report to report/data.js !\n\n")
+
 	bytes, err := json.MarshalIndent(data, "", "\t")
 	if err != nil {
 		return err
@@ -96,11 +98,4 @@ func generateReport() error {
 		return err
 	}
 	return f.Close()
-}
-
-func TestGenerateReport(t *testing.T) {
-	err := generateReport()
-	if err != nil {
-		t.Fatal(err)
-	}
 }

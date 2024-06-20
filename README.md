@@ -11,26 +11,19 @@ https://alecthomas.github.io/go_serialization_benchmarks
 ## Running the benchmarks
 
 ```bash
-go test -bench=.
+go run .
 ```
 
 To validate the correctness of the serializers:
 
 ```bash
-VALIDATE=1 go test -bench=. -benchtime=1ms
+go run . --validate
 ```
 
 To update the benchmark report:
 
 ```bash
-go test -tags genreport -run TestGenerateReport
-```
-
-To update the benchmark report with using a longer run benchmark (to get more
-accurate results):
-
-```bash
-go test -tags genreport -run TestGenerateReport -benchtime 10s -timeout 1h
+go run . --genreport
 ```
 
 ## Recommendation
@@ -61,7 +54,7 @@ serializer:
 - Regenerate the report by running:
 
 ```
-go test -tags genreport -run TestGenerateReport
+go run . --genreport
 ```
 
 - **Include the updated report data in your PR**
