@@ -32,33 +32,33 @@ func (s MUSSerializer) Marshal(o interface{}) ([]byte, error) {
 
 func (s MUSSerializer) Unmarshal(bs []byte, o interface{}) (err error) {
 	v := o.(*goserbench.SmallStruct)
-
 	var n int
-
 	v.Name, n, err = ord.UnmarshalString(bs)
 	if err != nil {
 		return
 	}
-	var n1 int
-	var bdayNano int64
-	bdayNano, n1, err = raw.UnmarshalInt64(bs[n:])
-	v.BirthDay = time.Unix(0, bdayNano)
+	var (
+		n1         int
+		birthDay64 int64
+	)
+	birthDay64, n1, err = raw.UnmarshalInt64(bs[n:])
 	n += n1
 	if err != nil {
 		return
 	}
+	v.BirthDay = time.Unix(0, birthDay64)
 	v.Phone, n1, err = ord.UnmarshalString(bs[n:])
 	n += n1
 	if err != nil {
 		return
 	}
-	var sibInt32 int32
-	sibInt32, n1, err = varint.UnmarshalInt32(bs[n:])
-	v.Siblings = int(sibInt32)
+	var siblings32 int32
+	siblings32, n1, err = varint.UnmarshalInt32(bs[n:])
 	n += n1
 	if err != nil {
 		return
 	}
+	v.Siblings = int(siblings32)
 	v.Spouse, n1, err = ord.UnmarshalBool(bs[n:])
 	n += n1
 	if err != nil {
@@ -73,9 +73,65 @@ func NewMUSSerializer() goserbench.Serializer {
 	return MUSSerializer{}
 }
 
-type MUSUnsafeSerializer struct {
+type MUSReuseSerializer struct {
 	buf []byte
 }
+
+func (s MUSReuseSerializer) Marshal(o interface{}) ([]byte, error) {
+	v := o.(*goserbench.SmallStruct)
+	n := ord.MarshalString(v.Name, s.buf)
+	n += raw.MarshalInt64(v.BirthDay.UnixNano(), s.buf[n:])
+	n += ord.MarshalString(v.Phone, s.buf[n:])
+	n += varint.MarshalInt32(int32(v.Siblings), s.buf[n:])
+	n += ord.MarshalBool(v.Spouse, s.buf[n:])
+	n += raw.MarshalFloat64(v.Money, s.buf[n:])
+	return s.buf[:n], nil
+}
+
+func (s MUSReuseSerializer) Unmarshal(bs []byte, o interface{}) (err error) {
+	v := o.(*goserbench.SmallStruct)
+	var n int
+	v.Name, n, err = ord.UnmarshalString(bs)
+	if err != nil {
+		return
+	}
+	var (
+		n1         int
+		birthDay64 int64
+	)
+	birthDay64, n1, err = raw.UnmarshalInt64(bs[n:])
+	n += n1
+	if err != nil {
+		return
+	}
+	v.BirthDay = time.Unix(0, birthDay64)
+	v.Phone, n1, err = ord.UnmarshalString(bs[n:])
+	n += n1
+	if err != nil {
+		return
+	}
+	var siblings32 int32
+	siblings32, n1, err = varint.UnmarshalInt32(bs[n:])
+	n += n1
+	if err != nil {
+		return
+	}
+	v.Siblings = int(siblings32)
+	v.Spouse, n1, err = ord.UnmarshalBool(bs[n:])
+	n += n1
+	if err != nil {
+		return
+	}
+	v.Money, n1, err = raw.UnmarshalFloat64(bs[n:])
+	n += n1
+	return
+}
+
+func NewMUSReuseSerializer() goserbench.Serializer {
+	return MUSReuseSerializer{buf: make([]byte, 1024)}
+}
+
+type MUSUnsafeSerializer struct{}
 
 func (s MUSUnsafeSerializer) Marshal(o interface{}) ([]byte, error) {
 	v := o.(*goserbench.SmallStruct)
@@ -85,7 +141,7 @@ func (s MUSUnsafeSerializer) Marshal(o interface{}) ([]byte, error) {
 	n += unsafe.SizeInt32(int32(v.Siblings))
 	n += unsafe.SizeBool(v.Spouse)
 	n += unsafe.SizeFloat64(v.Money)
-	buf := s.buf[:n]
+	buf := make([]byte, n)
 	n = unsafe.MarshalString(v.Name, buf)
 	n += unsafe.MarshalInt64(v.BirthDay.UnixNano(), buf[n:])
 	n += unsafe.MarshalString(v.Phone, buf[n:])
@@ -96,33 +152,34 @@ func (s MUSUnsafeSerializer) Marshal(o interface{}) ([]byte, error) {
 }
 
 func (s MUSUnsafeSerializer) Unmarshal(bs []byte, o interface{}) (err error) {
-	var n int
 	v := o.(*goserbench.SmallStruct)
-
+	var n int
 	v.Name, n, err = unsafe.UnmarshalString(bs)
 	if err != nil {
 		return
 	}
-	var n1 int
-	var bdayNano int64
-	bdayNano, n1, err = unsafe.UnmarshalInt64(bs[n:])
-	v.BirthDay = time.Unix(0, bdayNano)
+	var (
+		n1         int
+		birthDay64 int64
+	)
+	birthDay64, n1, err = unsafe.UnmarshalInt64(bs[n:])
 	n += n1
 	if err != nil {
 		return
 	}
+	v.BirthDay = time.Unix(0, birthDay64)
 	v.Phone, n1, err = unsafe.UnmarshalString(bs[n:])
 	n += n1
 	if err != nil {
 		return
 	}
-	var sibInt32 int32
-	sibInt32, n1, err = unsafe.UnmarshalInt32(bs[n:])
-	v.Siblings = int(sibInt32)
+	var siblings32 int32
+	siblings32, n1, err = unsafe.UnmarshalInt32(bs[n:])
 	n += n1
 	if err != nil {
 		return
 	}
+	v.Siblings = int(siblings32)
 	v.Spouse, n1, err = unsafe.UnmarshalBool(bs[n:])
 	n += n1
 	if err != nil {
@@ -134,5 +191,63 @@ func (s MUSUnsafeSerializer) Unmarshal(bs []byte, o interface{}) (err error) {
 }
 
 func NewMUSUnsafeSerializer() goserbench.Serializer {
-	return MUSUnsafeSerializer{buf: make([]byte, 1024)}
+	return MUSUnsafeSerializer{}
+}
+
+type MUSUnsafeReuseSerializer struct {
+	buf []byte
+}
+
+func (s MUSUnsafeReuseSerializer) Marshal(o interface{}) ([]byte, error) {
+	v := o.(*goserbench.SmallStruct)
+	n := unsafe.MarshalString(v.Name, s.buf)
+	n += unsafe.MarshalInt64(v.BirthDay.UnixNano(), s.buf[n:])
+	n += unsafe.MarshalString(v.Phone, s.buf[n:])
+	n += unsafe.MarshalInt32(int32(v.Siblings), s.buf[n:])
+	n += unsafe.MarshalBool(v.Spouse, s.buf[n:])
+	n += unsafe.MarshalFloat64(v.Money, s.buf[n:])
+	return s.buf[:n], nil
+}
+
+func (s MUSUnsafeReuseSerializer) Unmarshal(bs []byte, o interface{}) (err error) {
+	v := o.(*goserbench.SmallStruct)
+	var n int
+	v.Name, n, err = unsafe.UnmarshalString(bs)
+	if err != nil {
+		return
+	}
+	var (
+		n1         int
+		birthDay64 int64
+	)
+	birthDay64, n1, err = unsafe.UnmarshalInt64(bs[n:])
+	n += n1
+	if err != nil {
+		return
+	}
+	v.BirthDay = time.Unix(0, birthDay64)
+	v.Phone, n1, err = unsafe.UnmarshalString(bs[n:])
+	n += n1
+	if err != nil {
+		return
+	}
+	var siblings32 int32
+	siblings32, n1, err = unsafe.UnmarshalInt32(bs[n:])
+	n += n1
+	if err != nil {
+		return
+	}
+	v.Siblings = int(siblings32)
+	v.Spouse, n1, err = unsafe.UnmarshalBool(bs[n:])
+	n += n1
+	if err != nil {
+		return
+	}
+	v.Money, n1, err = unsafe.UnmarshalFloat64(bs[n:])
+	n += n1
+	return
+}
+
+func NewMUSUnsafeReuseSerializer() goserbench.Serializer {
+	return MUSUnsafeReuseSerializer{buf: make([]byte, 1024)}
 }

@@ -447,9 +447,25 @@ var benchmarkCases = []BenchmarkCase{
 		TimeSupport: TSNoSupport,
 		APIKind:     AKManual,
 	}, {
-		Name: "mus/unsafe_reuse",
+		Name: "mus/reuse",
+		URL:  "github.com/mus-format/mus-go",
+		New:  mus.NewMUSReuseSerializer,
+
+		BufferReuseMarshal: true,
+		TimeSupport:        TSNoSupport,
+		APIKind:            AKManual,
+	}, {
+		Name: "mus/unsafe",
 		URL:  "github.com/mus-format/mus-go",
 		New:  mus.NewMUSUnsafeSerializer,
+
+		UnsafeStringUnmarshal: true,
+		TimeSupport:           TSNoSupport,
+		APIKind:               AKManual,
+	}, {
+		Name: "mus/unsafe_reuse",
+		URL:  "github.com/mus-format/mus-go",
+		New:  mus.NewMUSUnsafeReuseSerializer,
 
 		BufferReuseMarshal:    true,
 		UnsafeStringUnmarshal: true,
