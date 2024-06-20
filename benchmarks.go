@@ -449,7 +449,7 @@ var benchmarkCases = []BenchmarkCase{
 	}, {
 		Name: "mus/unsafe_reuse",
 		URL:  "github.com/mus-format/mus-go",
-		New:  mus.NewMUSUnsafeSerializer,
+		New:  mus.NewMUSUnsafeReuseSerializer,
 
 		BufferReuseMarshal:    true,
 		UnsafeStringUnmarshal: true,
