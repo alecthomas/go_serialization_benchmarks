@@ -10,6 +10,9 @@ https://alecthomas.github.io/go_serialization_benchmarks
 
 ## Running the benchmarks
 
+Without cloning:
+To benchmark and validate, without cloning the repository, replace the `.` from the commands below with `github.com/alecthomas/go_serialization_benchmarks@latest`.
+
 ```bash
 go run .
 ```
