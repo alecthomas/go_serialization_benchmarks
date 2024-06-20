@@ -42,6 +42,9 @@ type reportLine struct {
 func generateReport() error {
 	data := make([]reportLine, len(benchmarkCases))
 	for i, bench := range benchmarkCases {
+		if ALG_NAME != "any" && bench.Name != ALG_NAME {
+			continue
+		}
 		marshalRes := testing.Benchmark(func(b *testing.B) {
 			goserbench.BenchMarshalSmallStruct(b, bench.New())
 		})

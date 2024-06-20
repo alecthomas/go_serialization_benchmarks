@@ -23,6 +23,9 @@ See README.md for details on running the benchmarks.
 func BenchmarkSerializers(b *testing.B) {
 	for i := range benchmarkCases {
 		bc := benchmarkCases[i]
+		if ALG_NAME != "any" && bc.Name != ALG_NAME {
+			continue
+		}
 		b.Run("marshal/"+bc.Name, func(b *testing.B) {
 			goserbench.BenchMarshalSmallStruct(b, bc.New())
 		})
