@@ -22,7 +22,7 @@ Re-Generating Report = %t
 
 `, *validate, *genReport)
 
-	err := BenchmarkSerializers(*genReport, *validate)
+	err := BenchAndReportSerializers(*genReport, *validate)
 	if err != nil {
 		panic(err)
 	}

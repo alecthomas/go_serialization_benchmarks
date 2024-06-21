@@ -35,7 +35,7 @@ type reportLine struct {
 	Notes                 string `json:"notes"`
 }
 
-func BenchmarkSerializers(generateReport bool, validate bool) error {
+func BenchAndReportSerializers(generateReport bool, validate bool) error {
 	data := make([]reportLine, len(benchmarkCases))
 	for i, bench := range benchmarkCases {
 		marshalRes := testing.Benchmark(func(b *testing.B) {
@@ -78,8 +78,6 @@ func BenchmarkSerializers(generateReport bool, validate bool) error {
 		return nil
 	}
 
-	fmt.Printf("\nSaved report to report/data.js !\n\n")
-
 	bytes, err := json.MarshalIndent(data, "", "\t")
 	if err != nil {
 		return err
@@ -97,5 +95,7 @@ func BenchmarkSerializers(generateReport bool, validate bool) error {
 	if _, err = f.Write([]byte(";")); err != nil {
 		return err
 	}
+
+	fmt.Printf("\nSaved report to report/data.js !\n\n")
 	return f.Close()
 }

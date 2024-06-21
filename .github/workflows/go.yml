@@ -18,4 +18,4 @@ jobs:
         with:
           go-version: ${{ matrix.go }}
       - name: Verify benchmarks validate
-        run: go run . --validate
+        run: go test -v -bench . -run bench -benchtime 1ms

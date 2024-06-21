@@ -10,7 +10,6 @@ https://alecthomas.github.io/go_serialization_benchmarks
 
 ## Running the benchmarks
 
-Without cloning:
 To benchmark and validate, without cloning the repository, replace the `.` from the commands below with `github.com/alecthomas/go_serialization_benchmarks@latest`.
 
 ```bash
@@ -18,15 +17,18 @@ go run .
 ```
 
 To validate the correctness of the serializers:
-
 ```bash
 go run . --validate
 ```
 
 To update the benchmark report:
-
 ```bash
 go run . --genreport
+```
+
+To update the benchmark report with a longer benchmark run (to get more accurate results):
+```bash
+go test -tags genreport -run TestGenerateReport -benchtime 10s -timeout 1h #--validate
 ```
 
 ## Recommendation
