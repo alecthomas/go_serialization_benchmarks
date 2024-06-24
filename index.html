@@ -1,0 +1,482 @@
+<!DOCTYPE HTML>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Go SmallStruct Serializers Benchmark Results</title>
+
+	<!-- Bootstrap CSS -->
+	<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+
+	<!-- jQuery, Popper.js, Bootstrap JS -->
+	<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+	<!-- DataTables CSS and JS -->
+	<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.3/css/dataTables.bootstrap4.min.css">
+	<script type="text/javascript" charset="utf8"
+		src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.js"></script>
+	<script type="text/javascript" charset="utf8"
+		src="https://cdn.datatables.net/1.11.3/js/dataTables.bootstrap4.min.js"></script>
+
+	<!-- Report Data-->
+	<script src="data.js"></script>
+
+	<!-- Custom CSS -->
+	<style>
+		body {
+			font-family: Arial, sans-serif;
+			margin: 20px
+		}
+
+		.note {
+			font-style: italic;
+			margin-bottom: 20px;
+			font-size: 0.9em;
+		}
+
+		h2 {
+			font-size: 1.5em;
+			font-weight: bold;
+			margin-top: 30px;
+			margin-bottom: 15px;
+		}
+
+		.btn-secondary {
+			background-color: #6c757d;
+			border-color: #6c757d;
+			color: #fff;
+		}
+
+		.btn-secondary:hover {
+			background-color: #5a6268;
+			border-color: #545b62;
+			color: #fff;
+		}
+
+		.toggle-div {
+			margin-left: 20px;
+		}
+
+		.toggle-container {
+			display: flex;
+			gap: 40px;
+			margin-bottom: 40px;
+			transition: all 0.3s ease;
+			max-height: 700px;
+			overflow: hidden;
+		}
+
+		@media (min-width: 575.98px) {
+			.modal-dialog-centered-lg{display:-ms-flexbox;display:flex;-ms-flex-align:center;align-items:center;min-height:calc(100% - 1rem)}.modal-dialog-centered-lg::before{display:block;height:calc(100vh - 1rem);height:-webkit-min-content;height:-moz-min-content;height:min-content;content:""}.modal-dialog-centered-lg.modal-dialog-scrollable{-ms-flex-direction:column;flex-direction:column;-ms-flex-pack:center;justify-content:center;height:100%}.modal-dialog-centered-lg.modal-dialog-scrollable .modal-content{max-height:none}.modal-dialog-centered-lg.modal-dialog-scrollable::before{content:none}.modal-dialog-centered-lg{min-height:calc(100% - 3.5rem)}.modal-dialog-centered-lg::before{height:calc(100vh - 3.5rem);height:-webkit-min-content;height:-moz-min-content;height:min-content}
+		}
+		
+		@media (max-width: 575.98px) {
+			.modal-dialog {
+				width: 100vw;
+				margin: 0;
+			}
+		}
+
+		@media (max-width: 560px) {
+			.toggle-container {
+				flex-direction: column;
+				gap: 10px;
+				margin-bottom: 50px;
+				max-height: 1200px;
+			}
+		}
+
+		.toggle-container.collapsed {
+			max-height: 0;
+			margin-bottom: 0;
+			padding-top: 0;
+			padding-bottom: 0;
+		}
+
+		.toggle-container h2 {
+			margin-bottom: 10px;
+		}
+
+		.toggle-container label {
+			display: flex;
+			align-items: center;
+		}
+
+		.toggle-container input {
+			margin-right: 5px;
+		}
+
+		.yes {
+			background-color: #d4edda !important;
+			color: #155724 !important;
+		}
+
+		.no {
+			background-color: #f8d7da !important;
+			color: #721c24 !important;
+		}
+
+		input[type="checkbox"] {
+			appearance: none;
+			-webkit-appearance: none;
+			-moz-appearance: none;
+			width: 20px;
+			height: 20px;
+			border: 2px solid #555;
+			border-radius: 4px;
+			outline: none;
+			cursor: pointer;
+			position: relative;
+		}
+
+		input[type="checkbox"]:checked {
+			background-color: #6c757d;
+			border-color: #6c757d;
+		}
+
+		input[type="checkbox"]:checked::after {
+			content: "\2714";
+			font-size: 16px;
+			color: white;
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			transform: translate(-50%, -50%);
+		}
+
+		input[type="checkbox"]:focus {
+			box-shadow: 0 0 3px #5a6268;
+		}
+
+		.custom-select {
+			width: 200px;
+			margin-bottom: 10px;
+		}
+
+		.dataTables_wrapper .dataTables_scroll div.dataTables_scrollBody {
+			overflow: auto;
+			width: 100%;
+		}
+
+		.dataTables_wrapper .dataTables_scroll div.dataTables_scrollHead table,
+		.dataTables_wrapper .dataTables_scroll div.dataTables_scrollBody table {
+			width: 100% !important;
+		}
+
+		div.dataTables_wrapper div.dataTables_filter {
+			float: left;
+			text-align: left;
+		}
+
+		div.dataTables_wrapper div.dataTables_length {
+			float: right;
+			text-align: right;
+		}
+	</style>
+</head>
+
+<body>
+	<p class="note">
+		Note: This report is user-generated. For best comparison results, re-run it on your target
+		architecture/platform.
+	</p>
+
+	<h2>Go SmallStruct Serializers Benchmark Results</h2>
+
+	<div class="flex">
+		<button id="toggleOptionsBtn" class="btn btn-secondary mb-3">Show Options</button>
+		<button id="toggleMetricsBtn" class="btn btn-secondary mb-3">Show Metrics Info</button>
+	</div>
+
+	<div id="optionsContainer" class="toggle-container collapsed">
+		<section>
+			<h2>Metrics:</h2>
+			<div class="toggle-div">
+				<label><input type="checkbox" data-column="0" checked> Name</label>
+				<label><input type="checkbox" data-column="1" checked> Total Iterations</label>
+				<label><input type="checkbox" data-column="2"> Marshal Iterations</label>
+				<label><input type="checkbox" data-column="3"> Unmarshal Iterations</label>
+				<label><input type="checkbox" data-column="4" checked> Total ns/Op</label>
+				<label><input type="checkbox" data-column="5"> Marshal ns/Op</label>
+				<label><input type="checkbox" data-column="6"> Unmarshal ns/Op</label>
+				<label><input type="checkbox" data-column="7" checked> Total B/Op</label>
+				<label><input type="checkbox" data-column="8"> Marshal B/Op</label>
+				<label><input type="checkbox" data-column="9"> Unmarshal B/Op</label>
+				<label><input type="checkbox" data-column="10" checked> Total allocs/Op</label>
+				<label><input type="checkbox" data-column="11"> Marshal allocs/Op</label>
+				<label><input type="checkbox" data-column="12"> Unmarshal allocs/Op</label>
+				<label><input type="checkbox" data-column="13" checked> Serialization Size</label>
+				<label><input type="checkbox" data-column="14" checked> Unsafe Str Unmarshal</label>
+				<label><input type="checkbox" data-column="15" checked> Buffer Reuse Marshal</label>
+				<label><input type="checkbox" data-column="16" checked> Time Support</label>
+				<label><input type="checkbox" data-column="17" checked> API Kind</label>
+				<label><input type="checkbox" data-column="18" checked> URL</label>
+				<label><input type="checkbox" data-column="19" checked> Notes</label>
+			</div>
+		</section>
+
+		<section>
+			<h2>Filter Benchmarks:</h2>
+			<div class="toggle-div">
+				<label><input type="checkbox" id="filterUnsafe" checked> Show Unsafe Str Unmarshal</label>
+				<label><input type="checkbox" id="filterBuffer" checked> Show Buffer Reuse Marshal</label>
+
+				<label>Filter by Time Support:</label>
+				<select class="custom-select" id="timeSupportFilter">
+					<option value="">All</option>
+					<option value="unix-ns">unix-ns</option>
+					<option value="unix-ms">unix-ms</option>
+					<option value="fullrange">fullrange</option>
+					<option value="fulltzoffset">fulltzoffset</option>
+					<option value="RFC3339ns">RFC3339ns</option>
+					<option value="custom">custom</option>
+					<option value="no">no</option>
+					<option value="unknown">unknown</option>
+				</select>
+
+				<label>Filter by API Kind:</label>
+				<select class="custom-select" id="apiKindFilter">
+					<option value="">All</option>
+					<option value="reflect">reflect</option>
+					<option value="codegen">codegen</option>
+					<option value="manual">manual</option>
+				</select>
+			</div>
+		</section>
+	</div>
+
+	<div id="metricsContainer" class="toggle-container collapsed">
+		<section>
+			<h2>Metrics Info:</h2>
+			<ul>
+				<li><b>Iterations</b>: The number of iterations used in the benchmark to reach (approximately) a 1
+					second
+					run.
+				</li>
+				<li><b>ns/Op</b>: How long (in nanoseconds) each operation took.</li>
+				<li><b>B/Op</b>: The allocation heap size (in bytes) per operation.</li>
+				<li><b>allocs/Op</b>: The number of heap allocations per operation.</li>
+				<li><b>Serialization Size</b>: The amount of bytes used to encode a marshalled value.</li>
+				<li><b>Unsafe Str Unmarshal</b>: Whether unmarshalled strings are safe to use or if their value is
+					modified
+					if
+					the underlying backing byte array is modified.</li>
+				<li><b>Buffer Reuse Marshal</b>: Whether marshalling reuses its internal buffer for every operation.
+				</li>
+				<li><b>Time Support</b>: How the serializer supports time.Time values. Options:
+					<ul>
+						<li><b>unix-ns</b>: Time since UNIX epoch as an int64, with nanosecond precision.</li>
+						<li><b>unix-ms</b>: Time since UNIX epoch as an int64, with millisecond precision.</li>
+						<li><b>fullrange</b>: Full time.Time range, without timezone information.</li>
+						<li><b>fulltzoffset</b>: Full time.Time range, including timezone offset information.</li>
+						<li><b>RFC3339ns</b>: RFC3339 string with nanosecond precision.</li>
+						<li><b>custom</b>: Custom encoding and restrictions.</li>
+						<li><b>no</b>: No native support for time.Time values (user needs to convert).</li>
+						<li><b>unknown</b>: Unknown if/how the serializer encodes time.Time values.</li>
+					</ul>
+				</li>
+				<li><b>API Kind</b>: How user code interacts/uses the serializer library. Options:
+					<ul>
+						<li><b>reflect</b>: Serializer uses Go's reflection features (no additional code needed).</li>
+						<li><b>codegen</b>: Code generation step creates the code to marshal/unmarshal structures.</li>
+						<li><b>manual</b>: User must write the code to marshal/unmarshal structures.</li>
+					</ul>
+				</li>
+			</ul>
+		</section>
+	</div>
+
+	<table id="benchmarkResults" class="display table table-striped table-bordered" style="width:101%">
+		<thead>
+			<tr>
+				<th>Name</th>
+				<th>Total Iterations</th>
+				<th>Marshal Iterations</th>
+				<th>Unmarshal Iterations</th>
+				<th>Total ns/Op</th>
+				<th>Marshal ns/Op</th>
+				<th>Unmarshal ns/Op</th>
+				<th>Total B/Op</th>
+				<th>Marshal B/Op</th>
+				<th>Unmarshal B/Op</th>
+				<th>Total allocs/Op</th>
+				<th>Marshal allocs/Op</th>
+				<th>Unmarshal allocs/Op</th>
+				<th>Serialization Size</th>
+				<th>Unsafe Str Unmarshal</th>
+				<th>Buffer Reuse Marshal</th>
+				<th>Time Support</th>
+				<th>API Kind</th>
+				<th>URL</th>
+				<th>Notes</th>
+			</tr>
+		</thead>
+		<tbody>
+			<!-- The data rows will be dynamically populated by DataTables -->
+		</tbody>
+	</table>
+
+	<!-- Bootstrap Modal -->
+	<div class="modal fade" id="welcomeModal" tabindex="-1" aria-labelledby="welcomeModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-dialog-centered-lg modal-lg">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="welcomeModalLabel">Welcome to Go SmallStruct Serializers Benchmark</h5>
+				</div>
+				<div class="modal-body">
+					<p><strong>Important:</strong></p>
+					<p>Some benchmarks or entire serializers might be hidden because they're using unsafe string unmarshal and/or buffer
+						reusing. To include these benchmarks:</p>
+					<ul>
+						<li>Click "Show Options"</li>
+						<li>Under "Filter Benchmarks", press "Show Unsafe Str Unmarshal" or "Show Buffer Reuse Marshal"
+						</li>
+					</ul>
+
+					<p><strong>Metrics Info:</strong></p>
+					<p>If any metrics sound unfamiliar, click on "Show Metrics Info" to find detailed information about
+						each metric.</p>
+				</div>
+				<div class="modal-footer">
+					<button class="btn btn-secondary" onclick="localStorage.setItem('firstVisit', '1')"
+						data-dismiss="modal">Okay, don't show again.</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<script>
+		$(document).ready(function () {
+			if (!localStorage.getItem('firstVisit')) {
+				$('#welcomeModal').modal('show');
+			}
+
+			var toggleOptionsBtn = $('#toggleOptionsBtn');
+			var toggleMetricsBtn = $('#toggleMetricsBtn');
+
+			var optionsContainer = $('#optionsContainer');
+			var metricsContainer = $('#metricsContainer');
+
+			toggleOptionsBtn.on('click', function () {
+				if (!metricsContainer.hasClass('collapsed')) {
+					metricsContainer.addClass('collapsed');
+					toggleMetricsBtn.text('Show Metrics Info');
+				}
+
+				optionsContainer.toggleClass('collapsed');
+				if (optionsContainer.hasClass('collapsed')) {
+					toggleOptionsBtn.text('Show Options');
+				} else {
+					toggleOptionsBtn.text('Hide Options');
+				}
+			});
+
+			toggleMetricsBtn.on('click', function () {
+				if (!optionsContainer.hasClass('collapsed')) {
+					optionsContainer.addClass('collapsed');
+					toggleOptionsBtn.text('Show Options');
+				}
+
+				metricsContainer.toggleClass('collapsed');
+				if (metricsContainer.hasClass('collapsed')) {
+					toggleMetricsBtn.text('Show Metrics Info');
+				} else {
+					toggleMetricsBtn.text('Hide Metrics Info');
+				}
+			});
+
+			var table = $('#benchmarkResults').DataTable({
+				data: data,
+				dom: 'flrtip',
+				paging: false,
+				order: [[4, 'asc']],
+				columns: [
+					{ data: 'name' },
+					{ data: 'total_iter_count' },
+					{ data: 'marshal_iter_count', visible: false },
+					{ data: 'unmarshal_iter_count', visible: false },
+					{ data: 'total_ns_op' },
+					{ data: 'marshal_ns_op', visible: false },
+					{ data: 'unmarshal_ns_op', visible: false },
+					{ data: 'total_alloc_bytes' },
+					{ data: 'marshal_alloc_bytes', visible: false },
+					{ data: 'unmarshal_alloc_bytes', visible: false },
+					{ data: 'total_allocs' },
+					{ data: 'marshal_allocs', visible: false },
+					{ data: 'unmarshal_allocs', visible: false },
+					{ data: 'serialization_size' },
+					{
+						data: 'unsafe_string_unmarshal',
+						render: function (data, type, row) {
+							return data ? 'yes' : 'no';
+						}
+					},
+					{
+						data: 'buffer_reuse_marshal',
+						render: function (data, type, row) {
+							return data ? 'yes' : 'no';
+						}
+					},
+					{ data: 'time_support' },
+					{ data: 'api_kind' },
+					{ data: 'url' },
+					{ data: 'notes' }
+				],
+				createdRow: function (row, data, dataIndex) {
+					if (data.unsafe_string_unmarshal) {
+						$(row).addClass('has-unsafe');
+						$('td', row).eq(6).addClass('yes');
+					} else {
+						$('td', row).eq(6).addClass('no');
+					}
+					if (data.buffer_reuse_marshal) {
+						$(row).addClass('has-buffer');
+						$('td', row).eq(7).addClass('yes');
+					} else {
+						$('td', row).eq(7).addClass('no');
+					}
+				},
+				rowCallback: function (row, data, dataIndex) {
+					var showUnsafe = $('#filterUnsafe').prop('checked');
+					var showBuffer = $('#filterBuffer').prop('checked');
+					var timeFilter = $('#timeSupportFilter').val();
+					var apiFilter = $('#apiKindFilter').val();
+					var hasUnsafe = $(row).hasClass('has-unsafe');
+					var hasBuffer = $(row).hasClass('has-buffer');
+
+					if ((!showUnsafe && hasUnsafe) || (!showBuffer && hasBuffer)) {
+						$(row).hide();
+					} else if ((timeFilter && data.time_support !== timeFilter) || (apiFilter && data.api_kind !== apiFilter)) {
+						$(row).hide();
+					} else {
+						$(row).show();
+					}
+				}
+			});
+
+			$('input[type="checkbox"]').on('change', function () {
+				var $this = $(this);
+				if ($this.attr('id') === 'filterUnsafe' || $this.attr('id') === 'filterBuffer') {
+					table.rows().invalidate().draw();
+				} else {
+					var column = table.column($this.attr('data-column'));
+					column.visible($this.prop('checked'));
+				}
+			});
+
+			$('#timeSupportFilter, #apiKindFilter').on('change', function () {
+				table.rows().invalidate().draw();
+			});
+
+			$('#filterUnsafe').prop('checked', false);
+			$('#filterBuffer').prop('checked', false);
+
+			table.rows().invalidate().draw();
+		});
+	</script>
+</body>
+
+</html>
