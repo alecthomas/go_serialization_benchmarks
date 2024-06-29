@@ -7,7 +7,7 @@ require (
 	github.com/Sereal/Sereal v0.0.0-20230201113653-fa72c87b650e
 	github.com/alecthomas/binary v0.0.0-20221018225505-74871811ee56
 	github.com/calmh/xdr v1.1.0
-	github.com/chmike/ditp v0.0.0-20240618130435-627cf7ce9ad6
+	github.com/chmike/ditp v0.0.0-20240629115045-1ab5bbd646cd
 	github.com/cosmos/cosmos-proto v1.0.0-beta.3
 	github.com/cybriq/gotiny v0.0.5
 	github.com/davecgh/go-xdr v0.0.0-20161123171359-e6a2ba005892
