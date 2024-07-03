@@ -34,8 +34,6 @@ github.com/bketelsen/crypt v0.0.3-0.20200106085610-5cbc8cc4026c/go.mod h1:MKsuJm
 github.com/calmh/xdr v1.1.0 h1:U/Dd4CXNLoo8EiQ4ulJUXkgO1/EyQLgDKLgpY1SOoJE=
 github.com/calmh/xdr v1.1.0/go.mod h1:E8sz2ByAdXC8MbANf1LCRYzedSnnc+/sXXJs/PVqoeg=
 github.com/cespare/xxhash v1.1.0/go.mod h1:XrSqR1VqqWfGrhpAt58auRo0WTKS1nRRg3ghfAqPWnc=
-github.com/chmike/ditp v0.0.0-20240621105623-1fe3e031524f h1:fxT+cPh0H+xo8ojX5O1zt/o/vTf7oeKdpk7r7asg2fs=
-github.com/chmike/ditp v0.0.0-20240621105623-1fe3e031524f/go.mod h1:Az8w1aHUmNFs7+C7v41Y/cpXIBafvOs+7J7M/KGsM1c=
 github.com/chmike/ditp v0.0.0-20240629115045-1ab5bbd646cd h1:ImEBzQdUJ6jx65nsFrBlNNV8um9lW4ApGEa+mIjXOZQ=
 github.com/chmike/ditp v0.0.0-20240629115045-1ab5bbd646cd/go.mod h1:Az8w1aHUmNFs7+C7v41Y/cpXIBafvOs+7J7M/KGsM1c=
 github.com/client9/misspell v0.3.4/go.mod h1:qj6jICC3Q7zFZvVWo7KLAzC3yx5G7kyvSDkc90ppPyw=
@@ -200,8 +198,8 @@ github.com/modern-go/reflect2 v1.0.2/go.mod h1:yWuevngMOJpCy52FWWMvUC8ws7m/LJsjY
 github.com/montanaflynn/stats v0.0.0-20171201202039-1bf9dbcd8cbe/go.mod h1:wL8QJuTMNUDYhXwkmfOly8iTdp5TEcJFWZD2D7SIkUc=
 github.com/mus-format/common-go v0.0.0-20240427160332-fda7f59c1da2 h1:VlQlK11OtURHQ1VsdHcp9OFq56i8HEIHURgfEtP9Jek=
 github.com/mus-format/common-go v0.0.0-20240427160332-fda7f59c1da2/go.mod h1:1hTb8w0YdSGIOU6wNY+e9uXnDZ9OQnUivNtd8cPSdoU=
-github.com/mus-format/mus-go v0.2.3 h1:HZ4NqdThMV2js9/goQueFqxAHaMBZDGBPwOwFv5f3LA=
-github.com/mus-format/mus-go v0.2.3/go.mod h1:uRQAo0t2WbvKZ9Iz5wdZV4s5eq1LsTS9dSizQeV9s+M=
+github.com/mus-format/mus-go v0.3.0 h1:OUBb/uWaaVPVpmyOo+DUVdjw5dkxQ1TCG3HO8q/Gyq8=
+github.com/mus-format/mus-go v0.3.0/go.mod h1:uRQAo0t2WbvKZ9Iz5wdZV4s5eq1LsTS9dSizQeV9s+M=
 github.com/mwitkow/go-conntrack v0.0.0-20161129095857-cc309e4a2223/go.mod h1:qRWi+5nqEBWmkhHvq77mSJWrCKwh8bxhgT7d/eI7P4U=
 github.com/nazarifard/fastape v0.0.0-20240611084216-abaecf150e5b h1:Roh7HBLqAxLpo/qxWztQlzt6QUBGTCX9AXxCaJf+pB8=
 github.com/nazarifard/fastape v0.0.0-20240611084216-abaecf150e5b/go.mod h1:F54tpGg4uMgsYNUqD07iNENNGcS2GJobr+td/iZ5Xm4=
