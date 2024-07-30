@@ -19,7 +19,7 @@ Re-Generating Report = true
 
 `, *validate)
 
-	err := BenchAndReportSerializers(*validate, true)
+	err := BenchAndReportSerializers(true, *validate)
 	if err != nil {
 		t.Fatal(err)
 	}
