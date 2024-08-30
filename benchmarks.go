@@ -27,6 +27,7 @@ import (
 	msgpacktinylib "github.com/alecthomas/go_serialization_benchmarks/internal/serializers/msgpack_tinylib"
 	msgpackvmihailenco "github.com/alecthomas/go_serialization_benchmarks/internal/serializers/msgpack_vmihailenco"
 	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/mus"
+	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/protobuf"
 	protobufdedis "github.com/alecthomas/go_serialization_benchmarks/internal/serializers/protobuf_dedis"
 	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/pulsar"
 	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/sereal"
@@ -259,6 +260,13 @@ var benchmarkCases = []BenchmarkCase{
 		New:  pulsar.NewPulsarSerializer,
 
 		TimeSupport: TSNoSupport,
+		APIKind:     AKCodegen,
+	}, {
+		Name: "protobuf-go",
+		URL:  "github.com/protocolbuffers/protobuf-go",
+		New:  protobuf.NewProtobufSerializer,
+
+		TimeSupport: TSRFC3339Ns,
 		APIKind:     AKCodegen,
 	}, {
 		Name: "gogo/protobuf",
