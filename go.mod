@@ -32,7 +32,7 @@ require (
 	github.com/vmihailenco/msgpack/v5 v5.3.5
 	go.dedis.ch/protobuf v1.0.11
 	go.mongodb.org/mongo-driver v1.11.1
-	google.golang.org/protobuf v1.28.1
+	google.golang.org/protobuf v1.34.2
 	gopkg.in/mgo.v2 v2.0.0-20190816093944-a6b53ec6cb22
 	wellquite.org/bebop v0.0.0-20231109192402-a92af83691ec
 )
