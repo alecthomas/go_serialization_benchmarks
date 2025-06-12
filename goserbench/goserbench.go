@@ -139,6 +139,9 @@ func BenchUnmarshalSmallStruct(b *testing.B, s Serializer, validate bool) {
 			if !o.BirthDay.Equal(i.BirthDay) {
 				b.Fatalf("wrong birthday: got %v, want %v", o.BirthDay, i.BirthDay)
 			}
+			if o.Money != i.Money {
+				b.Fatalf("wrong money: got %v, want %v", o.Money, i.Money)
+			}
 		}
 	}
 }
