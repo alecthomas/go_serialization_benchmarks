@@ -3,11 +3,15 @@ package main
 import (
 	"flag"
 	"fmt"
+	"os"
+	"regexp"
+	"testing"
 )
 
 var (
 	validate  = flag.Bool("validate", false, "to validate the correctness of the serializers")
 	genReport = flag.Bool("genreport", false, "to re-generate the report")
+	nameFlag  = flag.String("name", "", "restrict benchmarks to run only if they match this regexp")
 )
 
 func main() {
@@ -22,7 +26,17 @@ Re-Generating Report = %t
 
 `, *validate, *genReport)
 
-	err := BenchAndReportSerializers(*genReport, *validate)
+	var nameRe *regexp.Regexp
+	if *nameFlag != "" {
+		var err error
+		nameRe, err = regexp.Compile(*nameFlag)
+		if err != nil {
+			fmt.Printf("Error compiling -name regexp: %v\n", err)
+			os.Exit(1)
+		}
+	}
+
+	err := BenchAndReportSerializers(*genReport, *validate, nameRe)
 	if err != nil {
 		panic(err)
 	}

@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
+	"regexp"
 	"strings"
 	"testing"
 
@@ -35,9 +36,13 @@ type reportLine struct {
 	Notes                 string `json:"notes"`
 }
 
-func BenchAndReportSerializers(generateReport bool, validate bool) error {
+func BenchAndReportSerializers(generateReport bool, validate bool, namesRe *regexp.Regexp) error {
 	data := make([]reportLine, len(benchmarkCases))
 	for i, bench := range benchmarkCases {
+		if namesRe != nil && !namesRe.MatchString(bench.Name) {
+			continue
+		}
+
 		marshalRes := testing.Benchmark(func(b *testing.B) {
 			goserbench.BenchMarshalSmallStruct(b, bench.New())
 		})

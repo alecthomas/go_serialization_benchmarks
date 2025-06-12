@@ -6,6 +6,8 @@ package main
 
 import (
 	"fmt"
+	"os"
+	"regexp"
 	"testing"
 )
 
@@ -19,7 +21,17 @@ Re-Generating Report = true
 
 `, *validate)
 
-	err := BenchAndReportSerializers(true, *validate)
+	var nameRe *regexp.Regexp
+	if *nameFlag != "" {
+		var err error
+		nameRe, err = regexp.Compile(*nameFlag)
+		if err != nil {
+			fmt.Printf("Error compiling -name regexp: %v\n", err)
+			os.Exit(1)
+		}
+	}
+
+	err := BenchAndReportSerializers(true, *validate, nameRe)
 	if err != nil {
 		t.Fatal(err)
 	}
