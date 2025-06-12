@@ -503,6 +503,28 @@ var benchmarkCases = []BenchmarkCase{
 			"This is a manually written encoding, designed to be the fastest possible for this benchmark.",
 		},
 	}, {
+		Name: "baseline_rw",
+		URL:  "",
+		New:  baseline.NewBaselineReaderWriter,
+
+		TimeSupport: TSNoSupport,
+		APIKind:     AKManual,
+		Notes: []string{
+			"This is a manually written encoding, designed to be the fastest possible for this benchmark, using an io.Reader/io.Writer as the API.",
+		},
+	}, {
+		Name: "baseline_rw/unsafe_reuse",
+		URL:  "",
+		New:  baseline.NewBaselineReaderWriterUnsafeReuse,
+
+		UnsafeStringUnmarshal: true,
+		BufferReuseMarshal:    true,
+		TimeSupport:           TSNoSupport,
+		APIKind:               AKManual,
+		Notes: []string{
+			"This is a manually written encoding, designed to be the fastest possible for this benchmark, using an io.Reader/io.Writer as the API.",
+		},
+	}, {
 		Name: "fastape",
 		URL:  "github.com/nazarifard/fastape",
 		New:  fastape.NewTape,
