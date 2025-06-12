@@ -36,6 +36,10 @@ Re-Generating Report = %t
 		}
 	}
 
+	// Manually call testing.Init(), otherwise validation errors may cause
+	// internal panics.
+	testing.Init()
+
 	err := BenchAndReportSerializers(*genReport, *validate, nameRe)
 	if err != nil {
 		panic(err)

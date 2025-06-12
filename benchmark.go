@@ -48,11 +48,20 @@ func BenchAndReportSerializers(generateReport bool, validate bool, namesRe *rege
 		})
 		fmt.Printf("%10s -   Marshal - %s %s\n", bench.Name, marshalRes.String(),
 			marshalRes.MemString())
+
+		unmarshalOk := false
 		unmarshalRes := testing.Benchmark(func(b *testing.B) {
 			goserbench.BenchUnmarshalSmallStruct(b, bench.New(), validate)
+			unmarshalOk = true
 		})
-		fmt.Printf("%10s - Unmarshal - %s %s\n", bench.Name, unmarshalRes.String(),
-			unmarshalRes.MemString())
+		if !unmarshalOk {
+			fmt.Printf("\nUnmarshal benchmark of %q did not complete successfully\n", bench.Name)
+			fmt.Printf("Test with go test -validate -run Bench -bench BenchmarkSerializers/unmarshal/%s\n\n", bench.Name)
+			return fmt.Errorf("benchmark %s failed", bench.Name)
+		} else {
+			fmt.Printf("%10s - Unmarshal - %s %s\n", bench.Name, unmarshalRes.String(),
+				unmarshalRes.MemString())
+		}
 
 		data[i] = reportLine{
 			Name:                  bench.Name,
