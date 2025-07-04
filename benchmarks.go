@@ -227,6 +227,15 @@ var benchmarkCases = []BenchmarkCase{
 		TimeSupport: TSNoSupport,
 		APIKind:     AKCodegen,
 	}, {
+		Name: "flatbuffers/unsafe_reuse",
+		URL:  "github.com/google/flatbuffers/go",
+		New:  flatbuffers.NewFlatBuffersUnsafeReuseSerializer,
+
+		TimeSupport:           TSNoSupport,
+		APIKind:               AKCodegen,
+		UnsafeStringUnmarshal: true,
+		BufferReuseMarshal:    true,
+	}, {
 		Name: "capnproto",
 		URL:  "github.com/glycerine/go-capnproto",
 		New:  capnproto.NewCapNProtoSerializer,
