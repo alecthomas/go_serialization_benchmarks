@@ -24,6 +24,8 @@ import (
 	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/ikea"
 	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/jsoniter"
 	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/mongobson"
+	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/sonic"
+	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/sonic_fast"
 	msgpacktinylib "github.com/alecthomas/go_serialization_benchmarks/internal/serializers/msgpack_tinylib"
 	msgpackvmihailenco "github.com/alecthomas/go_serialization_benchmarks/internal/serializers/msgpack_vmihailenco"
 	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/mus"
@@ -174,6 +176,20 @@ var benchmarkCases = []BenchmarkCase{
 		Name: "mongobson",
 		URL:  "go.mongodb.org/mongo-driver/mongo",
 		New:  mongobson.NewMongoBSONSerializer,
+
+		TimeSupport: TSUnixMs,
+		APIKind:     AKReflect,
+	}, {
+		Name: "sonic",
+		URL:  "github.com/bytedance/sonic",
+		New:  sonic.NewSonicSerializer,
+
+		TimeSupport: TSUnixMs,
+		APIKind:     AKReflect,
+	}, {
+		Name: "sonic_fast",
+		URL:  "github.com/bytedance/sonic",
+		New:  sonic_fast.NewSonicSerializer,
 
 		TimeSupport: TSUnixMs,
 		APIKind:     AKReflect,
