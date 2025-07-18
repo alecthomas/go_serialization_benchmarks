@@ -16,6 +16,7 @@ import (
 	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/fastjson"
 	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/flatbuffers"
 	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/gencode"
+	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/goccyjson"
 	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/gogo"
 	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/gotiny"
 	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/hprose"
@@ -541,5 +542,12 @@ var benchmarkCases = []BenchmarkCase{
 		UnsafeStringUnmarshal: true,
 		TimeSupport:           TSUnixNs,
 		APIKind:               AKManual,
+	}, {
+		Name: "goccyjson",
+		URL:  "https://github.com/goccy/go-json",
+		New:  goccyjson.NewGoccyJsonSerializer,
+
+		TimeSupport: TSRFC3339Ns,
+		APIKind:     AKReflect,
 	},
 }
