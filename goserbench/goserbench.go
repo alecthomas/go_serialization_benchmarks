@@ -3,7 +3,7 @@ package goserbench
 import (
 	"fmt"
 	"math"
-	"math/rand"
+	"math/rand/v2"
 	"testing"
 	"time"
 )
@@ -18,24 +18,24 @@ const (
 	MaxSmallStructPhoneSize = 10
 )
 
-func randString(l int) string {
+func randString(rng *rand.Rand, l int) string {
 	buf := make([]byte, l)
 	for i := 0; i < (l+1)/2; i++ {
-		buf[i] = byte(rand.Intn(256))
+		buf[i] = byte(rng.IntN(256))
 	}
 	return fmt.Sprintf("%x", buf)[:l]
 }
 
-func generateSmallStruct() []*SmallStruct {
+func generateSmallStruct(rng *rand.Rand) []*SmallStruct {
 	a := make([]*SmallStruct, 0, 1000)
 	for i := 0; i < 1000; i++ {
 		a = append(a, &SmallStruct{
-			Name:     randString(MaxSmallStructNameSize),
+			Name:     randString(rng, MaxSmallStructNameSize),
 			BirthDay: time.Now(),
-			Phone:    randString(MaxSmallStructPhoneSize),
-			Siblings: rand.Intn(5),
-			Spouse:   rand.Intn(2) == 1,
-			Money:    rand.Float64(),
+			Phone:    randString(rng, MaxSmallStructPhoneSize),
+			Siblings: rng.IntN(5),
+			Spouse:   rng.IntN(2) == 1,
+			Money:    rng.Float64(),
 		})
 	}
 	return a
@@ -44,13 +44,14 @@ func generateSmallStruct() []*SmallStruct {
 // BenchMarshalSmallStruct benchmarks marshalling the [SmallStruct] type.
 func BenchMarshalSmallStruct(b *testing.B, s Serializer) {
 	b.Helper()
-	data := generateSmallStruct()
+	rng := rand.New(rand.NewPCG(0xdeadbeef, 0x1701d))
+	data := generateSmallStruct(rng)
 
 	b.ReportAllocs()
 	b.ResetTimer()
 	var serialSize int
 	for i := 0; i < b.N; i++ {
-		o := data[rand.Intn(len(data))]
+		o := data[rng.IntN(len(data))]
 		bytes, err := s.Marshal(o)
 		if err != nil {
 			b.Fatalf("marshal error %s for %#v", err, o)
@@ -65,6 +66,7 @@ func BenchMarshalSmallStruct(b *testing.B, s Serializer) {
 // against the source struct.
 func BenchUnmarshalSmallStruct(b *testing.B, s Serializer, validate bool) {
 	b.Helper()
+	rng := rand.New(rand.NewPCG(0xdeadbeef, 0x1701d))
 
 	var timePrecision time.Duration
 	if stp, ok := s.(SerializerTimePrecision); ok {
@@ -75,7 +77,7 @@ func BenchUnmarshalSmallStruct(b *testing.B, s Serializer, validate bool) {
 		forcesUTC = set.ForcesUTC()
 	}
 
-	data := generateSmallStruct()
+	data := generateSmallStruct(rng)
 	ser := make([][]byte, len(data))
 	var serialSize int
 	for i, d := range data {
@@ -115,7 +117,7 @@ func BenchUnmarshalSmallStruct(b *testing.B, s Serializer, validate bool) {
 	b.ResetTimer()
 
 	for i := 0; i < b.N; i++ {
-		n := rand.Intn(len(ser))
+		n := rng.IntN(len(ser))
 		*o = SmallStruct{}
 		err := s.Unmarshal(ser[n], o)
 		if err != nil {
