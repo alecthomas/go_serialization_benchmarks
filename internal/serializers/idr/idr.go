@@ -1,8 +1,6 @@
 package idr
 
 import (
-	"time"
-
 	"github.com/alecthomas/go_serialization_benchmarks/goserbench"
 	"github.com/chmike/ditp/idr/low"
 )
@@ -13,7 +11,7 @@ type IDRSerializer struct {
 func (s IDRSerializer) Marshal(o interface{}) ([]byte, error) {
 	v := o.(*goserbench.SmallStruct)
 	e := make([]byte, 0, 64)
-	e = low.AppendInt64(e, v.BirthDay.UnixMicro())
+	e = low.AppendTime(e, v.BirthDay)
 	e = low.AppendFloat64(e, v.Money)
 	e = low.AppendBool(e, v.Spouse)
 	e = low.AppendVarInt(e, v.Siblings)
@@ -24,8 +22,7 @@ func (s IDRSerializer) Marshal(o interface{}) ([]byte, error) {
 
 func (s IDRSerializer) Unmarshal(d []byte, o interface{}) (err error) {
 	v := o.(*goserbench.SmallStruct)
-	d, tmp := low.Int64(d)
-	v.BirthDay = time.UnixMicro(tmp)
+	d, v.BirthDay = low.Time(d)
 	d, v.Money = low.Float64(d)
 	d, v.Spouse = low.Bool(d)
 	d, v.Siblings = low.VarInt(d)
@@ -45,7 +42,7 @@ type IDRSerializerReuse struct {
 func (s IDRSerializerReuse) Marshal(o interface{}) ([]byte, error) {
 	v := o.(*goserbench.SmallStruct)
 	e := low.Reset(s.e)
-	e = low.AppendInt64(e, v.BirthDay.UnixMicro())
+	e = low.AppendTime(e, v.BirthDay)
 	e = low.AppendFloat64(e, v.Money)
 	e = low.AppendBool(e, v.Spouse)
 	e = low.AppendVarInt(e, v.Siblings)
@@ -56,8 +53,7 @@ func (s IDRSerializerReuse) Marshal(o interface{}) ([]byte, error) {
 
 func (s IDRSerializerReuse) Unmarshal(d []byte, o interface{}) (err error) {
 	v := o.(*goserbench.SmallStruct)
-	d, tmp := low.Int64(d)
-	v.BirthDay = time.UnixMicro(tmp)
+	d, v.BirthDay = low.Time(d)
 	d, v.Money = low.Float64(d)
 	d, v.Spouse = low.Bool(d)
 	d, v.Siblings = low.VarInt(d)
