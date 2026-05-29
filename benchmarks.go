@@ -479,7 +479,6 @@ var benchmarkCases = []BenchmarkCase{
 
 		TimeSupport: TSFullTzOffset,
 		APIKind:     AKManual,
-		Notes:       []string{"low level IDR encoding demo with same nsec time encoding as benc"},
 	}, {
 		Name: "idr/reuse",
 		URL:  "github.com/chmike/ditp",
@@ -488,7 +487,6 @@ var benchmarkCases = []BenchmarkCase{
 		BufferReuseMarshal: true,
 		TimeSupport:        TSFullTzOffset,
 		APIKind:            AKManual,
-		Notes:              []string{"low level IDR encoding demo with same nsec time encoding as benc"},
 	}, {
 		Name: "baseline",
 		URL:  "",

@@ -11,12 +11,12 @@ type IDRSerializer struct {
 func (s IDRSerializer) Marshal(o interface{}) ([]byte, error) {
 	v := o.(*goserbench.SmallStruct)
 	e := make([]byte, 0, 64)
-	e = low.PutTime(e, v.BirthDay)
-	e = low.PutFloat64(e, v.Money)
-	e = low.PutBool(e, v.Spouse)
-	e = low.PutVarInt(e, v.Siblings)
-	e = low.PutString(e, v.Name)
-	e = low.PutString(e, v.Phone)
+	e = low.AppendTime(e, v.BirthDay)
+	e = low.AppendFloat64(e, v.Money)
+	e = low.AppendBool(e, v.Spouse)
+	e = low.AppendVarInt(e, v.Siblings)
+	e = low.AppendString(e, v.Name)
+	e = low.AppendString(e, v.Phone)
 	return e, nil
 }
 
@@ -42,12 +42,12 @@ type IDRSerializerReuse struct {
 func (s IDRSerializerReuse) Marshal(o interface{}) ([]byte, error) {
 	v := o.(*goserbench.SmallStruct)
 	e := low.Reset(s.e)
-	e = low.PutTime(e, v.BirthDay)
-	e = low.PutFloat64(e, v.Money)
-	e = low.PutBool(e, v.Spouse)
-	e = low.PutVarInt(e, v.Siblings)
-	e = low.PutString(e, v.Name)
-	e = low.PutString(e, v.Phone)
+	e = low.AppendTime(e, v.BirthDay)
+	e = low.AppendFloat64(e, v.Money)
+	e = low.AppendBool(e, v.Spouse)
+	e = low.AppendVarInt(e, v.Siblings)
+	e = low.AppendString(e, v.Name)
+	e = low.AppendString(e, v.Phone)
 	return e, nil
 }
 
