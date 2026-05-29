@@ -36,6 +36,8 @@ github.com/calmh/xdr v1.1.0/go.mod h1:E8sz2ByAdXC8MbANf1LCRYzedSnnc+/sXXJs/PVqoe
 github.com/cespare/xxhash v1.1.0/go.mod h1:XrSqR1VqqWfGrhpAt58auRo0WTKS1nRRg3ghfAqPWnc=
 github.com/chmike/ditp v0.0.0-20240629115045-1ab5bbd646cd h1:ImEBzQdUJ6jx65nsFrBlNNV8um9lW4ApGEa+mIjXOZQ=
 github.com/chmike/ditp v0.0.0-20240629115045-1ab5bbd646cd/go.mod h1:Az8w1aHUmNFs7+C7v41Y/cpXIBafvOs+7J7M/KGsM1c=
+github.com/chmike/ditp v0.0.0-20260529191559-ba1cb46039fd h1:/c6s2zKoMTf3CkD4nHRUkXvgXAAFgmtbPOplfqf+4jw=
+github.com/chmike/ditp v0.0.0-20260529191559-ba1cb46039fd/go.mod h1:q1+/FOd94RbDMj7S7AaevpEUiVLIY4jKlE0mZ4Wussc=
 github.com/client9/misspell v0.3.4/go.mod h1:qj6jICC3Q7zFZvVWo7KLAzC3yx5G7kyvSDkc90ppPyw=
 github.com/coreos/bbolt v1.3.2/go.mod h1:iRUV2dpdMOn7Bo10OQBFzIJO9kkE559Wcmn+qkEiiKk=
 github.com/coreos/etcd v3.3.13+incompatible/go.mod h1:uF7uidLiAD3TWHmW31ZFd/JWoc32PjwdhPthX9715RE=
