@@ -8,7 +8,7 @@ import (
 type IDRSerializer struct {
 }
 
-func (s IDRSerializer) Marshal(o interface{}) ([]byte, error) {
+func (s IDRSerializer) Marshal(o any) ([]byte, error) {
 	v := o.(*goserbench.SmallStruct)
 	e := make([]byte, 0, 64)
 	e = low.PutTime(e, v.BirthDay)
@@ -20,7 +20,7 @@ func (s IDRSerializer) Marshal(o interface{}) ([]byte, error) {
 	return e, nil
 }
 
-func (s IDRSerializer) Unmarshal(d []byte, o interface{}) (err error) {
+func (s IDRSerializer) Unmarshal(d []byte, o any) (err error) {
 	v := o.(*goserbench.SmallStruct)
 	d, v.BirthDay = low.Time(d)
 	d, v.Money = low.Float64(d)
@@ -39,7 +39,7 @@ type IDRSerializerReuse struct {
 	e low.Encoder
 }
 
-func (s IDRSerializerReuse) Marshal(o interface{}) ([]byte, error) {
+func (s IDRSerializerReuse) Marshal(o any) ([]byte, error) {
 	v := o.(*goserbench.SmallStruct)
 	e := low.Reset(s.e)
 	e = low.PutTime(e, v.BirthDay)
@@ -51,7 +51,7 @@ func (s IDRSerializerReuse) Marshal(o interface{}) ([]byte, error) {
 	return e, nil
 }
 
-func (s IDRSerializerReuse) Unmarshal(d []byte, o interface{}) (err error) {
+func (s IDRSerializerReuse) Unmarshal(d []byte, o any) (err error) {
 	v := o.(*goserbench.SmallStruct)
 	d, v.BirthDay = low.Time(d)
 	d, v.Money = low.Float64(d)

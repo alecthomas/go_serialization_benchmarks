@@ -21,7 +21,7 @@ type SSZSerializer struct {
 	a SSZA
 }
 
-func (s *SSZSerializer) Marshal(o interface{}) (buf []byte, err error) {
+func (s *SSZSerializer) Marshal(o any) (buf []byte, err error) {
 	v := o.(*goserbench.SmallStruct)
 	a := &s.a
 	a.Name = v.Name
@@ -33,7 +33,7 @@ func (s *SSZSerializer) Marshal(o interface{}) (buf []byte, err error) {
 	return ssz.Marshal(a)
 }
 
-func (s *SSZSerializer) Unmarshal(bs []byte, o interface{}) (err error) {
+func (s *SSZSerializer) Unmarshal(bs []byte, o any) (err error) {
 	a := &s.a
 	err = ssz.Unmarshal(bs, a)
 	if err != nil {

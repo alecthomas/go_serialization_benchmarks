@@ -13,7 +13,7 @@ type FlatBufferSerializer struct {
 	builder     *flatbuffers.Builder
 }
 
-func (s *FlatBufferSerializer) Marshal(o interface{}) ([]byte, error) {
+func (s *FlatBufferSerializer) Marshal(o any) ([]byte, error) {
 	a := o.(*goserbench.SmallStruct)
 	builder := s.builder
 	if !s.unsafeReuse {
@@ -35,7 +35,7 @@ func (s *FlatBufferSerializer) Marshal(o interface{}) ([]byte, error) {
 	return builder.FinishedBytes(), nil
 }
 
-func (s *FlatBufferSerializer) Unmarshal(d []byte, i interface{}) error {
+func (s *FlatBufferSerializer) Unmarshal(d []byte, i any) error {
 	a := i.(*goserbench.SmallStruct)
 	o := FlatBufferA{}
 	o.Init(d, flatbuffers.GetUOffsetT(d))

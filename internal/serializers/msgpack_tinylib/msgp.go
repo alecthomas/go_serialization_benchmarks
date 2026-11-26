@@ -8,7 +8,7 @@ type MsgpSerializer struct {
 	a A
 }
 
-func (m MsgpSerializer) Marshal(o interface{}) ([]byte, error) {
+func (m MsgpSerializer) Marshal(o any) ([]byte, error) {
 	v := o.(*goserbench.SmallStruct)
 	a := &m.a
 	a.Name = v.Name
@@ -20,7 +20,7 @@ func (m MsgpSerializer) Marshal(o interface{}) ([]byte, error) {
 	return a.MarshalMsg(nil)
 }
 
-func (m MsgpSerializer) Unmarshal(d []byte, o interface{}) error {
+func (m MsgpSerializer) Unmarshal(d []byte, o any) error {
 	a := &m.a
 	_, err := a.UnmarshalMsg(d)
 	if err != nil {

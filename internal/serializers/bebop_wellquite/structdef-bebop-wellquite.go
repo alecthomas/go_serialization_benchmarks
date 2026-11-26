@@ -9,12 +9,12 @@ import (
 )
 
 type BebopBufWellquite struct {
-	Name string
+	Name     string
 	BirthDay time.Time
-	Phone string
+	Phone    string
 	Siblings int32
-	Spouse bool
-	Money float64
+	Spouse   bool
+	Money    float64
 }
 
 // EncodeBebop writes the value to the writer, serialized as Bebop.
@@ -225,4 +225,3 @@ func (self *BebopBufWellquite) BebopUnmarshalAt(buf []byte, offset int) (nextOff
 	}
 	return offset, nil
 }
-

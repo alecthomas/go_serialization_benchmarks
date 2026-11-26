@@ -16,10 +16,10 @@ type SmallStruct struct {
 type Serializer interface {
 	// Marshal should marshal the given object (a *A) into a byte slice.
 	// The byte slice may be used across invocations of Marshal().
-	Marshal(o interface{}) ([]byte, error)
+	Marshal(o any) ([]byte, error)
 
 	// Unmarshal should unmarshal the given byte slice into a *A object.
-	Unmarshal(d []byte, o interface{}) error
+	Unmarshal(d []byte, o any) error
 }
 
 // SerializerTimePrecision is a serializer that specifies the max precision that

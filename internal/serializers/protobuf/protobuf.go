@@ -17,7 +17,7 @@ type Protobuf struct {
 	unmarshaller func([]byte, proto.Message) error
 }
 
-func (s *Protobuf) Marshal(o interface{}) ([]byte, error) {
+func (s *Protobuf) Marshal(o any) ([]byte, error) {
 	v := o.(*goserbench.SmallStruct)
 	a := &s.a
 	a.Name = v.Name
@@ -29,7 +29,7 @@ func (s *Protobuf) Marshal(o interface{}) ([]byte, error) {
 	return s.marshaller(a)
 }
 
-func (s *Protobuf) Unmarshal(d []byte, o interface{}) error {
+func (s *Protobuf) Unmarshal(d []byte, o any) error {
 	a := &s.a
 	*a = ProtobufGo{}
 

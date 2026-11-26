@@ -16,7 +16,7 @@ import (
 // marshalling/unmarshalling operations.
 type BaselineSerializer struct{}
 
-func (b *BaselineSerializer) Marshal(o interface{}) ([]byte, error) {
+func (b *BaselineSerializer) Marshal(o any) ([]byte, error) {
 	a := o.(*goserbench.SmallStruct)
 	buf := make([]byte, 0, maxSmallStructSerializeSize)
 	buf = binary.LittleEndian.AppendUint64(buf, uint64(a.BirthDay.UnixNano()))
@@ -28,7 +28,7 @@ func (b *BaselineSerializer) Marshal(o interface{}) ([]byte, error) {
 	return buf, nil
 }
 
-func (b *BaselineSerializer) Unmarshal(d []byte, o interface{}) error {
+func (b *BaselineSerializer) Unmarshal(d []byte, o any) error {
 	a := o.(*goserbench.SmallStruct)
 	a.BirthDay = time.Unix(0, int64(binary.LittleEndian.Uint64(d[:8])))
 	a.Money = math.Float64frombits(binary.LittleEndian.Uint64(d[8:16]))
@@ -49,7 +49,7 @@ type BaselineUnsafeSerializer struct {
 	buf []byte
 }
 
-func (b *BaselineUnsafeSerializer) Marshal(o interface{}) ([]byte, error) {
+func (b *BaselineUnsafeSerializer) Marshal(o any) ([]byte, error) {
 	a := o.(*goserbench.SmallStruct)
 	buf := b.buf
 	buf = binary.LittleEndian.AppendUint64(buf, uint64(a.BirthDay.UnixNano()))
@@ -61,7 +61,7 @@ func (b *BaselineUnsafeSerializer) Marshal(o interface{}) ([]byte, error) {
 	return buf, nil
 }
 
-func (b *BaselineUnsafeSerializer) Unmarshal(d []byte, o interface{}) error {
+func (b *BaselineUnsafeSerializer) Unmarshal(d []byte, o any) error {
 	a := o.(*goserbench.SmallStruct)
 	a.BirthDay = time.Unix(0, int64(binary.LittleEndian.Uint64(d[:8])))
 	a.Money = math.Float64frombits(binary.LittleEndian.Uint64(d[8:16]))

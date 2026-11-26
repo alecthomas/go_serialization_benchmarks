@@ -11,7 +11,7 @@ type XDRCalmhSerializer struct {
 	a XDRA
 }
 
-func (s *XDRCalmhSerializer) Marshal(o interface{}) (buf []byte, err error) {
+func (s *XDRCalmhSerializer) Marshal(o any) (buf []byte, err error) {
 	v := o.(*goserbench.SmallStruct)
 	a := &s.a
 	a.Name = v.Name
@@ -23,7 +23,7 @@ func (s *XDRCalmhSerializer) Marshal(o interface{}) (buf []byte, err error) {
 	return a.MarshalXDR()
 }
 
-func (s *XDRCalmhSerializer) Unmarshal(bs []byte, o interface{}) (err error) {
+func (s *XDRCalmhSerializer) Unmarshal(bs []byte, o any) (err error) {
 	a := &s.a
 	err = a.UnmarshalXDR(bs)
 	if err != nil {

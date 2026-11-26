@@ -13,11 +13,11 @@ func (m MongoBsonSerializer) TimePrecision() time.Duration {
 	return time.Millisecond
 }
 
-func (m MongoBsonSerializer) Marshal(o interface{}) ([]byte, error) {
+func (m MongoBsonSerializer) Marshal(o any) ([]byte, error) {
 	return mongobson.Marshal(o)
 }
 
-func (m MongoBsonSerializer) Unmarshal(d []byte, o interface{}) error {
+func (m MongoBsonSerializer) Unmarshal(d []byte, o any) error {
 	return mongobson.Unmarshal(d, o)
 }
 

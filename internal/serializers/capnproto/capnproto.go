@@ -10,7 +10,7 @@ import (
 
 type CapNProtoSerializer struct{}
 
-func (x CapNProtoSerializer) Marshal(o interface{}) ([]byte, error) {
+func (x CapNProtoSerializer) Marshal(o any) ([]byte, error) {
 	a := o.(*goserbench.SmallStruct)
 	seg := capn.NewBuffer(nil)
 	c := NewRootCapnpA(seg)
@@ -25,7 +25,7 @@ func (x CapNProtoSerializer) Marshal(o interface{}) ([]byte, error) {
 	return buf.Bytes(), err
 }
 
-func (x CapNProtoSerializer) Unmarshal(d []byte, i interface{}) error {
+func (x CapNProtoSerializer) Unmarshal(d []byte, i any) error {
 	a := i.(*goserbench.SmallStruct)
 	s, _, err := capn.ReadFromMemoryZeroCopy(d)
 	if err != nil {

@@ -16,7 +16,7 @@ func RegisterGeneratedResolver() {
 }
 
 // encode
-func ___encode(i interface{}) ([]byte, error) {
+func ___encode(i any) ([]byte, error) {
 	if msgpack.StructAsArray() {
 		return ___encodeAsArray(i)
 	} else {
@@ -25,7 +25,7 @@ func ___encode(i interface{}) ([]byte, error) {
 }
 
 // encodeAsArray
-func ___encodeAsArray(i interface{}) ([]byte, error) {
+func ___encodeAsArray(i any) ([]byte, error) {
 	switch v := i.(type) {
 	case A:
 		encoder := enc.NewEncoder()
@@ -122,7 +122,7 @@ func ___encodeAsArray(i interface{}) ([]byte, error) {
 }
 
 // encodeAsMap
-func ___encodeAsMap(i interface{}) ([]byte, error) {
+func ___encodeAsMap(i any) ([]byte, error) {
 	switch v := i.(type) {
 	case A:
 		encoder := enc.NewEncoder()
@@ -219,7 +219,7 @@ func ___encodeAsMap(i interface{}) ([]byte, error) {
 }
 
 // decode
-func ___decode(data []byte, i interface{}) (bool, error) {
+func ___decode(data []byte, i any) (bool, error) {
 	if msgpack.StructAsArray() {
 		return ___decodeAsArray(data, i)
 	} else {
@@ -228,7 +228,7 @@ func ___decode(data []byte, i interface{}) (bool, error) {
 }
 
 // decodeAsArray
-func ___decodeAsArray(data []byte, i interface{}) (bool, error) {
+func ___decodeAsArray(data []byte, i any) (bool, error) {
 	switch v := i.(type) {
 	case *A:
 		decoder := dec.NewDecoder(data)
@@ -277,7 +277,7 @@ func ___decodeAsArray(data []byte, i interface{}) (bool, error) {
 }
 
 // decodeAsMap
-func ___decodeAsMap(data []byte, i interface{}) (bool, error) {
+func ___decodeAsMap(data []byte, i any) (bool, error) {
 	switch v := i.(type) {
 	case *A:
 		decoder := dec.NewDecoder(data)

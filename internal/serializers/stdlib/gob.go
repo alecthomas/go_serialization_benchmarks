@@ -9,13 +9,13 @@ import (
 
 type GobSerializer struct{}
 
-func (g *GobSerializer) Marshal(o interface{}) ([]byte, error) {
+func (g *GobSerializer) Marshal(o any) ([]byte, error) {
 	var buf bytes.Buffer
 	err := gob.NewEncoder(&buf).Encode(o)
 	return buf.Bytes(), err
 }
 
-func (g *GobSerializer) Unmarshal(d []byte, o interface{}) error {
+func (g *GobSerializer) Unmarshal(d []byte, o any) error {
 	return gob.NewDecoder(bytes.NewReader(d)).Decode(o)
 }
 

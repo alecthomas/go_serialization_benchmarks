@@ -8,11 +8,11 @@ import (
 
 type ShamatonMapMsgpackSerializer struct{}
 
-func (m ShamatonMapMsgpackSerializer) Marshal(o interface{}) ([]byte, error) {
+func (m ShamatonMapMsgpackSerializer) Marshal(o any) ([]byte, error) {
 	return shamaton.MarshalAsMap(o)
 }
 
-func (m ShamatonMapMsgpackSerializer) Unmarshal(d []byte, o interface{}) error {
+func (m ShamatonMapMsgpackSerializer) Unmarshal(d []byte, o any) error {
 	return shamaton.UnmarshalAsMap(d, o)
 }
 
@@ -22,11 +22,11 @@ func NewShamatonMapMsgpackSerializer() goserbench.Serializer {
 
 type ShamatonArrayMsgpackSerializer struct{}
 
-func (m ShamatonArrayMsgpackSerializer) Marshal(o interface{}) ([]byte, error) {
+func (m ShamatonArrayMsgpackSerializer) Marshal(o any) ([]byte, error) {
 	return shamaton.MarshalAsArray(o)
 }
 
-func (m ShamatonArrayMsgpackSerializer) Unmarshal(d []byte, o interface{}) error {
+func (m ShamatonArrayMsgpackSerializer) Unmarshal(d []byte, o any) error {
 	return shamaton.UnmarshalAsArray(d, o)
 }
 
@@ -39,7 +39,7 @@ type ShamatonMapMsgpackgenSerializer struct {
 	a A
 }
 
-func (m ShamatonMapMsgpackgenSerializer) Marshal(o interface{}) ([]byte, error) {
+func (m ShamatonMapMsgpackgenSerializer) Marshal(o any) ([]byte, error) {
 	v := o.(*goserbench.SmallStruct)
 	a := &m.a
 	a.Name = v.Name
@@ -51,7 +51,7 @@ func (m ShamatonMapMsgpackgenSerializer) Marshal(o interface{}) ([]byte, error) 
 	return shamatongen.MarshalAsMap(a)
 }
 
-func (m ShamatonMapMsgpackgenSerializer) Unmarshal(d []byte, o interface{}) error {
+func (m ShamatonMapMsgpackgenSerializer) Unmarshal(d []byte, o any) error {
 	a := &m.a
 	err := shamatongen.UnmarshalAsMap(d, a)
 	if err != nil {
@@ -77,7 +77,7 @@ type ShamatonArrayMsgpackgenSerializer struct {
 	a A
 }
 
-func (m ShamatonArrayMsgpackgenSerializer) Marshal(o interface{}) ([]byte, error) {
+func (m ShamatonArrayMsgpackgenSerializer) Marshal(o any) ([]byte, error) {
 	v := o.(*goserbench.SmallStruct)
 	a := &m.a
 	a.Name = v.Name
@@ -90,7 +90,7 @@ func (m ShamatonArrayMsgpackgenSerializer) Marshal(o interface{}) ([]byte, error
 
 }
 
-func (m ShamatonArrayMsgpackgenSerializer) Unmarshal(d []byte, o interface{}) error {
+func (m ShamatonArrayMsgpackgenSerializer) Unmarshal(d []byte, o any) error {
 	a := &m.a
 	err := shamatongen.UnmarshalAsArray(d, a)
 	if err != nil {

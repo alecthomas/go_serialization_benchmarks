@@ -11,11 +11,11 @@ var (
 
 type JsonIterSerializer struct{}
 
-func (j JsonIterSerializer) Marshal(o interface{}) ([]byte, error) {
+func (j JsonIterSerializer) Marshal(o any) ([]byte, error) {
 	return jsoniterFast.Marshal(o)
 }
 
-func (j JsonIterSerializer) Unmarshal(d []byte, o interface{}) error {
+func (j JsonIterSerializer) Unmarshal(d []byte, o any) error {
 	return jsoniterFast.Unmarshal(d, o)
 }
 

@@ -10,7 +10,7 @@ type GencodeSerializer struct {
 	a GencodeA
 }
 
-func (s *GencodeSerializer) Marshal(o interface{}) ([]byte, error) {
+func (s *GencodeSerializer) Marshal(o any) ([]byte, error) {
 	v := o.(*goserbench.SmallStruct)
 	a := &s.a
 	a.Name = v.Name
@@ -22,7 +22,7 @@ func (s *GencodeSerializer) Marshal(o interface{}) ([]byte, error) {
 	return a.Marshal(nil)
 }
 
-func (s *GencodeSerializer) Unmarshal(bs []byte, o interface{}) (err error) {
+func (s *GencodeSerializer) Unmarshal(bs []byte, o any) (err error) {
 	a := &s.a
 	_, err = a.Unmarshal(bs)
 	if err != nil {
@@ -48,7 +48,7 @@ type GencodeUnsafeSerializer struct {
 	a   GencodeUnsafeA
 }
 
-func (s *GencodeUnsafeSerializer) Marshal(o interface{}) ([]byte, error) {
+func (s *GencodeUnsafeSerializer) Marshal(o any) ([]byte, error) {
 	v := o.(*goserbench.SmallStruct)
 	a := &s.a
 	a.Name = v.Name
@@ -60,7 +60,7 @@ func (s *GencodeUnsafeSerializer) Marshal(o interface{}) ([]byte, error) {
 	return a.Marshal(s.buf)
 }
 
-func (s *GencodeUnsafeSerializer) Unmarshal(bs []byte, o interface{}) (err error) {
+func (s *GencodeUnsafeSerializer) Unmarshal(bs []byte, o any) (err error) {
 	a := &s.a
 	_, err = a.Unmarshal(bs)
 	if err != nil {

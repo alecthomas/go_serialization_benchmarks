@@ -7,11 +7,11 @@ import (
 
 type SerealSerializer struct{}
 
-func (s SerealSerializer) Marshal(o interface{}) ([]byte, error) {
+func (s SerealSerializer) Marshal(o any) ([]byte, error) {
 	return sereal.Marshal(o)
 }
 
-func (s SerealSerializer) Unmarshal(d []byte, o interface{}) error {
+func (s SerealSerializer) Unmarshal(d []byte, o any) error {
 	err := sereal.Unmarshal(d, o)
 	return err
 }

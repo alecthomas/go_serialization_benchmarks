@@ -15,7 +15,7 @@ func (s *PulsarSerializer) ForceUTC() bool {
 	return true
 }
 
-func (s *PulsarSerializer) Marshal(o interface{}) (buf []byte, err error) {
+func (s *PulsarSerializer) Marshal(o any) (buf []byte, err error) {
 	v := o.(*goserbench.SmallStruct)
 	a := &s.a
 	a.Name = v.Name
@@ -27,7 +27,7 @@ func (s *PulsarSerializer) Marshal(o interface{}) (buf []byte, err error) {
 	return pproto.Marshal(a)
 }
 
-func (s *PulsarSerializer) Unmarshal(bs []byte, o interface{}) (err error) {
+func (s *PulsarSerializer) Unmarshal(bs []byte, o any) (err error) {
 	a := &s.a
 
 	// Pulsar requires manually claring the fields to their default value.

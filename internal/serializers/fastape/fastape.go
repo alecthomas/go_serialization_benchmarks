@@ -23,7 +23,7 @@ func (cp smallStructTape) Sizeof(p goserbench.SmallStruct) int {
 		cp.MoneyTape.Sizeof(p.Money)
 }
 
-func (cp smallStructTape) Marshal(o interface{}) (buf []byte, err error) {
+func (cp smallStructTape) Marshal(o any) (buf []byte, err error) {
 	p := o.(*goserbench.SmallStruct)
 	buf = make([]byte, cp.Sizeof(*p))
 
@@ -43,7 +43,7 @@ func (cp smallStructTape) Marshal(o interface{}) (buf []byte, err error) {
 	return
 }
 
-func (cp smallStructTape) Unmarshal(bs []byte, o interface{}) (err error) {
+func (cp smallStructTape) Unmarshal(bs []byte, o any) (err error) {
 	p := o.(*goserbench.SmallStruct)
 
 	k, n := 0, 0

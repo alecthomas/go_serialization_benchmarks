@@ -18,7 +18,7 @@ type GogoProtoSerializer struct {
 	unmarshaller func([]byte, proto.Message) error
 }
 
-func (s *GogoProtoSerializer) Marshal(o interface{}) (buf []byte, err error) {
+func (s *GogoProtoSerializer) Marshal(o any) (buf []byte, err error) {
 	v := o.(*goserbench.SmallStruct)
 	a := &s.a
 	a.Name = v.Name
@@ -30,7 +30,7 @@ func (s *GogoProtoSerializer) Marshal(o interface{}) (buf []byte, err error) {
 	return s.marshaller(a)
 }
 
-func (s *GogoProtoSerializer) Unmarshal(bs []byte, o interface{}) (err error) {
+func (s *GogoProtoSerializer) Unmarshal(bs []byte, o any) (err error) {
 	// NOTE: gogoproto serialization in jsonpb mode does not automatically
 	// clear fields with their empty value.
 	a := &s.a

@@ -13,11 +13,11 @@ func (m BsonSerializer) TimePrecision() time.Duration {
 	return time.Millisecond
 }
 
-func (m BsonSerializer) Marshal(o interface{}) ([]byte, error) {
+func (m BsonSerializer) Marshal(o any) ([]byte, error) {
 	return bson.Marshal(o)
 }
 
-func (m BsonSerializer) Unmarshal(d []byte, o interface{}) error {
+func (m BsonSerializer) Unmarshal(d []byte, o any) error {
 	return bson.Unmarshal(d, o)
 }
 

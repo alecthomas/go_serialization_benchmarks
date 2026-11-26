@@ -8,11 +8,11 @@ import (
 
 type JsonSerializer struct{}
 
-func (j JsonSerializer) Marshal(o interface{}) ([]byte, error) {
+func (j JsonSerializer) Marshal(o any) ([]byte, error) {
 	return json.Marshal(o)
 }
 
-func (j JsonSerializer) Unmarshal(d []byte, o interface{}) error {
+func (j JsonSerializer) Unmarshal(d []byte, o any) error {
 	return json.Unmarshal(d, o)
 }
 

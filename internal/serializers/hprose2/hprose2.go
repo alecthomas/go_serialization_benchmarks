@@ -10,7 +10,7 @@ type Hprose2Serializer struct {
 	reader *hprose2.Reader
 }
 
-func (s Hprose2Serializer) Marshal(o interface{}) ([]byte, error) {
+func (s Hprose2Serializer) Marshal(o any) ([]byte, error) {
 	a := o.(*goserbench.SmallStruct)
 	writer := s.writer
 	writer.Clear()
@@ -23,7 +23,7 @@ func (s Hprose2Serializer) Marshal(o interface{}) ([]byte, error) {
 	return writer.Bytes(), nil
 }
 
-func (s Hprose2Serializer) Unmarshal(d []byte, i interface{}) error {
+func (s Hprose2Serializer) Unmarshal(d []byte, i any) error {
 	o := i.(*goserbench.SmallStruct)
 	reader := s.reader
 	reader.Init(d)

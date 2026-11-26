@@ -12,7 +12,7 @@ type HproseSerializer struct {
 	reader *hprose.Reader
 }
 
-func (s *HproseSerializer) Marshal(o interface{}) ([]byte, error) {
+func (s *HproseSerializer) Marshal(o any) ([]byte, error) {
 	a := o.(*goserbench.SmallStruct)
 	writer := s.writer
 	buf := writer.Stream.(*bytes.Buffer)
@@ -26,7 +26,7 @@ func (s *HproseSerializer) Marshal(o interface{}) ([]byte, error) {
 	return buf.Bytes()[l:], nil
 }
 
-func (s *HproseSerializer) Unmarshal(d []byte, i interface{}) (err error) {
+func (s *HproseSerializer) Unmarshal(d []byte, i any) (err error) {
 	o := i.(*goserbench.SmallStruct)
 	reader := s.reader
 	reader.Stream = &hprose.BytesReader{Bytes: d, Pos: 0}

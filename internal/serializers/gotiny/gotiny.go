@@ -11,11 +11,11 @@ type GotinySerializer struct {
 	dec *gotiny.Decoder
 }
 
-func (g GotinySerializer) Marshal(o interface{}) ([]byte, error) {
+func (g GotinySerializer) Marshal(o any) ([]byte, error) {
 	return gotiny.Marshal(o), nil
 }
 
-func (g GotinySerializer) Unmarshal(d []byte, o interface{}) error {
+func (g GotinySerializer) Unmarshal(d []byte, o any) error {
 	g.dec.Decode(d, o)
 	return nil
 }

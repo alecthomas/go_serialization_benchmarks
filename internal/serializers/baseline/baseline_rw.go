@@ -50,7 +50,7 @@ type BaselineReaderWriter struct {
 	strBuf []byte
 }
 
-func (b *BaselineReaderWriter) Marshal(o interface{}) ([]byte, error) {
+func (b *BaselineReaderWriter) Marshal(o any) ([]byte, error) {
 	// Create a new bytes buffer. We do it like this (referencing
 	// alwaysNilWriter first) to avoid the compiler de-virtualizing and
 	// inlining the calls to w.Write() directly into bytes.Buffer.Write()
@@ -92,7 +92,7 @@ func (b *BaselineReaderWriter) Marshal(o interface{}) ([]byte, error) {
 	return w.Bytes(), nil
 }
 
-func (b *BaselineReaderWriter) Unmarshal(d []byte, o interface{}) error {
+func (b *BaselineReaderWriter) Unmarshal(d []byte, o any) error {
 	// Create reader with passed buffer. We do it like this (referencing
 	// alwaysNilReader first) to ensure the compiler does not devirtualize
 	// and inline the Read() calls direcly to the *bytes.Buffer.
@@ -164,7 +164,7 @@ type BaselineReaderWriterUnsafeReuse struct {
 	strBuf []byte
 }
 
-func (b *BaselineReaderWriterUnsafeReuse) Marshal(o interface{}) ([]byte, error) {
+func (b *BaselineReaderWriterUnsafeReuse) Marshal(o any) ([]byte, error) {
 	// Get a reference to the writer and reset its buffer. We do it like
 	// this (referencing alwaysNilWriter first) to ensure the compiler does
 	// not devirtualize and inline the Write() calls direcly to the
@@ -199,7 +199,7 @@ func (b *BaselineReaderWriterUnsafeReuse) Marshal(o interface{}) ([]byte, error)
 	return w.Bytes(), nil
 }
 
-func (b *BaselineReaderWriterUnsafeReuse) Unmarshal(d []byte, o interface{}) error {
+func (b *BaselineReaderWriterUnsafeReuse) Unmarshal(d []byte, o any) error {
 	// Reset reader to passed buffer. We do it like this (referencing
 	// alwaysNilReader first) to ensure the compiler does not devirtualize
 	// and inline the Read() calls direcly to the *bytes.Buffer.

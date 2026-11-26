@@ -13,7 +13,7 @@ type FastJSONSerializer struct {
 	buf    []byte
 }
 
-func (s *FastJSONSerializer) Marshal(o interface{}) (buf []byte, err error) {
+func (s *FastJSONSerializer) Marshal(o any) (buf []byte, err error) {
 	v := o.(*goserbench.SmallStruct)
 	object, arena := s.object, s.arena
 	object.Set("name", arena.NewString(v.Name))
@@ -31,7 +31,7 @@ func (s *FastJSONSerializer) Marshal(o interface{}) (buf []byte, err error) {
 	return object.MarshalTo(s.buf), nil
 }
 
-func (s *FastJSONSerializer) Unmarshal(bs []byte, o interface{}) (err error) {
+func (s *FastJSONSerializer) Unmarshal(bs []byte, o any) (err error) {
 	v := o.(*goserbench.SmallStruct)
 	val, err := fastjson.ParseBytes(bs)
 	if err != nil {

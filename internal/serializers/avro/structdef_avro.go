@@ -69,7 +69,7 @@ func NewAvroA() goserbench.Serializer {
 	return &AvroA{record: rec, codec: codec}
 }
 
-func (a *AvroA) Marshal(o interface{}) ([]byte, error) {
+func (a *AvroA) Marshal(o any) ([]byte, error) {
 	object := o.(*goserbench.SmallStruct)
 	a.record.Set("name", object.Name)
 	a.record.Set("birthday", int64(object.BirthDay.UnixNano()))
@@ -84,7 +84,7 @@ func (a *AvroA) Marshal(o interface{}) ([]byte, error) {
 	return b.Bytes(), nil
 }
 
-func (a *AvroA) Unmarshal(d []byte, o interface{}) error {
+func (a *AvroA) Unmarshal(d []byte, o any) error {
 	object := o.(*goserbench.SmallStruct)
 	b := bytes.NewBuffer(d)
 	i, err := a.codec.Decode(b)
@@ -111,9 +111,9 @@ func (a *AvroA) String() string {
 	return "GoAvro"
 }
 
-func avroMarshal(o interface{}, marshalFunc func([]byte, interface{}) ([]byte, error)) ([]byte, error) {
+func avroMarshal(o any, marshalFunc func([]byte, any) ([]byte, error)) ([]byte, error) {
 	object := o.(*goserbench.SmallStruct)
-	return marshalFunc(nil, map[string]interface{}{
+	return marshalFunc(nil, map[string]any{
 		"name":     object.Name,
 		"birthday": int64(object.BirthDay.UnixNano()),
 		"phone":    object.Phone,
@@ -123,13 +123,13 @@ func avroMarshal(o interface{}, marshalFunc func([]byte, interface{}) ([]byte, e
 	})
 }
 
-func avroUnmarshal(d []byte, o interface{}, unmarshalFunc func([]byte) (interface{}, []byte, error)) error {
+func avroUnmarshal(d []byte, o any, unmarshalFunc func([]byte) (any, []byte, error)) error {
 	object := o.(*goserbench.SmallStruct)
 	r, _, err := unmarshalFunc(d)
 	if err != nil {
 		return err
 	}
-	m := r.(map[string]interface{})
+	m := r.(map[string]any)
 	object.Name = m["name"].(string)
 	object.BirthDay = time.Unix(0, m["birthday"].(int64))
 	object.Phone = m["phone"].(string)
@@ -147,11 +147,11 @@ func NewAvro2Txt() goserbench.Serializer {
 	return &Avro2Txt{codec: codec}
 }
 
-func (a *Avro2Txt) Marshal(o interface{}) ([]byte, error) {
+func (a *Avro2Txt) Marshal(o any) ([]byte, error) {
 	return avroMarshal(o, a.codec.TextualFromNative)
 }
 
-func (a *Avro2Txt) Unmarshal(d []byte, o interface{}) error {
+func (a *Avro2Txt) Unmarshal(d []byte, o any) error {
 	return avroUnmarshal(d, o, a.codec.NativeFromTextual)
 }
 
@@ -167,11 +167,11 @@ func NewAvro2Bin() goserbench.Serializer {
 	return &Avro2Bin{codec: codec}
 }
 
-func (a *Avro2Bin) Marshal(o interface{}) ([]byte, error) {
+func (a *Avro2Bin) Marshal(o any) ([]byte, error) {
 	return avroMarshal(o, a.codec.BinaryFromNative)
 }
 
-func (a *Avro2Bin) Unmarshal(d []byte, o interface{}) error {
+func (a *Avro2Bin) Unmarshal(d []byte, o any) error {
 	return avroUnmarshal(d, o, a.codec.NativeFromBinary)
 }
 

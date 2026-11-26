@@ -7,11 +7,11 @@ import (
 
 type ProtobufSerializer struct{}
 
-func (m ProtobufSerializer) Marshal(o interface{}) ([]byte, error) {
+func (m ProtobufSerializer) Marshal(o any) ([]byte, error) {
 	return protobuf.Encode(o)
 }
 
-func (m ProtobufSerializer) Unmarshal(d []byte, o interface{}) error {
+func (m ProtobufSerializer) Unmarshal(d []byte, o any) error {
 	return protobuf.Decode(d, o)
 }
 

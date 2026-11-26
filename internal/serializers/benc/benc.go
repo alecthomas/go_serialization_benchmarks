@@ -10,7 +10,7 @@ import (
 
 type BENCSerializer struct{}
 
-func (s BENCSerializer) Marshal(o interface{}) (buf []byte, err error) {
+func (s BENCSerializer) Marshal(o any) (buf []byte, err error) {
 	v := o.(*goserbench.SmallStruct)
 	n := bstd.SizeString(v.Name)
 	n += bstd.SizeInt64()
@@ -29,7 +29,7 @@ func (s BENCSerializer) Marshal(o interface{}) (buf []byte, err error) {
 	return
 }
 
-func (s BENCSerializer) Unmarshal(bs []byte, o interface{}) (err error) {
+func (s BENCSerializer) Unmarshal(bs []byte, o any) (err error) {
 	v := o.(*goserbench.SmallStruct)
 	var n int
 	n, v.Name, err = bstd.UnmarshalString(0, bs)
@@ -67,7 +67,7 @@ func NewBENCSerializer() goserbench.Serializer {
 
 type BENCUnsafeSerializer struct{}
 
-func (s BENCUnsafeSerializer) Marshal(o interface{}) (buf []byte, err error) {
+func (s BENCUnsafeSerializer) Marshal(o any) (buf []byte, err error) {
 	v := o.(*goserbench.SmallStruct)
 	n := bstd.SizeString(v.Name)
 	n += bstd.SizeInt64()
@@ -86,7 +86,7 @@ func (s BENCUnsafeSerializer) Marshal(o interface{}) (buf []byte, err error) {
 	return
 }
 
-func (s BENCUnsafeSerializer) Unmarshal(bs []byte, o interface{}) (err error) {
+func (s BENCUnsafeSerializer) Unmarshal(bs []byte, o any) (err error) {
 	var n int
 	v := o.(*goserbench.SmallStruct)
 	n, v.Name, err = bunsafe.UnmarshalString(0, bs)

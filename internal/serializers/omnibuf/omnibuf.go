@@ -23,7 +23,7 @@ type OmniBufCodegen struct {
 	zeroCopy bool
 }
 
-func (s *OmniBufCodegen) Marshal(o interface{}) ([]byte, error) {
+func (s *OmniBufCodegen) Marshal(o any) ([]byte, error) {
 	v := o.(*goserbench.SmallStruct)
 	a := &s.a
 	a.Name = v.Name
@@ -39,7 +39,7 @@ func (s *OmniBufCodegen) Marshal(o interface{}) ([]byte, error) {
 	return a.MarshalOmniBufAppend(nil), nil
 }
 
-func (s *OmniBufCodegen) Unmarshal(d []byte, o interface{}) error {
+func (s *OmniBufCodegen) Unmarshal(d []byte, o any) error {
 	a := &s.a
 	if err := a.UnmarshalOmniBuf(d, s.zeroCopy); err != nil {
 		return err
@@ -70,7 +70,7 @@ type OmniBufReflect struct {
 	a OmniBufGo
 }
 
-func (s *OmniBufReflect) Marshal(o interface{}) ([]byte, error) {
+func (s *OmniBufReflect) Marshal(o any) ([]byte, error) {
 	v := o.(*goserbench.SmallStruct)
 	a := &s.a
 	a.Name = v.Name
@@ -82,7 +82,7 @@ func (s *OmniBufReflect) Marshal(o interface{}) ([]byte, error) {
 	return omnibufwire.Marshal(a)
 }
 
-func (s *OmniBufReflect) Unmarshal(d []byte, o interface{}) error {
+func (s *OmniBufReflect) Unmarshal(d []byte, o any) error {
 	a := &s.a
 	*a = OmniBufGo{}
 	if err := omnibufwire.Unmarshal(d, a); err != nil {

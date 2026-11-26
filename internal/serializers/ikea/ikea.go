@@ -23,7 +23,7 @@ type IkeaSerializer struct {
 	buf *bytes.Buffer
 }
 
-func (s *IkeaSerializer) Marshal(o interface{}) (buf []byte, err error) {
+func (s *IkeaSerializer) Marshal(o any) (buf []byte, err error) {
 	v := o.(*goserbench.SmallStruct)
 	a := &s.a
 	a.Name = v.Name
@@ -41,7 +41,7 @@ func (s *IkeaSerializer) Marshal(o interface{}) (buf []byte, err error) {
 	return
 }
 
-func (s *IkeaSerializer) Unmarshal(bs []byte, o interface{}) (err error) {
+func (s *IkeaSerializer) Unmarshal(bs []byte, o any) (err error) {
 	a := &s.a
 	s.buf.Reset()
 	s.buf.Write(bs)

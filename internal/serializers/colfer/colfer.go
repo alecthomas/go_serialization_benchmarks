@@ -10,7 +10,7 @@ func (s *ColferSerializer) ForceUTC() bool {
 	return true
 }
 
-func (s *ColferSerializer) Marshal(o interface{}) (buf []byte, err error) {
+func (s *ColferSerializer) Marshal(o any) (buf []byte, err error) {
 	v := o.(*goserbench.SmallStruct)
 	a := &s.a
 	a.Name = v.Name
@@ -22,7 +22,7 @@ func (s *ColferSerializer) Marshal(o interface{}) (buf []byte, err error) {
 	return a.MarshalBinary()
 }
 
-func (s *ColferSerializer) Unmarshal(bs []byte, o interface{}) (err error) {
+func (s *ColferSerializer) Unmarshal(bs []byte, o any) (err error) {
 	a := &s.a
 
 	// Colfer requires manually claring the fields to their default value.

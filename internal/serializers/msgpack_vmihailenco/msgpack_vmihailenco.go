@@ -7,11 +7,11 @@ import (
 
 type VmihailencoMsgpackSerializer struct{}
 
-func (m VmihailencoMsgpackSerializer) Marshal(o interface{}) ([]byte, error) {
+func (m VmihailencoMsgpackSerializer) Marshal(o any) ([]byte, error) {
 	return vmihailenco.Marshal(o)
 }
 
-func (m VmihailencoMsgpackSerializer) Unmarshal(d []byte, o interface{}) error {
+func (m VmihailencoMsgpackSerializer) Unmarshal(d []byte, o any) error {
 	return vmihailenco.Unmarshal(d, o)
 }
 

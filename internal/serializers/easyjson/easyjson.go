@@ -9,7 +9,7 @@ type EasyJSONSerializer struct {
 	a A
 }
 
-func (m EasyJSONSerializer) Marshal(o interface{}) ([]byte, error) {
+func (m EasyJSONSerializer) Marshal(o any) ([]byte, error) {
 	v := o.(*goserbench.SmallStruct)
 	a := &m.a
 	a.Name = v.Name
@@ -21,7 +21,7 @@ func (m EasyJSONSerializer) Marshal(o interface{}) ([]byte, error) {
 	return easyjson.Marshal(a)
 }
 
-func (m EasyJSONSerializer) Unmarshal(d []byte, o interface{}) error {
+func (m EasyJSONSerializer) Unmarshal(d []byte, o any) error {
 	a := &m.a
 	err := easyjson.Unmarshal(d, a)
 	if err != nil {

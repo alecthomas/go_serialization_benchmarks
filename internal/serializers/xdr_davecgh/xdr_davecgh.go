@@ -7,11 +7,11 @@ import (
 
 type XDRDavecghSerializer struct{}
 
-func (x XDRDavecghSerializer) Marshal(o interface{}) ([]byte, error) {
+func (x XDRDavecghSerializer) Marshal(o any) ([]byte, error) {
 	return xdr.Marshal(o)
 }
 
-func (x XDRDavecghSerializer) Unmarshal(d []byte, o interface{}) error {
+func (x XDRDavecghSerializer) Unmarshal(d []byte, o any) error {
 	_, err := xdr.Unmarshal(d, o)
 	return err
 }

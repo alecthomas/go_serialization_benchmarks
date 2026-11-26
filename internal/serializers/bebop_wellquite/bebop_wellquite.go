@@ -11,7 +11,7 @@ type BebopWellquiteSerializer struct {
 	buf []byte
 }
 
-func (s *BebopWellquiteSerializer) Marshal(o interface{}) (buf []byte, err error) {
+func (s *BebopWellquiteSerializer) Marshal(o any) (buf []byte, err error) {
 	v := o.(*goserbench.SmallStruct)
 	a := &s.a
 	a.Name = v.Name
@@ -23,7 +23,7 @@ func (s *BebopWellquiteSerializer) Marshal(o interface{}) (buf []byte, err error
 	return a.MarshalBebop(s.buf)
 }
 
-func (s *BebopWellquiteSerializer) Unmarshal(bs []byte, o interface{}) (err error) {
+func (s *BebopWellquiteSerializer) Unmarshal(bs []byte, o any) (err error) {
 	a := &s.a
 	_, err = a.UnmarshalBebop(bs)
 	if err != nil {

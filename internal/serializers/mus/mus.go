@@ -11,7 +11,7 @@ import (
 
 type MUSSerializer struct{}
 
-func (s MUSSerializer) Marshal(o interface{}) ([]byte, error) {
+func (s MUSSerializer) Marshal(o any) ([]byte, error) {
 	v := o.(*goserbench.SmallStruct)
 	n := ord.SizeString(v.Name, nil)
 	n += unsafe.SizeInt64(v.BirthDay.UnixNano())
@@ -29,7 +29,7 @@ func (s MUSSerializer) Marshal(o interface{}) ([]byte, error) {
 	return buf, nil
 }
 
-func (s MUSSerializer) Unmarshal(bs []byte, o interface{}) (err error) {
+func (s MUSSerializer) Unmarshal(bs []byte, o any) (err error) {
 	v := o.(*goserbench.SmallStruct)
 	var n int
 	v.Name, n, err = ord.UnmarshalString(nil, bs)
@@ -76,7 +76,7 @@ type MUSUnsafeReuseSerializer struct {
 	buf []byte
 }
 
-func (s MUSUnsafeReuseSerializer) Marshal(o interface{}) ([]byte, error) {
+func (s MUSUnsafeReuseSerializer) Marshal(o any) ([]byte, error) {
 	v := o.(*goserbench.SmallStruct)
 	n := unsafe.MarshalString(v.Name, nil, s.buf)
 	n += unsafe.MarshalInt64(v.BirthDay.UnixNano(), s.buf[n:])
@@ -87,7 +87,7 @@ func (s MUSUnsafeReuseSerializer) Marshal(o interface{}) ([]byte, error) {
 	return s.buf[:n], nil
 }
 
-func (s MUSUnsafeReuseSerializer) Unmarshal(bs []byte, o interface{}) (err error) {
+func (s MUSUnsafeReuseSerializer) Unmarshal(bs []byte, o any) (err error) {
 	v := o.(*goserbench.SmallStruct)
 	var n int
 	v.Name, n, err = unsafe.UnmarshalString(nil, bs)

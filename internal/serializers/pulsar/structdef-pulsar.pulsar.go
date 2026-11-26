@@ -812,7 +812,7 @@ func file_structdef_pulsar_proto_rawDescGZIP() []byte {
 }
 
 var file_structdef_pulsar_proto_msgTypes = make([]protoimpl.MessageInfo, 1)
-var file_structdef_pulsar_proto_goTypes = []interface{}{
+var file_structdef_pulsar_proto_goTypes = []any{
 	(*PulsarBufA)(nil), // 0: goserbench.PulsarBufA
 }
 var file_structdef_pulsar_proto_depIdxs = []int32{
@@ -829,7 +829,7 @@ func file_structdef_pulsar_proto_init() {
 		return
 	}
 	if !protoimpl.UnsafeEnabled {
-		file_structdef_pulsar_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
+		file_structdef_pulsar_proto_msgTypes[0].Exporter = func(v any, i int) any {
 			switch v := v.(*PulsarBufA); i {
 			case 0:
 				return &v.state
