@@ -7,20 +7,20 @@ import (
 	"github.com/alecthomas/go_serialization_benchmarks/goserbench"
 )
 
-type GobSerializer struct{}
+type GobCodec struct{ goserbench.NativeSmallStruct }
 
-func (g *GobSerializer) Marshal(o any) ([]byte, error) {
+func (g *GobCodec) Marshal(o *goserbench.SmallStruct) ([]byte, error) {
 	var buf bytes.Buffer
 	err := gob.NewEncoder(&buf).Encode(o)
 	return buf.Bytes(), err
 }
 
-func (g *GobSerializer) Unmarshal(d []byte, o any) error {
+func (g *GobCodec) Unmarshal(d []byte, o *goserbench.SmallStruct) error {
 	return gob.NewDecoder(bytes.NewReader(d)).Decode(o)
 }
 
-func NewGobSerializer() goserbench.Serializer {
+func NewGobCodec() goserbench.Codec[goserbench.SmallStruct] {
 	// registration required before first use
 	gob.Register(goserbench.SmallStruct{})
-	return &GobSerializer{}
+	return &GobCodec{}
 }

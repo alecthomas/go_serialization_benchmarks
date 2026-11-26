@@ -8,13 +8,14 @@ import (
 	flatbuffers "github.com/google/flatbuffers/go"
 )
 
-type FlatBufferSerializer struct {
+type FlatBufferCodec struct {
+	goserbench.NativeSmallStruct
+
 	unsafeReuse bool
 	builder     *flatbuffers.Builder
 }
 
-func (s *FlatBufferSerializer) Marshal(o any) ([]byte, error) {
-	a := o.(*goserbench.SmallStruct)
+func (s *FlatBufferCodec) Marshal(a *goserbench.SmallStruct) ([]byte, error) {
 	builder := s.builder
 	if !s.unsafeReuse {
 		builder.Bytes = nil // free
@@ -35,8 +36,7 @@ func (s *FlatBufferSerializer) Marshal(o any) ([]byte, error) {
 	return builder.FinishedBytes(), nil
 }
 
-func (s *FlatBufferSerializer) Unmarshal(d []byte, i any) error {
-	a := i.(*goserbench.SmallStruct)
+func (s *FlatBufferCodec) Unmarshal(d []byte, a *goserbench.SmallStruct) error {
 	o := FlatBufferA{}
 	o.Init(d, flatbuffers.GetUOffsetT(d))
 	if s.unsafeReuse {
@@ -53,13 +53,13 @@ func (s *FlatBufferSerializer) Unmarshal(d []byte, i any) error {
 	return nil
 }
 
-func NewFlatBuffersSerializer() goserbench.Serializer {
-	return &FlatBufferSerializer{builder: flatbuffers.NewBuilder(0), unsafeReuse: false}
+func NewFlatBuffersCodec() goserbench.Codec[goserbench.SmallStruct] {
+	return &FlatBufferCodec{builder: flatbuffers.NewBuilder(0), unsafeReuse: false}
 }
 
-func NewFlatBuffersUnsafeReuseSerializer() goserbench.Serializer {
+func NewFlatBuffersUnsafeReuseCodec() goserbench.Codec[goserbench.SmallStruct] {
 	const maxSerSize = 128
-	return &FlatBufferSerializer{builder: flatbuffers.NewBuilder(maxSerSize), unsafeReuse: true}
+	return &FlatBufferCodec{builder: flatbuffers.NewBuilder(maxSerSize), unsafeReuse: true}
 }
 
 // unsafeSliceToString converts a byte slice to a string in an unsafe way

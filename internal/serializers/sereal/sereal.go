@@ -5,17 +5,17 @@ import (
 	"github.com/alecthomas/go_serialization_benchmarks/goserbench"
 )
 
-type SerealSerializer struct{}
+type SerealCodec struct{ goserbench.NativeSmallStruct }
 
-func (s SerealSerializer) Marshal(o any) ([]byte, error) {
+func (s SerealCodec) Marshal(o *goserbench.SmallStruct) ([]byte, error) {
 	return sereal.Marshal(o)
 }
 
-func (s SerealSerializer) Unmarshal(d []byte, o any) error {
+func (s SerealCodec) Unmarshal(d []byte, o *goserbench.SmallStruct) error {
 	err := sereal.Unmarshal(d, o)
 	return err
 }
 
-func NewSerealSerializer() goserbench.Serializer {
-	return SerealSerializer{}
+func NewSerealCodec() goserbench.Codec[goserbench.SmallStruct] {
+	return SerealCodec{}
 }

@@ -5,13 +5,14 @@ import (
 	hprose2 "github.com/hprose/hprose-golang/io"
 )
 
-type Hprose2Serializer struct {
+type Hprose2Codec struct {
+	goserbench.NativeSmallStruct
+
 	writer *hprose2.Writer
 	reader *hprose2.Reader
 }
 
-func (s Hprose2Serializer) Marshal(o any) ([]byte, error) {
-	a := o.(*goserbench.SmallStruct)
+func (s Hprose2Codec) Marshal(a *goserbench.SmallStruct) ([]byte, error) {
 	writer := s.writer
 	writer.Clear()
 	writer.WriteString(a.Name)
@@ -23,8 +24,7 @@ func (s Hprose2Serializer) Marshal(o any) ([]byte, error) {
 	return writer.Bytes(), nil
 }
 
-func (s Hprose2Serializer) Unmarshal(d []byte, i any) error {
-	o := i.(*goserbench.SmallStruct)
+func (s Hprose2Codec) Unmarshal(d []byte, o *goserbench.SmallStruct) error {
 	reader := s.reader
 	reader.Init(d)
 	o.Name = reader.ReadString()
@@ -36,8 +36,8 @@ func (s Hprose2Serializer) Unmarshal(d []byte, i any) error {
 	return nil
 }
 
-func NewHProse2Serializer() goserbench.Serializer {
+func NewHProse2Codec() goserbench.Codec[goserbench.SmallStruct] {
 	writer := hprose2.NewWriter(true)
 	reader := hprose2.NewReader(nil, true)
-	return Hprose2Serializer{writer: writer, reader: reader}
+	return Hprose2Codec{writer: writer, reader: reader}
 }

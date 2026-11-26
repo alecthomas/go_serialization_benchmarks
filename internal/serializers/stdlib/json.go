@@ -6,16 +6,16 @@ import (
 	"github.com/alecthomas/go_serialization_benchmarks/goserbench"
 )
 
-type JsonSerializer struct{}
+type JsonCodec struct{ goserbench.NativeSmallStruct }
 
-func (j JsonSerializer) Marshal(o any) ([]byte, error) {
+func (j JsonCodec) Marshal(o *goserbench.SmallStruct) ([]byte, error) {
 	return json.Marshal(o)
 }
 
-func (j JsonSerializer) Unmarshal(d []byte, o any) error {
+func (j JsonCodec) Unmarshal(d []byte, o *goserbench.SmallStruct) error {
 	return json.Unmarshal(d, o)
 }
 
-func NewJSONSerializer() goserbench.Serializer {
-	return JsonSerializer{}
+func NewJSONCodec() goserbench.Codec[goserbench.SmallStruct] {
+	return JsonCodec{}
 }

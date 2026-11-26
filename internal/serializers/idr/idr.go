@@ -5,11 +5,12 @@ import (
 	"github.com/chmike/ditp/idr/low"
 )
 
-type IDRSerializer struct {
+type IDRCodec struct {
+	goserbench.NativeSmallStruct
+
 }
 
-func (s IDRSerializer) Marshal(o any) ([]byte, error) {
-	v := o.(*goserbench.SmallStruct)
+func (s IDRCodec) Marshal(v *goserbench.SmallStruct) ([]byte, error) {
 	e := make([]byte, 0, 64)
 	e = low.PutTime(e, v.BirthDay)
 	e = low.PutFloat64(e, v.Money)
@@ -20,8 +21,7 @@ func (s IDRSerializer) Marshal(o any) ([]byte, error) {
 	return e, nil
 }
 
-func (s IDRSerializer) Unmarshal(d []byte, o any) (err error) {
-	v := o.(*goserbench.SmallStruct)
+func (s IDRCodec) Unmarshal(d []byte, v *goserbench.SmallStruct) (err error) {
 	d, v.BirthDay = low.Time(d)
 	d, v.Money = low.Float64(d)
 	d, v.Spouse = low.Bool(d)
@@ -31,16 +31,17 @@ func (s IDRSerializer) Unmarshal(d []byte, o any) (err error) {
 	return nil
 }
 
-func NewIDRSerializer() goserbench.Serializer {
-	return IDRSerializer{}
+func NewIDRCodec() goserbench.Codec[goserbench.SmallStruct] {
+	return IDRCodec{}
 }
 
-type IDRSerializerReuse struct {
+type IDRReuseCodec struct {
+	goserbench.NativeSmallStruct
+
 	e low.Encoder
 }
 
-func (s IDRSerializerReuse) Marshal(o any) ([]byte, error) {
-	v := o.(*goserbench.SmallStruct)
+func (s IDRReuseCodec) Marshal(v *goserbench.SmallStruct) ([]byte, error) {
 	e := low.Reset(s.e)
 	e = low.PutTime(e, v.BirthDay)
 	e = low.PutFloat64(e, v.Money)
@@ -51,8 +52,7 @@ func (s IDRSerializerReuse) Marshal(o any) ([]byte, error) {
 	return e, nil
 }
 
-func (s IDRSerializerReuse) Unmarshal(d []byte, o any) (err error) {
-	v := o.(*goserbench.SmallStruct)
+func (s IDRReuseCodec) Unmarshal(d []byte, v *goserbench.SmallStruct) (err error) {
 	d, v.BirthDay = low.Time(d)
 	d, v.Money = low.Float64(d)
 	d, v.Spouse = low.Bool(d)
@@ -62,6 +62,6 @@ func (s IDRSerializerReuse) Unmarshal(d []byte, o any) (err error) {
 	return nil
 }
 
-func NewIDRSerializerReuse() goserbench.Serializer {
-	return IDRSerializerReuse{e: make([]byte, 256)} // set initial buffer to 256 bytes
+func NewIDRReuseCodec() goserbench.Codec[goserbench.SmallStruct] {
+	return IDRReuseCodec{e: make([]byte, 256)} // set initial buffer to 256 bytes
 }

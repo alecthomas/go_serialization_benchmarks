@@ -5,17 +5,17 @@ import (
 	"github.com/davecgh/go-xdr/xdr"
 )
 
-type XDRDavecghSerializer struct{}
+type XDRDavecghCodec struct{ goserbench.NativeSmallStruct }
 
-func (x XDRDavecghSerializer) Marshal(o any) ([]byte, error) {
+func (x XDRDavecghCodec) Marshal(o *goserbench.SmallStruct) ([]byte, error) {
 	return xdr.Marshal(o)
 }
 
-func (x XDRDavecghSerializer) Unmarshal(d []byte, o any) error {
+func (x XDRDavecghCodec) Unmarshal(d []byte, o *goserbench.SmallStruct) error {
 	_, err := xdr.Unmarshal(d, o)
 	return err
 }
 
-func NewXDRDavecghSerializer() goserbench.Serializer {
-	return XDRDavecghSerializer{}
+func NewXDRDavecghCodec() goserbench.Codec[goserbench.SmallStruct] {
+	return XDRDavecghCodec{}
 }

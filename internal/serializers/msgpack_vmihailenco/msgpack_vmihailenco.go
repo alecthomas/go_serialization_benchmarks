@@ -5,16 +5,16 @@ import (
 	vmihailenco "github.com/vmihailenco/msgpack/v5"
 )
 
-type VmihailencoMsgpackSerializer struct{}
+type VmihailencoMsgpackCodec struct{ goserbench.NativeSmallStruct }
 
-func (m VmihailencoMsgpackSerializer) Marshal(o any) ([]byte, error) {
+func (m VmihailencoMsgpackCodec) Marshal(o *goserbench.SmallStruct) ([]byte, error) {
 	return vmihailenco.Marshal(o)
 }
 
-func (m VmihailencoMsgpackSerializer) Unmarshal(d []byte, o any) error {
+func (m VmihailencoMsgpackCodec) Unmarshal(d []byte, o *goserbench.SmallStruct) error {
 	return vmihailenco.Unmarshal(d, o)
 }
 
-func NewVmihailencoMsgpackSerialier() goserbench.Serializer {
-	return VmihailencoMsgpackSerializer{}
+func NewVmihailencoMsgpackCodec() goserbench.Codec[goserbench.SmallStruct] {
+	return VmihailencoMsgpackCodec{}
 }

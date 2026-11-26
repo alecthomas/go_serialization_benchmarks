@@ -7,20 +7,20 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
-type BsonSerializer struct{}
+type BsonCodec struct{ goserbench.NativeSmallStruct }
 
-func (m BsonSerializer) TimePrecision() time.Duration {
+func (m BsonCodec) TimePrecision() time.Duration {
 	return time.Millisecond
 }
 
-func (m BsonSerializer) Marshal(o any) ([]byte, error) {
+func (m BsonCodec) Marshal(o *goserbench.SmallStruct) ([]byte, error) {
 	return bson.Marshal(o)
 }
 
-func (m BsonSerializer) Unmarshal(d []byte, o any) error {
+func (m BsonCodec) Unmarshal(d []byte, o *goserbench.SmallStruct) error {
 	return bson.Unmarshal(d, o)
 }
 
-func NewBsonSerializer() goserbench.Serializer {
-	return BsonSerializer{}
+func NewBsonCodec() goserbench.Codec[goserbench.SmallStruct] {
+	return BsonCodec{}
 }

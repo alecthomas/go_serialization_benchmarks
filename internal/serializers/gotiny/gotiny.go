@@ -7,22 +7,24 @@ import (
 	"github.com/cybriq/gotiny"
 )
 
-type GotinySerializer struct {
+type GotinyCodec struct {
+	goserbench.NativeSmallStruct
+
 	dec *gotiny.Decoder
 }
 
-func (g GotinySerializer) Marshal(o any) ([]byte, error) {
+func (g GotinyCodec) Marshal(o *goserbench.SmallStruct) ([]byte, error) {
 	return gotiny.Marshal(o), nil
 }
 
-func (g GotinySerializer) Unmarshal(d []byte, o any) error {
+func (g GotinyCodec) Unmarshal(d []byte, o *goserbench.SmallStruct) error {
 	g.dec.Decode(d, o)
 	return nil
 }
 
-func NewGotinySerializer() goserbench.Serializer {
+func NewGotinyCodec() goserbench.Codec[goserbench.SmallStruct] {
 	ot := reflect.TypeOf(goserbench.SmallStruct{})
-	return GotinySerializer{
+	return GotinyCodec{
 		dec: gotiny.NewDecoderWithType(ot),
 	}
 }

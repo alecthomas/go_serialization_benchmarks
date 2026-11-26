@@ -9,8 +9,6 @@ import (
 	"regexp"
 	"strings"
 	"testing"
-
-	"github.com/alecthomas/go_serialization_benchmarks/goserbench"
 )
 
 type reportLine struct {
@@ -43,15 +41,13 @@ func BenchAndReportSerializers(generateReport bool, validate bool, namesRe *rege
 			continue
 		}
 
-		marshalRes := testing.Benchmark(func(b *testing.B) {
-			goserbench.BenchMarshalSmallStruct(b, bench.New())
-		})
+		marshalRes := testing.Benchmark(bench.Bench.Marshal)
 		fmt.Printf("%10s -   Marshal - %s %s\n", bench.Name, marshalRes.String(),
 			marshalRes.MemString())
 
 		unmarshalOk := false
 		unmarshalRes := testing.Benchmark(func(b *testing.B) {
-			goserbench.BenchUnmarshalSmallStruct(b, bench.New(), validate)
+			bench.Bench.Unmarshal(b, validate)
 			unmarshalOk = true
 		})
 		if !unmarshalOk {

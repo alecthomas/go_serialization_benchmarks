@@ -5,25 +5,27 @@ import (
 	"github.com/ugorji/go/codec"
 )
 
-type UgorjiCodecSerializer struct {
+type UgorjiCodec struct {
+	goserbench.NativeSmallStruct
+
 	codec.Handle
 }
 
-func (u *UgorjiCodecSerializer) Marshal(o any) ([]byte, error) {
+func (u *UgorjiCodec) Marshal(o *goserbench.SmallStruct) ([]byte, error) {
 	var bs []byte
 	return bs, codec.NewEncoderBytes(&bs, u.Handle).Encode(o)
 }
 
-func (u *UgorjiCodecSerializer) Unmarshal(d []byte, o any) error {
+func (u *UgorjiCodec) Unmarshal(d []byte, o *goserbench.SmallStruct) error {
 	return codec.NewDecoderBytes(d, u.Handle).Decode(o)
 }
 
-func NewUgorjiCodecMsgPack() goserbench.Serializer {
-	return &UgorjiCodecSerializer{&codec.MsgpackHandle{}}
+func NewUgorjiMsgPackCodec() goserbench.Codec[goserbench.SmallStruct] {
+	return &UgorjiCodec{Handle: &codec.MsgpackHandle{}}
 }
 
-func NewUgorjiCodecBinc() goserbench.Serializer {
+func NewUgorjiBincCodec() goserbench.Codec[goserbench.SmallStruct] {
 	h := &codec.BincHandle{}
 	h.AsSymbols = 0
-	return &UgorjiCodecSerializer{h}
+	return &UgorjiCodec{Handle: h}
 }

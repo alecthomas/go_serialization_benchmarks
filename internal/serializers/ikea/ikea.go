@@ -18,20 +18,11 @@ type IkeA struct {
 	Money    uint64
 }
 
-type IkeaSerializer struct {
-	a   IkeA
+type IkeaCodec struct {
 	buf *bytes.Buffer
 }
 
-func (s *IkeaSerializer) Marshal(o any) (buf []byte, err error) {
-	v := o.(*goserbench.SmallStruct)
-	a := &s.a
-	a.Name = v.Name
-	a.BirthDay = v.BirthDay.UnixNano()
-	a.Phone = v.Phone
-	a.Siblings = int32(v.Siblings)
-	a.Spouse = v.Spouse
-	a.Money = math.Float64bits(v.Money)
+func (s *IkeaCodec) Marshal(a *IkeA) (buf []byte, err error) {
 	err = ikea.Pack(s.buf, a)
 	if err != nil {
 		return
@@ -41,25 +32,30 @@ func (s *IkeaSerializer) Marshal(o any) (buf []byte, err error) {
 	return
 }
 
-func (s *IkeaSerializer) Unmarshal(bs []byte, o any) (err error) {
-	a := &s.a
+func (s *IkeaCodec) Unmarshal(bs []byte, a *IkeA) error {
 	s.buf.Reset()
 	s.buf.Write(bs)
-	err = ikea.Unpack(s.buf, a)
-	if err != nil {
-		return
-	}
+	return ikea.Unpack(s.buf, a)
+}
 
-	v := o.(*goserbench.SmallStruct)
+func (s *IkeaCodec) FromSmall(v *goserbench.SmallStruct, a *IkeA) {
+	a.Name = v.Name
+	a.BirthDay = v.BirthDay.UnixNano()
+	a.Phone = v.Phone
+	a.Siblings = int32(v.Siblings)
+	a.Spouse = v.Spouse
+	a.Money = math.Float64bits(v.Money)
+}
+
+func (s *IkeaCodec) ToSmall(a *IkeA, v *goserbench.SmallStruct) {
 	v.Name = a.Name
 	v.BirthDay = time.Unix(0, a.BirthDay)
 	v.Phone = a.Phone
 	v.Siblings = int(a.Siblings)
 	v.Spouse = a.Spouse
 	v.Money = math.Float64frombits(a.Money)
-	return
 }
 
-func NewIkeaSerializer() goserbench.Serializer {
-	return &IkeaSerializer{buf: bytes.NewBuffer(make([]byte, 0, 1024))}
+func NewIkeaCodec() goserbench.Codec[IkeA] {
+	return &IkeaCodec{buf: bytes.NewBuffer(make([]byte, 0, 1024))}
 }

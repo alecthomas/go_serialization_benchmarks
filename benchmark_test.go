@@ -3,8 +3,6 @@ package main
 import (
 	"fmt"
 	"testing"
-
-	"github.com/alecthomas/go_serialization_benchmarks/goserbench"
 )
 
 func BenchmarkSerializers(b *testing.B) {
@@ -18,11 +16,9 @@ Validating = %t
 
 	for i := range benchmarkCases {
 		bc := benchmarkCases[i]
-		b.Run("marshal/"+bc.Name, func(b *testing.B) {
-			goserbench.BenchMarshalSmallStruct(b, bc.New())
-		})
+		b.Run("marshal/"+bc.Name, bc.Bench.Marshal)
 		b.Run("unmarshal/"+bc.Name, func(b *testing.B) {
-			goserbench.BenchUnmarshalSmallStruct(b, bc.New(), *validate)
+			bc.Bench.Unmarshal(b, *validate)
 		})
 	}
 }

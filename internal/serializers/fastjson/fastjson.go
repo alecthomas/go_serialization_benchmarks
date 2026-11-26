@@ -7,14 +7,15 @@ import (
 	"github.com/valyala/fastjson"
 )
 
-type FastJSONSerializer struct {
+type FastJSONCodec struct {
+	goserbench.NativeSmallStruct
+
 	arena  fastjson.Arena
 	object *fastjson.Value
 	buf    []byte
 }
 
-func (s *FastJSONSerializer) Marshal(o any) (buf []byte, err error) {
-	v := o.(*goserbench.SmallStruct)
+func (s *FastJSONCodec) Marshal(v *goserbench.SmallStruct) (buf []byte, err error) {
 	object, arena := s.object, s.arena
 	object.Set("name", arena.NewString(v.Name))
 	object.Set("birthday", arena.NewNumberInt(int(v.BirthDay.UnixNano())))
@@ -31,8 +32,7 @@ func (s *FastJSONSerializer) Marshal(o any) (buf []byte, err error) {
 	return object.MarshalTo(s.buf), nil
 }
 
-func (s *FastJSONSerializer) Unmarshal(bs []byte, o any) (err error) {
-	v := o.(*goserbench.SmallStruct)
+func (s *FastJSONCodec) Unmarshal(bs []byte, v *goserbench.SmallStruct) (err error) {
 	val, err := fastjson.ParseBytes(bs)
 	if err != nil {
 		return err
@@ -46,17 +46,17 @@ func (s *FastJSONSerializer) Unmarshal(bs []byte, o any) (err error) {
 	return nil
 }
 
-func NewFastJSONSerializer() goserbench.Serializer {
+func NewFastJSONCodec() goserbench.Codec[goserbench.SmallStruct] {
 	var arena fastjson.Arena
-	return &FastJSONSerializer{
+	return &FastJSONCodec{
 		object: arena.NewObject(),
 		arena:  arena,
 	}
 }
 
-func NewFastJSONReuseSerializer() goserbench.Serializer {
+func NewFastJSONReuseCodec() goserbench.Codec[goserbench.SmallStruct] {
 	var arena fastjson.Arena
-	return &FastJSONSerializer{
+	return &FastJSONCodec{
 		object: arena.NewObject(),
 		arena:  arena,
 		buf:    make([]byte, 0, 1024),

@@ -5,16 +5,16 @@ import (
 	"go.dedis.ch/protobuf"
 )
 
-type ProtobufSerializer struct{}
+type ProtobufCodec struct{ goserbench.NativeSmallStruct }
 
-func (m ProtobufSerializer) Marshal(o any) ([]byte, error) {
+func (m ProtobufCodec) Marshal(o *goserbench.SmallStruct) ([]byte, error) {
 	return protobuf.Encode(o)
 }
 
-func (m ProtobufSerializer) Unmarshal(d []byte, o any) error {
+func (m ProtobufCodec) Unmarshal(d []byte, o *goserbench.SmallStruct) error {
 	return protobuf.Decode(d, o)
 }
 
-func NewProtobufSerializer() goserbench.Serializer {
-	return ProtobufSerializer{}
+func NewProtobufCodec() goserbench.Codec[goserbench.SmallStruct] {
+	return ProtobufCodec{}
 }

@@ -9,16 +9,22 @@ import (
 	goavro2 "github.com/linkedin/goavro/v2"
 )
 
-type AvroA struct {
+type GoAvroCodec struct {
+	goserbench.NativeSmallStruct
+
 	record *goavro.Record
 	codec  goavro.Codec
 }
 
-type Avro2Txt struct {
+type Avro2TextCodec struct {
+	goserbench.NativeSmallStruct
+
 	codec *goavro2.Codec
 }
 
-type Avro2Bin struct {
+type Avro2BinaryCodec struct {
+	goserbench.NativeSmallStruct
+
 	codec *goavro2.Codec
 }
 
@@ -57,7 +63,7 @@ var avroSchemaJSON = `
 		}
 	`
 
-func NewAvroA() goserbench.Serializer {
+func NewGoAvroCodec() goserbench.Codec[goserbench.SmallStruct] {
 	rec, err := goavro.NewRecord(goavro.RecordSchema(avroSchemaJSON))
 	if err != nil {
 		panic(err)
@@ -66,11 +72,10 @@ func NewAvroA() goserbench.Serializer {
 	if err != nil {
 		panic(err)
 	}
-	return &AvroA{record: rec, codec: codec}
+	return &GoAvroCodec{record: rec, codec: codec}
 }
 
-func (a *AvroA) Marshal(o any) ([]byte, error) {
-	object := o.(*goserbench.SmallStruct)
+func (a *GoAvroCodec) Marshal(object *goserbench.SmallStruct) ([]byte, error) {
 	a.record.Set("name", object.Name)
 	a.record.Set("birthday", int64(object.BirthDay.UnixNano()))
 	a.record.Set("phone", object.Phone)
@@ -84,8 +89,7 @@ func (a *AvroA) Marshal(o any) ([]byte, error) {
 	return b.Bytes(), nil
 }
 
-func (a *AvroA) Unmarshal(d []byte, o any) error {
-	object := o.(*goserbench.SmallStruct)
+func (a *GoAvroCodec) Unmarshal(d []byte, object *goserbench.SmallStruct) error {
 	b := bytes.NewBuffer(d)
 	i, err := a.codec.Decode(b)
 	if err != nil {
@@ -107,12 +111,11 @@ func (a *AvroA) Unmarshal(d []byte, o any) error {
 	return nil
 }
 
-func (a *AvroA) String() string {
+func (a *GoAvroCodec) String() string {
 	return "GoAvro"
 }
 
-func avroMarshal(o any, marshalFunc func([]byte, any) ([]byte, error)) ([]byte, error) {
-	object := o.(*goserbench.SmallStruct)
+func avroMarshal(object *goserbench.SmallStruct, marshalFunc func([]byte, any) ([]byte, error)) ([]byte, error) {
 	return marshalFunc(nil, map[string]any{
 		"name":     object.Name,
 		"birthday": int64(object.BirthDay.UnixNano()),
@@ -123,8 +126,7 @@ func avroMarshal(o any, marshalFunc func([]byte, any) ([]byte, error)) ([]byte, 
 	})
 }
 
-func avroUnmarshal(d []byte, o any, unmarshalFunc func([]byte) (any, []byte, error)) error {
-	object := o.(*goserbench.SmallStruct)
+func avroUnmarshal(d []byte, object *goserbench.SmallStruct, unmarshalFunc func([]byte) (any, []byte, error)) error {
 	r, _, err := unmarshalFunc(d)
 	if err != nil {
 		return err
@@ -139,42 +141,42 @@ func avroUnmarshal(d []byte, o any, unmarshalFunc func([]byte) (any, []byte, err
 	return nil
 }
 
-func NewAvro2Txt() goserbench.Serializer {
+func NewAvro2TextCodec() goserbench.Codec[goserbench.SmallStruct] {
 	codec, err := goavro2.NewCodec(avroSchemaJSON)
 	if err != nil {
 		panic(err)
 	}
-	return &Avro2Txt{codec: codec}
+	return &Avro2TextCodec{codec: codec}
 }
 
-func (a *Avro2Txt) Marshal(o any) ([]byte, error) {
+func (a *Avro2TextCodec) Marshal(o *goserbench.SmallStruct) ([]byte, error) {
 	return avroMarshal(o, a.codec.TextualFromNative)
 }
 
-func (a *Avro2Txt) Unmarshal(d []byte, o any) error {
+func (a *Avro2TextCodec) Unmarshal(d []byte, o *goserbench.SmallStruct) error {
 	return avroUnmarshal(d, o, a.codec.NativeFromTextual)
 }
 
-func (a *Avro2Txt) String() string {
+func (a *Avro2TextCodec) String() string {
 	return "GoAvro2Text"
 }
 
-func NewAvro2Bin() goserbench.Serializer {
+func NewAvro2BinaryCodec() goserbench.Codec[goserbench.SmallStruct] {
 	codec, err := goavro2.NewCodec(avroSchemaJSON)
 	if err != nil {
 		panic(err)
 	}
-	return &Avro2Bin{codec: codec}
+	return &Avro2BinaryCodec{codec: codec}
 }
 
-func (a *Avro2Bin) Marshal(o any) ([]byte, error) {
+func (a *Avro2BinaryCodec) Marshal(o *goserbench.SmallStruct) ([]byte, error) {
 	return avroMarshal(o, a.codec.BinaryFromNative)
 }
 
-func (a *Avro2Bin) Unmarshal(d []byte, o any) error {
+func (a *Avro2BinaryCodec) Unmarshal(d []byte, o *goserbench.SmallStruct) error {
 	return avroUnmarshal(d, o, a.codec.NativeFromBinary)
 }
 
-func (a *Avro2Bin) String() string {
+func (a *Avro2BinaryCodec) String() string {
 	return "GoAvro2Binary"
 }

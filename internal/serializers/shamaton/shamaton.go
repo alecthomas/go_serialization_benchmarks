@@ -6,107 +6,82 @@ import (
 	shamatongen "github.com/shamaton/msgpackgen/msgpack"
 )
 
-type ShamatonMapMsgpackSerializer struct{}
+type ShamatonMapMsgpackCodec struct{ goserbench.NativeSmallStruct }
 
-func (m ShamatonMapMsgpackSerializer) Marshal(o any) ([]byte, error) {
+func (ShamatonMapMsgpackCodec) Marshal(o *goserbench.SmallStruct) ([]byte, error) {
 	return shamaton.MarshalAsMap(o)
 }
 
-func (m ShamatonMapMsgpackSerializer) Unmarshal(d []byte, o any) error {
+func (ShamatonMapMsgpackCodec) Unmarshal(d []byte, o *goserbench.SmallStruct) error {
 	return shamaton.UnmarshalAsMap(d, o)
 }
 
-func NewShamatonMapMsgpackSerializer() goserbench.Serializer {
-	return ShamatonMapMsgpackSerializer{}
+func NewShamatonMapMsgpackCodec() goserbench.Codec[goserbench.SmallStruct] {
+	return ShamatonMapMsgpackCodec{}
 }
 
-type ShamatonArrayMsgpackSerializer struct{}
+type ShamatonArrayMsgpackCodec struct{ goserbench.NativeSmallStruct }
 
-func (m ShamatonArrayMsgpackSerializer) Marshal(o any) ([]byte, error) {
+func (ShamatonArrayMsgpackCodec) Marshal(o *goserbench.SmallStruct) ([]byte, error) {
 	return shamaton.MarshalAsArray(o)
 }
 
-func (m ShamatonArrayMsgpackSerializer) Unmarshal(d []byte, o any) error {
+func (ShamatonArrayMsgpackCodec) Unmarshal(d []byte, o *goserbench.SmallStruct) error {
 	return shamaton.UnmarshalAsArray(d, o)
 }
 
-func NewShamatonArrayMsgPackSerializer() goserbench.Serializer {
+func NewShamatonArrayMsgPackCodec() goserbench.Codec[goserbench.SmallStruct] {
 	RegisterGeneratedResolver()
-	return ShamatonArrayMsgpackSerializer{}
+	return ShamatonArrayMsgpackCodec{}
 }
 
-type ShamatonMapMsgpackgenSerializer struct {
-	a A
-}
+// shamatonGenConversions converts between A and goserbench.SmallStruct for
+// both generated shamaton codecs.
+type shamatonGenConversions struct{}
 
-func (m ShamatonMapMsgpackgenSerializer) Marshal(o any) ([]byte, error) {
-	v := o.(*goserbench.SmallStruct)
-	a := &m.a
+func (shamatonGenConversions) FromSmall(v *goserbench.SmallStruct, a *A) {
 	a.Name = v.Name
 	a.BirthDay = v.BirthDay
 	a.Phone = v.Phone
 	a.Siblings = v.Siblings
 	a.Spouse = v.Spouse
 	a.Money = v.Money
+}
+
+func (shamatonGenConversions) ToSmall(a *A, v *goserbench.SmallStruct) {
+	v.Name = a.Name
+	v.BirthDay = a.BirthDay
+	v.Phone = a.Phone
+	v.Siblings = a.Siblings
+	v.Spouse = a.Spouse
+	v.Money = a.Money
+}
+
+type ShamatonMapMsgpackgenCodec struct{ shamatonGenConversions }
+
+func (ShamatonMapMsgpackgenCodec) Marshal(a *A) ([]byte, error) {
 	return shamatongen.MarshalAsMap(a)
 }
 
-func (m ShamatonMapMsgpackgenSerializer) Unmarshal(d []byte, o any) error {
-	a := &m.a
-	err := shamatongen.UnmarshalAsMap(d, a)
-	if err != nil {
-		return err
-	}
-
-	v := o.(*goserbench.SmallStruct)
-	v.Name = a.Name
-	v.BirthDay = a.BirthDay
-	v.Phone = a.Phone
-	v.Siblings = int(a.Siblings)
-	v.Spouse = a.Spouse
-	v.Money = a.Money
-	return nil
+func (ShamatonMapMsgpackgenCodec) Unmarshal(d []byte, a *A) error {
+	return shamatongen.UnmarshalAsMap(d, a)
 }
 
-func NewShamatonMapMsgPackgenSerializer() goserbench.Serializer {
+func NewShamatonMapMsgPackgenCodec() goserbench.Codec[A] {
 	RegisterGeneratedResolver()
-	return ShamatonMapMsgpackgenSerializer{}
+	return ShamatonMapMsgpackgenCodec{}
 }
 
-type ShamatonArrayMsgpackgenSerializer struct {
-	a A
-}
+type ShamatonArrayMsgpackgenCodec struct{ shamatonGenConversions }
 
-func (m ShamatonArrayMsgpackgenSerializer) Marshal(o any) ([]byte, error) {
-	v := o.(*goserbench.SmallStruct)
-	a := &m.a
-	a.Name = v.Name
-	a.BirthDay = v.BirthDay
-	a.Phone = v.Phone
-	a.Siblings = v.Siblings
-	a.Spouse = v.Spouse
-	a.Money = v.Money
+func (ShamatonArrayMsgpackgenCodec) Marshal(a *A) ([]byte, error) {
 	return shamatongen.MarshalAsArray(a)
-
 }
 
-func (m ShamatonArrayMsgpackgenSerializer) Unmarshal(d []byte, o any) error {
-	a := &m.a
-	err := shamatongen.UnmarshalAsArray(d, a)
-	if err != nil {
-		return err
-	}
-
-	v := o.(*goserbench.SmallStruct)
-	v.Name = a.Name
-	v.BirthDay = a.BirthDay
-	v.Phone = a.Phone
-	v.Siblings = int(a.Siblings)
-	v.Spouse = a.Spouse
-	v.Money = a.Money
-	return nil
+func (ShamatonArrayMsgpackgenCodec) Unmarshal(d []byte, a *A) error {
+	return shamatongen.UnmarshalAsArray(d, a)
 }
 
-func NewShamatonArrayMsgpackgenSerializer() goserbench.Serializer {
-	return ShamatonArrayMsgpackgenSerializer{}
+func NewShamatonArrayMsgpackgenCodec() goserbench.Codec[A] {
+	return ShamatonArrayMsgpackgenCodec{}
 }

@@ -17,39 +17,34 @@ type SSZA struct {
 	Money    uint64 // ssz does not support float64
 }
 
-type SSZSerializer struct {
-	a SSZA
+type SSZCodec struct{}
+
+func (SSZCodec) Marshal(a *SSZA) ([]byte, error) {
+	return ssz.Marshal(a)
 }
 
-func (s *SSZSerializer) Marshal(o any) (buf []byte, err error) {
-	v := o.(*goserbench.SmallStruct)
-	a := &s.a
+func (SSZCodec) Unmarshal(bs []byte, a *SSZA) error {
+	return ssz.Unmarshal(bs, a)
+}
+
+func (SSZCodec) FromSmall(v *goserbench.SmallStruct, a *SSZA) {
 	a.Name = v.Name
 	a.BirthDay = uint64(v.BirthDay.UnixNano())
 	a.Phone = v.Phone
 	a.Siblings = int32(v.Siblings)
 	a.Spouse = v.Spouse
 	a.Money = math.Float64bits(v.Money)
-	return ssz.Marshal(a)
 }
 
-func (s *SSZSerializer) Unmarshal(bs []byte, o any) (err error) {
-	a := &s.a
-	err = ssz.Unmarshal(bs, a)
-	if err != nil {
-		return
-	}
-
-	v := o.(*goserbench.SmallStruct)
+func (SSZCodec) ToSmall(a *SSZA, v *goserbench.SmallStruct) {
 	v.Name = a.Name
 	v.BirthDay = time.Unix(0, int64(a.BirthDay))
 	v.Phone = a.Phone
 	v.Siblings = int(a.Siblings)
 	v.Spouse = a.Spouse
 	v.Money = math.Float64frombits(a.Money)
-	return
 }
 
-func NewSSZSerializer() goserbench.Serializer {
-	return &SSZSerializer{}
+func NewSSZCodec() goserbench.Codec[SSZA] {
+	return SSZCodec{}
 }

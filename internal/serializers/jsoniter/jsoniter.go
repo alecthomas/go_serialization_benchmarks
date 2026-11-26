@@ -9,20 +9,20 @@ var (
 	jsoniterFast = jsoniter.ConfigFastest
 )
 
-type JsonIterSerializer struct{}
+type JsonIterCodec struct{ goserbench.NativeSmallStruct }
 
-func (j JsonIterSerializer) Marshal(o any) ([]byte, error) {
+func (j JsonIterCodec) Marshal(o *goserbench.SmallStruct) ([]byte, error) {
 	return jsoniterFast.Marshal(o)
 }
 
-func (j JsonIterSerializer) Unmarshal(d []byte, o any) error {
+func (j JsonIterCodec) Unmarshal(d []byte, o *goserbench.SmallStruct) error {
 	return jsoniterFast.Unmarshal(d, o)
 }
 
-func (j JsonIterSerializer) ReduceFloat64Precision() uint {
+func (j JsonIterCodec) ReduceFloat64Precision() uint {
 	return 6
 }
 
-func NewJSONIterSerializer() goserbench.Serializer {
-	return JsonIterSerializer{}
+func NewJSONIterCodec() goserbench.Codec[goserbench.SmallStruct] {
+	return JsonIterCodec{}
 }

@@ -99,7 +99,8 @@ const (
 type BenchmarkCase struct {
 	Name string
 	URL  string
-	New  func() goserbench.Serializer
+	// Bench holds the serializer's marshal and unmarshal benchmarks.
+	Bench goserbench.Benchmarks
 
 	// UnsafeStringUnmarshal records whether the serializer uses usafe
 	// strings during unmarshal. Unsafe strings are modified if the
@@ -126,112 +127,112 @@ var benchmarkCases = []BenchmarkCase{
 	{
 		Name: "gotiny",
 		URL:  "github.com/niubaoshu/gotiny",
-		New:  gotiny.NewGotinySerializer,
+		Bench: goserbench.NewBenchmarks(gotiny.NewGotinyCodec),
 
 		TimeSupport: TSUnixNs,
 		APIKind:     AKReflect,
 	}, {
 		Name: "msgp",
 		URL:  "github.com/tinylib/msgp",
-		New:  msgpacktinylib.NewMsgpSerializer,
+		Bench: goserbench.NewBenchmarks(msgpacktinylib.NewMsgpCodec),
 
 		TimeSupport: TSFullRange,
 		APIKind:     AKCodegen,
 	}, {
 		Name: "msgpack",
 		URL:  "github.com/vmihailenco/msgpack",
-		New:  msgpackvmihailenco.NewVmihailencoMsgpackSerialier,
+		Bench: goserbench.NewBenchmarks(msgpackvmihailenco.NewVmihailencoMsgpackCodec),
 
 		TimeSupport: TSFullRange,
 		APIKind:     AKReflect,
 	}, {
 		Name: "json",
 		URL:  "pkg.go/dev/encoding/json",
-		New:  stdlib.NewJSONSerializer,
+		Bench: goserbench.NewBenchmarks(stdlib.NewJSONCodec),
 
 		TimeSupport: TSRFC3339Ns,
 		APIKind:     AKReflect,
 	}, {
 		Name: "jsoniter",
 		URL:  "github.com/json-iterator/go",
-		New:  jsoniter.NewJSONIterSerializer,
+		Bench: goserbench.NewBenchmarks(jsoniter.NewJSONIterCodec),
 
 		TimeSupport: TSCustom,
 		APIKind:     AKReflect,
 	}, {
 		Name: "easyjson",
 		URL:  "github.com/mailru/easyjson",
-		New:  easyjson.NewEasyJSONSerializer,
+		Bench: goserbench.NewBenchmarks(easyjson.NewEasyJSONCodec),
 
 		TimeSupport: TSUnknown,
 		APIKind:     AKCodegen,
 	}, {
 		Name: "bson",
 		URL:  "gopkg.in/mgo.v2/bson",
-		New:  bson.NewBsonSerializer,
+		Bench: goserbench.NewBenchmarks(bson.NewBsonCodec),
 
 		TimeSupport: TSUnixMs,
 		APIKind:     AKReflect,
 	}, {
 		Name: "mongobson",
 		URL:  "go.mongodb.org/mongo-driver/mongo",
-		New:  mongobson.NewMongoBSONSerializer,
+		Bench: goserbench.NewBenchmarks(mongobson.NewMongoBSONCodec),
 
 		TimeSupport: TSUnixMs,
 		APIKind:     AKReflect,
 	}, {
 		Name: "gob",
 		URL:  "pkg.go.dev/encoding/gob",
-		New:  stdlib.NewGobSerializer,
+		Bench: goserbench.NewBenchmarks(stdlib.NewGobCodec),
 
 		TimeSupport: TSFullTzOffset,
 		APIKind:     AKReflect,
 	}, {
 		Name: "davecgh/xdr",
 		URL:  "github.com/davecgh/go-xdr/xdr",
-		New:  xdrdavecgh.NewXDRDavecghSerializer,
+		Bench: goserbench.NewBenchmarks(xdrdavecgh.NewXDRDavecghCodec),
 
 		TimeSupport: TSRFC3339Ns,
 		APIKind:     AKReflect,
 	}, {
 		Name: "ugorji/msgpack",
 		URL:  "github.com/ugorji/go/codec",
-		New:  ugorji.NewUgorjiCodecMsgPack,
+		Bench: goserbench.NewBenchmarks(ugorji.NewUgorjiMsgPackCodec),
 
 		TimeSupport: TSUnknown,
 		APIKind:     AKReflect,
 	}, {
 		Name: "ugorji/binc",
 		URL:  "github.com/ugorji/go/codec",
-		New:  ugorji.NewUgorjiCodecBinc,
+		Bench: goserbench.NewBenchmarks(ugorji.NewUgorjiBincCodec),
 
 		TimeSupport: TSFullTzOffset,
 		APIKind:     AKReflect,
 	}, {
 		Name: "sereal",
 		URL:  "github.com/Sereal/Sereal/Go/sereal",
-		New:  sereal.NewSerealSerializer,
+		Bench: goserbench.NewBenchmarks(sereal.NewSerealCodec),
 
 		TimeSupport: TSUnknown,
 		APIKind:     AKReflect,
 	}, {
 		Name: "alecthomas/binary",
 		URL:  "github.com/alecthomas/binary",
-		New:  binaryalecthomas.NewBinarySerializer,
+		Bench: goserbench.NewBenchmarks(binaryalecthomas.NewBinaryCodec),
 
 		TimeSupport: TSNoSupport,
 		APIKind:     AKReflect,
 	}, {
 		Name: "flatbuffers",
 		URL:  "github.com/google/flatbuffers/go",
-		New:  flatbuffers.NewFlatBuffersSerializer,
+		Bench: goserbench.NewBenchmarks(flatbuffers.NewFlatBuffersCodec),
 
 		TimeSupport: TSNoSupport,
 		APIKind:     AKCodegen,
 	}, {
 		Name: "flatbuffers/unsafe_reuse",
 		URL:  "github.com/google/flatbuffers/go",
-		New:  flatbuffers.NewFlatBuffersUnsafeReuseSerializer,
+		Bench: goserbench.NewBenchmarks(flatbuffers.NewFlatBuffersUnsafeReuseCodec),
 
 		TimeSupport:           TSNoSupport,
 		APIKind:               AKCodegen,
@@ -240,56 +241,56 @@ var benchmarkCases = []BenchmarkCase{
 	}, {
 		Name: "capnproto",
 		URL:  "github.com/glycerine/go-capnproto",
-		New:  capnproto.NewCapNProtoSerializer,
+		Bench: goserbench.NewBenchmarks(capnproto.NewCapNProtoCodec),
 
 		TimeSupport: TSNoSupport,
 		APIKind:     AKCodegen,
 	}, {
 		Name: "hprose",
 		URL:  "github.com/hprose/hprose-go/io",
-		New:  hprose.NewHproseSerializer,
+		Bench: goserbench.NewBenchmarks(hprose.NewHproseCodec),
 
 		TimeSupport: TSCustom,
 		APIKind:     AKManual,
 	}, {
 		Name: "hprose2",
 		URL:  "github.com/hprose/hprose-golang/io",
-		New:  hprose2.NewHProse2Serializer,
+		Bench: goserbench.NewBenchmarks(hprose2.NewHProse2Codec),
 
 		TimeSupport: TSCustom,
 		APIKind:     AKManual,
 	}, {
 		Name: "dedis/protobuf",
 		URL:  "go.dedis.ch/protobuf",
-		New:  protobufdedis.NewProtobufSerializer,
+		Bench: goserbench.NewBenchmarks(protobufdedis.NewProtobufCodec),
 
 		TimeSupport: TSUnixNs,
 		APIKind:     AKReflect,
 	}, {
 		Name: "pulsar",
 		URL:  "github.com/cosmos/cosmos-proto",
-		New:  pulsar.NewPulsarSerializer,
+		Bench: goserbench.NewBenchmarks(pulsar.NewPulsarCodec),
 
 		TimeSupport: TSNoSupport,
 		APIKind:     AKCodegen,
 	}, {
 		Name: "protobuf-go",
 		URL:  "github.com/protocolbuffers/protobuf-go",
-		New:  protobuf.NewProtobufSerializer,
+		Bench: goserbench.NewBenchmarks(protobuf.NewProtobufCodec),
 
 		TimeSupport: TSRFC3339Ns,
 		APIKind:     AKCodegen,
 	}, {
 		Name: "omnibuf",
 		URL:  "github.com/omnibuf/omnibuf-go",
-		New:  omnibuf.NewOmniBufSerializer,
+		Bench: goserbench.NewBenchmarks(omnibuf.NewOmniBufCodec),
 
 		TimeSupport: TSUnixNs,
 		APIKind:     AKCodegen,
 	}, {
 		Name: "omnibuf/unsafe_reuse",
 		URL:  "github.com/omnibuf/omnibuf-go",
-		New:  omnibuf.NewOmniBufUnsafeReuseSerializer,
+		Bench: goserbench.NewBenchmarks(omnibuf.NewOmniBufUnsafeReuseCodec),
 
 		UnsafeStringUnmarshal: true,
 		BufferReuseMarshal:    true,
@@ -298,42 +299,42 @@ var benchmarkCases = []BenchmarkCase{
 	}, {
 		Name: "omnibuf/reflect",
 		URL:  "github.com/omnibuf/omnibuf-go",
-		New:  omnibuf.NewOmniBufReflectSerializer,
+		Bench: goserbench.NewBenchmarks(omnibuf.NewOmniBufReflectCodec),
 
 		TimeSupport: TSUnixNs,
 		APIKind:     AKReflect,
 	}, {
 		Name: "gogo/protobuf",
 		URL:  "github.com/gogo/protobuf/proto",
-		New:  gogo.NewGogoProtoSerializer,
+		Bench: goserbench.NewBenchmarks(gogo.NewGogoProtoCodec),
 
 		TimeSupport: TSNoSupport,
 		APIKind:     AKCodegen,
 	}, {
 		Name: "gogo/jsonpb",
 		URL:  "github.com/gogo/protobuf/proto",
-		New:  gogo.NewGogoJsonSerializer,
+		Bench: goserbench.NewBenchmarks(gogo.NewGogoJsonCodec),
 
 		TimeSupport: TSRFC3339Ns,
 		APIKind:     AKCodegen,
 	}, {
 		Name: "colfer",
 		URL:  "github.com/pascaldekloe/colfer",
-		New:  colfer.NewColferSerializer,
+		Bench: goserbench.NewBenchmarks(colfer.NewColferCodec),
 
 		TimeSupport: TSCustom,
 		APIKind:     AKCodegen,
 	}, {
 		Name: "gencode",
 		URL:  "github.com/andyleap/gencode",
-		New:  gencode.NewGencodeSerializer,
+		Bench: goserbench.NewBenchmarks(gencode.NewGencodeCodec),
 
 		TimeSupport: TSFullTzOffset,
 		APIKind:     AKCodegen,
 	}, {
 		Name: "gencode/unsafe_reuse",
 		URL:  "github.com/andyleap/gencode",
-		New:  gencode.NewGencodeUnsafeSerializer,
+		Bench: goserbench.NewBenchmarks(gencode.NewGencodeUnsafeCodec),
 
 		BufferReuseMarshal:    true,
 		UnsafeStringUnmarshal: true,
@@ -342,77 +343,77 @@ var benchmarkCases = []BenchmarkCase{
 	}, {
 		Name: "calmh/xdr",
 		URL:  "github.com/calmh/xdr",
-		New:  xdrcalmh.NewXDRCalmhSerializer,
+		Bench: goserbench.NewBenchmarks(xdrcalmh.NewXDRCalmhCodec),
 
 		TimeSupport: TSNoSupport,
 		APIKind:     AKCodegen,
 	}, {
 		Name: "goavro",
 		URL:  "gopkg.in/linkedin/goavro.v1",
-		New:  avro.NewAvroA,
+		Bench: goserbench.NewBenchmarks(avro.NewGoAvroCodec),
 
 		TimeSupport: TSNoSupport,
 		APIKind:     AKManual,
 	}, {
 		Name: "avro2/text",
 		URL:  "github.com/linkedin/goavro",
-		New:  avro.NewAvro2Txt,
+		Bench: goserbench.NewBenchmarks(avro.NewAvro2TextCodec),
 
 		TimeSupport: TSNoSupport,
 		APIKind:     AKManual,
 	}, {
 		Name: "avro2/binary",
 		URL:  "github.com/linkedin/goavro",
-		New:  avro.NewAvro2Bin,
+		Bench: goserbench.NewBenchmarks(avro.NewAvro2BinaryCodec),
 
 		TimeSupport: TSNoSupport,
 		APIKind:     AKManual,
 	}, {
 		Name: "ikea",
 		URL:  "github.com/ikkerens/ikeapack",
-		New:  ikea.NewIkeaSerializer,
+		Bench: goserbench.NewBenchmarks(ikea.NewIkeaCodec),
 
 		TimeSupport: TSNoSupport,
 		APIKind:     AKManual,
 	}, {
 		Name: "shamaton/msgpack/map",
 		URL:  "github.com/shamaton/msgpack",
-		New:  shamaton.NewShamatonMapMsgpackSerializer,
+		Bench: goserbench.NewBenchmarks(shamaton.NewShamatonMapMsgpackCodec),
 
 		TimeSupport: TSUnknown,
 		APIKind:     AKReflect,
 	}, {
 		Name: "shamaton/msgpack/array",
 		URL:  "github.com/shamaton/msgpack",
-		New:  shamaton.NewShamatonArrayMsgPackSerializer,
+		Bench: goserbench.NewBenchmarks(shamaton.NewShamatonArrayMsgPackCodec),
 
 		TimeSupport: TSUnknown,
 		APIKind:     AKReflect,
 	}, {
 		Name: "shamaton/msgpackgen/map",
 		URL:  "github.com/shamaton/msgpack",
-		New:  shamaton.NewShamatonMapMsgPackgenSerializer,
+		Bench: goserbench.NewBenchmarks(shamaton.NewShamatonMapMsgPackgenCodec),
 
 		TimeSupport: TSUnknown,
 		APIKind:     AKReflect,
 	}, {
 		Name: "shamaton/msgpackgen/array",
 		URL:  "github.com/shamaton/msgpack",
-		New:  shamaton.NewShamatonArrayMsgpackgenSerializer,
+		Bench: goserbench.NewBenchmarks(shamaton.NewShamatonArrayMsgpackgenCodec),
 
 		TimeSupport: TSUnknown,
 		APIKind:     AKReflect,
 	}, {
 		Name: "ssz",
 		URL:  "github.com/prysmaticlabs/go-ssz",
-		New:  ssz.NewSSZSerializer,
+		Bench: goserbench.NewBenchmarks(ssz.NewSSZCodec),
 
 		TimeSupport: TSNoSupport,
 		APIKind:     AKManual,
 	}, {
 		Name: "200sc/bebop",
 		URL:  "github.com/200sc/bebop",
-		New:  bebop200sc.NewBebop200ScSerializer,
+		Bench: goserbench.NewBenchmarks(bebop200sc.NewBebop200ScCodec),
 
 		TimeSupport: TSCustom,
 		APIKind:     AKCodegen,
@@ -422,7 +423,7 @@ var benchmarkCases = []BenchmarkCase{
 	}, {
 		Name: "200sc/bebop/reuse",
 		URL:  "github.com/200sc/bebop",
-		New:  bebop200sc.NewBebop200ScReuseSerializer,
+		Bench: goserbench.NewBenchmarks(bebop200sc.NewBebop200ScReuseCodec),
 
 		BufferReuseMarshal: true,
 		TimeSupport:        TSCustom,
@@ -433,7 +434,7 @@ var benchmarkCases = []BenchmarkCase{
 	}, {
 		Name: "wellquite/bebop",
 		URL:  "wellquite.org/bebop",
-		New:  bebopwellquite.NewBebopWellquiteSerializer,
+		Bench: goserbench.NewBenchmarks(bebopwellquite.NewBebopWellquiteCodec),
 
 		TimeSupport: TSCustom,
 		APIKind:     AKCodegen,
@@ -443,7 +444,7 @@ var benchmarkCases = []BenchmarkCase{
 	}, {
 		Name: "wellquite/bebop/reuse",
 		URL:  "wellquite.org/bebop",
-		New:  bebopwellquite.NewBebopWellquiteReuseSerializer,
+		Bench: goserbench.NewBenchmarks(bebopwellquite.NewBebopWellquiteReuseCodec),
 
 		BufferReuseMarshal: true,
 		TimeSupport:        TSCustom,
@@ -454,14 +455,14 @@ var benchmarkCases = []BenchmarkCase{
 	}, {
 		Name: "fastjson",
 		URL:  "github.com/valyala/fastjson",
-		New:  fastjson.NewFastJSONSerializer,
+		Bench: goserbench.NewBenchmarks(fastjson.NewFastJSONCodec),
 
 		TimeSupport: TSNoSupport,
 		APIKind:     AKManual,
 	}, {
 		Name: "fastjson/reuse",
 		URL:  "github.com/valyala/fastjson",
-		New:  fastjson.NewFastJSONReuseSerializer,
+		Bench: goserbench.NewBenchmarks(fastjson.NewFastJSONReuseCodec),
 
 		BufferReuseMarshal: true,
 		TimeSupport:        TSNoSupport,
@@ -469,14 +470,14 @@ var benchmarkCases = []BenchmarkCase{
 	}, {
 		Name: "benc",
 		URL:  "github.com/deneonet/benc",
-		New:  benc.NewBENCSerializer,
+		Bench: goserbench.NewBenchmarks(benc.NewBENCCodec),
 
 		TimeSupport: TSNoSupport,
 		APIKind:     AKManual,
 	}, {
 		Name: "benc/usafe",
 		URL:  "github.com/deneonet/benc",
-		New:  benc.NewBENCUnsafeSerializer,
+		Bench: goserbench.NewBenchmarks(benc.NewBENCUnsafeCodec),
 
 		UnsafeStringUnmarshal: true,
 		TimeSupport:           TSNoSupport,
@@ -484,14 +485,14 @@ var benchmarkCases = []BenchmarkCase{
 	}, {
 		Name: "bencgen",
 		URL:  "github.com/deneonet/benc",
-		New:  bencgen.NewBENCGenSerializer,
+		Bench: goserbench.NewBenchmarks(bencgen.NewBENCGenCodec),
 
 		TimeSupport: TSNoSupport,
 		APIKind:     AKCodegen,
 	}, {
 		Name: "bencgen/unsafe",
 		URL:  "github.com/deneonet/benc",
-		New:  bencgen.NewBENCGenUnsafeSerializer,
+		Bench: goserbench.NewBenchmarks(bencgen.NewBENCGenUnsafeCodec),
 
 		UnsafeStringUnmarshal: true,
 		TimeSupport:           TSNoSupport,
@@ -499,14 +500,14 @@ var benchmarkCases = []BenchmarkCase{
 	}, {
 		Name: "mus",
 		URL:  "github.com/mus-format/mus-go",
-		New:  mus.NewMUSSerializer,
+		Bench: goserbench.NewBenchmarks(mus.NewMUSCodec),
 
 		TimeSupport: TSNoSupport,
 		APIKind:     AKManual,
 	}, {
 		Name: "mus/unsafe_reuse",
 		URL:  "github.com/mus-format/mus-go",
-		New:  mus.NewMUSUnsafeReuseSerializer,
+		Bench: goserbench.NewBenchmarks(mus.NewMUSUnsafeReuseCodec),
 
 		BufferReuseMarshal:    true,
 		UnsafeStringUnmarshal: true,
@@ -515,7 +516,7 @@ var benchmarkCases = []BenchmarkCase{
 	}, {
 		Name: "idr",
 		URL:  "github.com/chmike/ditp",
-		New:  idr.NewIDRSerializer,
+		Bench: goserbench.NewBenchmarks(idr.NewIDRCodec),
 
 		TimeSupport: TSFullTzOffset,
 		APIKind:     AKManual,
@@ -523,7 +524,7 @@ var benchmarkCases = []BenchmarkCase{
 	}, {
 		Name: "idr/reuse",
 		URL:  "github.com/chmike/ditp",
-		New:  idr.NewIDRSerializerReuse,
+		Bench: goserbench.NewBenchmarks(idr.NewIDRReuseCodec),
 
 		BufferReuseMarshal: true,
 		TimeSupport:        TSFullTzOffset,
@@ -532,7 +533,7 @@ var benchmarkCases = []BenchmarkCase{
 	}, {
 		Name: "baseline",
 		URL:  "",
-		New:  baseline.NewBaselineSerializer,
+		Bench: goserbench.NewBenchmarks(baseline.NewBaselineCodec),
 
 		TimeSupport: TSNoSupport,
 		APIKind:     AKManual,
@@ -542,7 +543,7 @@ var benchmarkCases = []BenchmarkCase{
 	}, {
 		Name: "baseline/unsafe_reuse",
 		URL:  "",
-		New:  baseline.NewBaselineUnsafeSerializer,
+		Bench: goserbench.NewBenchmarks(baseline.NewBaselineUnsafeCodec),
 
 		UnsafeStringUnmarshal: true,
 		BufferReuseMarshal:    true,
@@ -554,7 +555,7 @@ var benchmarkCases = []BenchmarkCase{
 	}, {
 		Name: "baseline_rw",
 		URL:  "",
-		New:  baseline.NewBaselineReaderWriter,
+		Bench: goserbench.NewBenchmarks(baseline.NewBaselineReaderWriterCodec),
 
 		TimeSupport: TSNoSupport,
 		APIKind:     AKManual,
@@ -564,7 +565,7 @@ var benchmarkCases = []BenchmarkCase{
 	}, {
 		Name: "baseline_rw/unsafe_reuse",
 		URL:  "",
-		New:  baseline.NewBaselineReaderWriterUnsafeReuse,
+		Bench: goserbench.NewBenchmarks(baseline.NewBaselineReaderWriterUnsafeReuseCodec),
 
 		UnsafeStringUnmarshal: true,
 		BufferReuseMarshal:    true,
@@ -576,7 +577,7 @@ var benchmarkCases = []BenchmarkCase{
 	}, {
 		Name: "fastape",
 		URL:  "github.com/nazarifard/fastape",
-		New:  fastape.NewTape,
+		Bench: goserbench.NewBenchmarks(fastape.NewFastapeCodec),
 
 		UnsafeStringUnmarshal: true,
 		TimeSupport:           TSUnixNs,

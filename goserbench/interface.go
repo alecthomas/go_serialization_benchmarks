@@ -22,6 +22,25 @@ type Serializer interface {
 	Unmarshal(d []byte, o any) error
 }
 
+// Codec marshals and unmarshals values of a serializer's native type T.
+//
+// The harness converts test data with FromSmall before timing starts and
+// converts results with ToSmall only to validate them, so neither conversion
+// is measured.
+type Codec[T any] interface {
+	Marshal(v *T) ([]byte, error)
+	Unmarshal(d []byte, v *T) error
+	FromSmall(src *SmallStruct, dst *T)
+	ToSmall(src *T, dst *SmallStruct)
+}
+
+// NativeSmallStruct provides the [Codec] conversions for codecs whose native
+// type is [SmallStruct] itself. Embed it in such codecs.
+type NativeSmallStruct struct{}
+
+func (NativeSmallStruct) FromSmall(src, dst *SmallStruct) { *dst = *src }
+func (NativeSmallStruct) ToSmall(src, dst *SmallStruct)   { *dst = *src }
+
 // SerializerTimePrecision is a serializer that specifies the max precision that
 // a time.Time is encodable. This will be used to truncate time fields.
 type SerializerTimePrecision interface {

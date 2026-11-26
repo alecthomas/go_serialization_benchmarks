@@ -8,16 +8,15 @@ import (
 	"github.com/alecthomas/go_serialization_benchmarks/goserbench"
 )
 
-// BaselineSerializer is a baseline test for marshalling/unmarshalling. It
+// BaselineCodec is a baseline test for marshalling/unmarshalling. It
 // assumes names are 16 bytes and phones are 10 bytes and may panic or produce
 // incorrect results if this is not the case.
 //
 // This is useful as an upper bound on the performance achievable for standard
 // marshalling/unmarshalling operations.
-type BaselineSerializer struct{}
+type BaselineCodec struct{ goserbench.NativeSmallStruct }
 
-func (b *BaselineSerializer) Marshal(o any) ([]byte, error) {
-	a := o.(*goserbench.SmallStruct)
+func (b *BaselineCodec) Marshal(a *goserbench.SmallStruct) ([]byte, error) {
 	buf := make([]byte, 0, maxSmallStructSerializeSize)
 	buf = binary.LittleEndian.AppendUint64(buf, uint64(a.BirthDay.UnixNano()))
 	buf = binary.LittleEndian.AppendUint64(buf, math.Float64bits(a.Money))
@@ -28,8 +27,7 @@ func (b *BaselineSerializer) Marshal(o any) ([]byte, error) {
 	return buf, nil
 }
 
-func (b *BaselineSerializer) Unmarshal(d []byte, o any) error {
-	a := o.(*goserbench.SmallStruct)
+func (b *BaselineCodec) Unmarshal(d []byte, a *goserbench.SmallStruct) error {
 	a.BirthDay = time.Unix(0, int64(binary.LittleEndian.Uint64(d[:8])))
 	a.Money = math.Float64frombits(binary.LittleEndian.Uint64(d[8:16]))
 	a.Siblings = int(binary.LittleEndian.Uint32(d[16:20]))
@@ -39,18 +37,19 @@ func (b *BaselineSerializer) Unmarshal(d []byte, o any) error {
 	return nil
 }
 
-func NewBaselineSerializer() goserbench.Serializer {
-	return &BaselineSerializer{}
+func NewBaselineCodec() goserbench.Codec[goserbench.SmallStruct] {
+	return &BaselineCodec{}
 }
 
-// BaselineUnsafeSerializer is similar to BaselizeSerializer, but it reuses
+// BaselineUnsafeCodec is similar to BaselineCodec, but it reuses
 // the marshalling buffer and unmarshals unsafe strings.
-type BaselineUnsafeSerializer struct {
+type BaselineUnsafeCodec struct {
+	goserbench.NativeSmallStruct
+
 	buf []byte
 }
 
-func (b *BaselineUnsafeSerializer) Marshal(o any) ([]byte, error) {
-	a := o.(*goserbench.SmallStruct)
+func (b *BaselineUnsafeCodec) Marshal(a *goserbench.SmallStruct) ([]byte, error) {
 	buf := b.buf
 	buf = binary.LittleEndian.AppendUint64(buf, uint64(a.BirthDay.UnixNano()))
 	buf = binary.LittleEndian.AppendUint64(buf, math.Float64bits(a.Money))
@@ -61,8 +60,7 @@ func (b *BaselineUnsafeSerializer) Marshal(o any) ([]byte, error) {
 	return buf, nil
 }
 
-func (b *BaselineUnsafeSerializer) Unmarshal(d []byte, o any) error {
-	a := o.(*goserbench.SmallStruct)
+func (b *BaselineUnsafeCodec) Unmarshal(d []byte, a *goserbench.SmallStruct) error {
 	a.BirthDay = time.Unix(0, int64(binary.LittleEndian.Uint64(d[:8])))
 	a.Money = math.Float64frombits(binary.LittleEndian.Uint64(d[8:16]))
 	a.Siblings = int(binary.LittleEndian.Uint32(d[16:20]))
@@ -72,8 +70,8 @@ func (b *BaselineUnsafeSerializer) Unmarshal(d []byte, o any) error {
 	return nil
 }
 
-func NewBaselineUnsafeSerializer() goserbench.Serializer {
-	return &BaselineUnsafeSerializer{
+func NewBaselineUnsafeCodec() goserbench.Codec[goserbench.SmallStruct] {
+	return &BaselineUnsafeCodec{
 		buf: make([]byte, 0, maxSmallStructSerializeSize),
 	}
 }

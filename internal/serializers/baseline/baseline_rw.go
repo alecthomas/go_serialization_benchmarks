@@ -26,14 +26,16 @@ var alwaysNilWriter bytesMarshable
 // devirtualize calls to bytes.Reader.Read().
 var awlaysNilReader io.Reader
 
-// BaselineReaderWriter is a hand-written baseline serializer that reads/writes
+// BaselineReaderWriterCodec is a hand-written baseline serializer that reads/writes
 // using standard io.Reader and io.Writer interfaces.
 //
 // While goserbench utlimately generates a []byte as a result of Marshal (and
 // reads from a []byte as well), this verifies the performance of using the
 // generic io interface, which could be used to write to other streams directly
 // (e.g. file or socket).
-type BaselineReaderWriter struct {
+type BaselineReaderWriterCodec struct {
+	goserbench.NativeSmallStruct
+
 	// Store r to avoid this allocation. This is meant to simulate the fact
 	// that Unmarshal() receives a Reader directly (instead of a []byte).
 	r *bytes.Reader
@@ -50,7 +52,7 @@ type BaselineReaderWriter struct {
 	strBuf []byte
 }
 
-func (b *BaselineReaderWriter) Marshal(o any) ([]byte, error) {
+func (b *BaselineReaderWriterCodec) Marshal(a *goserbench.SmallStruct) ([]byte, error) {
 	// Create a new bytes buffer. We do it like this (referencing
 	// alwaysNilWriter first) to avoid the compiler de-virtualizing and
 	// inlining the calls to w.Write() directly into bytes.Buffer.Write()
@@ -68,7 +70,6 @@ func (b *BaselineReaderWriter) Marshal(o any) ([]byte, error) {
 		w = b.w
 	}
 
-	a := o.(*goserbench.SmallStruct)
 	extra := b.auxBuf[:0]
 	if _, err := w.Write(binary.LittleEndian.AppendUint64(extra, uint64(a.BirthDay.UnixNano()))); err != nil {
 		return nil, err
@@ -92,7 +93,7 @@ func (b *BaselineReaderWriter) Marshal(o any) ([]byte, error) {
 	return w.Bytes(), nil
 }
 
-func (b *BaselineReaderWriter) Unmarshal(d []byte, o any) error {
+func (b *BaselineReaderWriterCodec) Unmarshal(d []byte, a *goserbench.SmallStruct) error {
 	// Create reader with passed buffer. We do it like this (referencing
 	// alwaysNilReader first) to ensure the compiler does not devirtualize
 	// and inline the Read() calls direcly to the *bytes.Buffer.
@@ -102,7 +103,6 @@ func (b *BaselineReaderWriter) Unmarshal(d []byte, o any) error {
 		r = b.r
 	}
 
-	a := o.(*goserbench.SmallStruct)
 	aux := b.auxBuf
 	strs := b.strBuf
 
@@ -138,8 +138,8 @@ func (b *BaselineReaderWriter) Unmarshal(d []byte, o any) error {
 	return nil
 }
 
-func NewBaselineReaderWriter() goserbench.Serializer {
-	return &BaselineReaderWriter{
+func NewBaselineReaderWriterCodec() goserbench.Codec[goserbench.SmallStruct] {
+	return &BaselineReaderWriterCodec{
 		r:      bytes.NewReader(nil),
 		w:      &simpleBufferWriter{},
 		auxBuf: make([]byte, 8),
@@ -147,10 +147,12 @@ func NewBaselineReaderWriter() goserbench.Serializer {
 	}
 }
 
-// BaselineReaderWriterUnsafeReuse is a hand-written baseline serializer that
+// BaselineReaderWriterUnsafeReuseCodec is a hand-written baseline serializer that
 // reads/writes using standard io.Reader and io.Writer interfaces. It reuses
 // buffers and unsafe strings.
-type BaselineReaderWriterUnsafeReuse struct {
+type BaselineReaderWriterUnsafeReuseCodec struct {
+	goserbench.NativeSmallStruct
+
 	// w saves the buffer for writing.
 	w bytesMarshable
 
@@ -164,7 +166,7 @@ type BaselineReaderWriterUnsafeReuse struct {
 	strBuf []byte
 }
 
-func (b *BaselineReaderWriterUnsafeReuse) Marshal(o any) ([]byte, error) {
+func (b *BaselineReaderWriterUnsafeReuseCodec) Marshal(a *goserbench.SmallStruct) ([]byte, error) {
 	// Get a reference to the writer and reset its buffer. We do it like
 	// this (referencing alwaysNilWriter first) to ensure the compiler does
 	// not devirtualize and inline the Write() calls direcly to the
@@ -175,7 +177,6 @@ func (b *BaselineReaderWriterUnsafeReuse) Marshal(o any) ([]byte, error) {
 		w.Reset()
 	}
 
-	a := o.(*goserbench.SmallStruct)
 	extra := b.auxBuf[:0]
 	if _, err := w.Write(binary.LittleEndian.AppendUint64(extra, uint64(a.BirthDay.UnixNano()))); err != nil {
 		return nil, err
@@ -199,7 +200,7 @@ func (b *BaselineReaderWriterUnsafeReuse) Marshal(o any) ([]byte, error) {
 	return w.Bytes(), nil
 }
 
-func (b *BaselineReaderWriterUnsafeReuse) Unmarshal(d []byte, o any) error {
+func (b *BaselineReaderWriterUnsafeReuseCodec) Unmarshal(d []byte, a *goserbench.SmallStruct) error {
 	// Reset reader to passed buffer. We do it like this (referencing
 	// alwaysNilReader first) to ensure the compiler does not devirtualize
 	// and inline the Read() calls direcly to the *bytes.Buffer.
@@ -209,7 +210,6 @@ func (b *BaselineReaderWriterUnsafeReuse) Unmarshal(d []byte, o any) error {
 		r = b.r
 	}
 
-	a := o.(*goserbench.SmallStruct)
 	aux := b.auxBuf
 	strs := b.strBuf
 
@@ -246,8 +246,8 @@ func (b *BaselineReaderWriterUnsafeReuse) Unmarshal(d []byte, o any) error {
 	return nil
 }
 
-func NewBaselineReaderWriterUnsafeReuse() goserbench.Serializer {
-	return &BaselineReaderWriterUnsafeReuse{
+func NewBaselineReaderWriterUnsafeReuseCodec() goserbench.Codec[goserbench.SmallStruct] {
+	return &BaselineReaderWriterUnsafeReuseCodec{
 		w:      bytes.NewBuffer(make([]byte, 0, maxSmallStructSerializeSize)),
 		r:      bytes.NewReader(nil),
 		auxBuf: make([]byte, 8),

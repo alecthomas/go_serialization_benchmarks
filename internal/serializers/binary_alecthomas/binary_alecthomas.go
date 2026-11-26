@@ -5,16 +5,16 @@ import (
 	"github.com/alecthomas/go_serialization_benchmarks/goserbench"
 )
 
-type BinarySerializer struct{}
+type BinaryCodec struct{ goserbench.NativeSmallStruct }
 
-func (b BinarySerializer) Marshal(o any) ([]byte, error) {
+func (b BinaryCodec) Marshal(o *goserbench.SmallStruct) ([]byte, error) {
 	return binary.Marshal(o)
 }
 
-func (b BinarySerializer) Unmarshal(d []byte, o any) error {
+func (b BinaryCodec) Unmarshal(d []byte, o *goserbench.SmallStruct) error {
 	return binary.Unmarshal(d, o)
 }
 
-func NewBinarySerializer() goserbench.Serializer {
-	return BinarySerializer{}
+func NewBinaryCodec() goserbench.Codec[goserbench.SmallStruct] {
+	return BinaryCodec{}
 }

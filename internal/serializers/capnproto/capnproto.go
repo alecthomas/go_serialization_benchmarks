@@ -8,10 +8,9 @@ import (
 	capn "github.com/glycerine/go-capnproto"
 )
 
-type CapNProtoSerializer struct{}
+type CapNProtoCodec struct{ goserbench.NativeSmallStruct }
 
-func (x CapNProtoSerializer) Marshal(o any) ([]byte, error) {
-	a := o.(*goserbench.SmallStruct)
+func (x CapNProtoCodec) Marshal(a *goserbench.SmallStruct) ([]byte, error) {
 	seg := capn.NewBuffer(nil)
 	c := NewRootCapnpA(seg)
 	c.SetName(a.Name)
@@ -25,8 +24,7 @@ func (x CapNProtoSerializer) Marshal(o any) ([]byte, error) {
 	return buf.Bytes(), err
 }
 
-func (x CapNProtoSerializer) Unmarshal(d []byte, i any) error {
-	a := i.(*goserbench.SmallStruct)
+func (x CapNProtoCodec) Unmarshal(d []byte, a *goserbench.SmallStruct) error {
 	s, _, err := capn.ReadFromMemoryZeroCopy(d)
 	if err != nil {
 		return err
@@ -41,6 +39,6 @@ func (x CapNProtoSerializer) Unmarshal(d []byte, i any) error {
 	return nil
 }
 
-func NewCapNProtoSerializer() goserbench.Serializer {
-	return CapNProtoSerializer{}
+func NewCapNProtoCodec() goserbench.Codec[goserbench.SmallStruct] {
+	return CapNProtoCodec{}
 }

@@ -8,10 +8,9 @@ import (
 	bstd "github.com/deneonet/benc/std"
 )
 
-type BENCSerializer struct{}
+type BENCCodec struct{ goserbench.NativeSmallStruct }
 
-func (s BENCSerializer) Marshal(o any) (buf []byte, err error) {
-	v := o.(*goserbench.SmallStruct)
+func (s BENCCodec) Marshal(v *goserbench.SmallStruct) (buf []byte, err error) {
 	n := bstd.SizeString(v.Name)
 	n += bstd.SizeInt64()
 	n += bstd.SizeString(v.Phone)
@@ -30,8 +29,7 @@ func (s BENCSerializer) Marshal(o any) (buf []byte, err error) {
 	return
 }
 
-func (s BENCSerializer) Unmarshal(bs []byte, o any) (err error) {
-	v := o.(*goserbench.SmallStruct)
+func (s BENCCodec) Unmarshal(bs []byte, v *goserbench.SmallStruct) (err error) {
 	var n int
 	n, v.Name, err = bstd.UnmarshalString(0, bs)
 	if err != nil {
@@ -62,14 +60,13 @@ func (s BENCSerializer) Unmarshal(bs []byte, o any) (err error) {
 	return
 }
 
-func NewBENCSerializer() goserbench.Serializer {
-	return BENCSerializer{}
+func NewBENCCodec() goserbench.Codec[goserbench.SmallStruct] {
+	return BENCCodec{}
 }
 
-type BENCUnsafeSerializer struct{}
+type BENCUnsafeCodec struct{ goserbench.NativeSmallStruct }
 
-func (s BENCUnsafeSerializer) Marshal(o any) (buf []byte, err error) {
-	v := o.(*goserbench.SmallStruct)
+func (s BENCUnsafeCodec) Marshal(v *goserbench.SmallStruct) (buf []byte, err error) {
 	n := bstd.SizeString(v.Name)
 	n += bstd.SizeInt64()
 	n += bstd.SizeString(v.Phone)
@@ -88,9 +85,8 @@ func (s BENCUnsafeSerializer) Marshal(o any) (buf []byte, err error) {
 	return
 }
 
-func (s BENCUnsafeSerializer) Unmarshal(bs []byte, o any) (err error) {
+func (s BENCUnsafeCodec) Unmarshal(bs []byte, v *goserbench.SmallStruct) (err error) {
 	var n int
-	v := o.(*goserbench.SmallStruct)
 	n, v.Name, err = bstd.UnmarshalUnsafeString(0, bs)
 	if err != nil {
 		return
@@ -120,6 +116,6 @@ func (s BENCUnsafeSerializer) Unmarshal(bs []byte, o any) (err error) {
 	return
 }
 
-func NewBENCUnsafeSerializer() goserbench.Serializer {
-	return BENCUnsafeSerializer{}
+func NewBENCUnsafeCodec() goserbench.Codec[goserbench.SmallStruct] {
+	return BENCUnsafeCodec{}
 }

@@ -9,10 +9,9 @@ import (
 	"github.com/mus-format/mus-go/unsafe"
 )
 
-type MUSSerializer struct{}
+type MUSCodec struct{ goserbench.NativeSmallStruct }
 
-func (s MUSSerializer) Marshal(o any) ([]byte, error) {
-	v := o.(*goserbench.SmallStruct)
+func (s MUSCodec) Marshal(v *goserbench.SmallStruct) ([]byte, error) {
 	n := ord.SizeString(v.Name, nil)
 	n += unsafe.SizeInt64(v.BirthDay.UnixNano())
 	n += ord.SizeString(v.Phone, nil)
@@ -29,8 +28,7 @@ func (s MUSSerializer) Marshal(o any) ([]byte, error) {
 	return buf, nil
 }
 
-func (s MUSSerializer) Unmarshal(bs []byte, o any) (err error) {
-	v := o.(*goserbench.SmallStruct)
+func (s MUSCodec) Unmarshal(bs []byte, v *goserbench.SmallStruct) (err error) {
 	var n int
 	v.Name, n, err = ord.UnmarshalString(nil, bs)
 	if err != nil {
@@ -68,16 +66,17 @@ func (s MUSSerializer) Unmarshal(bs []byte, o any) (err error) {
 	return
 }
 
-func NewMUSSerializer() goserbench.Serializer {
-	return MUSSerializer{}
+func NewMUSCodec() goserbench.Codec[goserbench.SmallStruct] {
+	return MUSCodec{}
 }
 
-type MUSUnsafeReuseSerializer struct {
+type MUSUnsafeReuseCodec struct {
+	goserbench.NativeSmallStruct
+
 	buf []byte
 }
 
-func (s MUSUnsafeReuseSerializer) Marshal(o any) ([]byte, error) {
-	v := o.(*goserbench.SmallStruct)
+func (s MUSUnsafeReuseCodec) Marshal(v *goserbench.SmallStruct) ([]byte, error) {
 	n := unsafe.MarshalString(v.Name, nil, s.buf)
 	n += unsafe.MarshalInt64(v.BirthDay.UnixNano(), s.buf[n:])
 	n += unsafe.MarshalString(v.Phone, nil, s.buf[n:])
@@ -87,8 +86,7 @@ func (s MUSUnsafeReuseSerializer) Marshal(o any) ([]byte, error) {
 	return s.buf[:n], nil
 }
 
-func (s MUSUnsafeReuseSerializer) Unmarshal(bs []byte, o any) (err error) {
-	v := o.(*goserbench.SmallStruct)
+func (s MUSUnsafeReuseCodec) Unmarshal(bs []byte, v *goserbench.SmallStruct) (err error) {
 	var n int
 	v.Name, n, err = unsafe.UnmarshalString(nil, bs)
 	if err != nil {
@@ -126,6 +124,6 @@ func (s MUSUnsafeReuseSerializer) Unmarshal(bs []byte, o any) (err error) {
 	return
 }
 
-func NewMUSUnsafeReuseSerializer() goserbench.Serializer {
-	return MUSUnsafeReuseSerializer{buf: make([]byte, 1024)}
+func NewMUSUnsafeReuseCodec() goserbench.Codec[goserbench.SmallStruct] {
+	return MUSUnsafeReuseCodec{buf: make([]byte, 1024)}
 }

@@ -7,47 +7,40 @@ import (
 	pproto "google.golang.org/protobuf/proto"
 )
 
-type PulsarSerializer struct {
-	a PulsarBufA
-}
+type PulsarCodec struct{}
 
-func (s *PulsarSerializer) ForceUTC() bool {
+var _ goserbench.SerializerEnforcesTimezone = PulsarCodec{}
+
+func (PulsarCodec) ForcesUTC() bool {
 	return true
 }
 
-func (s *PulsarSerializer) Marshal(o any) (buf []byte, err error) {
-	v := o.(*goserbench.SmallStruct)
-	a := &s.a
+func (PulsarCodec) Marshal(a *PulsarBufA) ([]byte, error) {
+	return pproto.Marshal(a)
+}
+
+func (PulsarCodec) Unmarshal(bs []byte, a *PulsarBufA) error {
+	return pproto.Unmarshal(bs, a)
+}
+
+func (PulsarCodec) FromSmall(v *goserbench.SmallStruct, a *PulsarBufA) {
 	a.Name = v.Name
 	a.BirthDay = v.BirthDay.UnixNano()
 	a.Phone = v.Phone
 	a.Siblings = int32(v.Siblings)
 	a.Spouse = v.Spouse
 	a.Money = v.Money
-	return pproto.Marshal(a)
 }
 
-func (s *PulsarSerializer) Unmarshal(bs []byte, o any) (err error) {
-	a := &s.a
-
-	// Pulsar requires manually claring the fields to their default value.
-	// *a = PulsarA{}
-
-	err = pproto.Unmarshal(bs, a)
-	if err != nil {
-		return
-	}
-
-	v := o.(*goserbench.SmallStruct)
+func (PulsarCodec) ToSmall(a *PulsarBufA, v *goserbench.SmallStruct) {
 	v.Name = a.Name
 	v.BirthDay = time.Unix(0, a.BirthDay)
 	v.Phone = a.Phone
 	v.Siblings = int(a.Siblings)
 	v.Spouse = a.Spouse
 	v.Money = a.Money
-	return
 }
 
-func NewPulsarSerializer() goserbench.Serializer {
-	return &PulsarSerializer{}
+func NewPulsarCodec() goserbench.Codec[PulsarBufA] {
+	return PulsarCodec{}
 }

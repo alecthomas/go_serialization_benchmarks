@@ -5,39 +5,34 @@ import (
 	easyjson "github.com/mailru/easyjson"
 )
 
-type EasyJSONSerializer struct {
-	a A
+type EasyJSONCodec struct{}
+
+func (EasyJSONCodec) Marshal(a *A) ([]byte, error) {
+	return easyjson.Marshal(a)
 }
 
-func (m EasyJSONSerializer) Marshal(o any) ([]byte, error) {
-	v := o.(*goserbench.SmallStruct)
-	a := &m.a
+func (EasyJSONCodec) Unmarshal(d []byte, a *A) error {
+	return easyjson.Unmarshal(d, a)
+}
+
+func (EasyJSONCodec) FromSmall(v *goserbench.SmallStruct, a *A) {
 	a.Name = v.Name
 	a.BirthDay = v.BirthDay
 	a.Phone = v.Phone
 	a.Siblings = v.Siblings
 	a.Spouse = v.Spouse
 	a.Money = v.Money
-	return easyjson.Marshal(a)
 }
 
-func (m EasyJSONSerializer) Unmarshal(d []byte, o any) error {
-	a := &m.a
-	err := easyjson.Unmarshal(d, a)
-	if err != nil {
-		return err
-	}
-
-	v := o.(*goserbench.SmallStruct)
+func (EasyJSONCodec) ToSmall(a *A, v *goserbench.SmallStruct) {
 	v.Name = a.Name
 	v.BirthDay = a.BirthDay
 	v.Phone = a.Phone
-	v.Siblings = int(a.Siblings)
+	v.Siblings = a.Siblings
 	v.Spouse = a.Spouse
 	v.Money = a.Money
-	return nil
 }
 
-func NewEasyJSONSerializer() goserbench.Serializer {
-	return EasyJSONSerializer{}
+func NewEasyJSONCodec() goserbench.Codec[A] {
+	return EasyJSONCodec{}
 }

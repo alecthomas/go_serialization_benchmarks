@@ -16,22 +16,36 @@ type OmniBufGo struct {
 	Money    float64 `omnibuf:"6,name=money"`
 }
 
-type OmniBufCodegen struct {
-	a        OmniBufGo
-	buf      []byte
-	reuse    bool
-	zeroCopy bool
-}
+// omniBufConversions converts between OmniBufGo and goserbench.SmallStruct
+// for both OmniBuf codecs.
+type omniBufConversions struct{}
 
-func (s *OmniBufCodegen) Marshal(o any) ([]byte, error) {
-	v := o.(*goserbench.SmallStruct)
-	a := &s.a
+func (omniBufConversions) FromSmall(v *goserbench.SmallStruct, a *OmniBufGo) {
 	a.Name = v.Name
 	a.BirthDay = v.BirthDay.UnixNano()
 	a.Phone = v.Phone
 	a.Siblings = int32(v.Siblings)
 	a.Spouse = v.Spouse
 	a.Money = v.Money
+}
+
+func (omniBufConversions) ToSmall(a *OmniBufGo, v *goserbench.SmallStruct) {
+	v.Name = a.Name
+	v.BirthDay = time.Unix(0, a.BirthDay)
+	v.Phone = a.Phone
+	v.Siblings = int(a.Siblings)
+	v.Spouse = a.Spouse
+	v.Money = a.Money
+}
+
+type OmniBufCodec struct {
+	omniBufConversions
+	buf      []byte
+	reuse    bool
+	zeroCopy bool
+}
+
+func (s *OmniBufCodec) Marshal(a *OmniBufGo) ([]byte, error) {
 	if s.reuse {
 		s.buf = a.MarshalOmniBufAppend(s.buf[:0])
 		return s.buf, nil
@@ -39,65 +53,34 @@ func (s *OmniBufCodegen) Marshal(o any) ([]byte, error) {
 	return a.MarshalOmniBufAppend(nil), nil
 }
 
-func (s *OmniBufCodegen) Unmarshal(d []byte, o any) error {
-	a := &s.a
-	if err := a.UnmarshalOmniBuf(d, s.zeroCopy); err != nil {
-		return err
-	}
-	v := o.(*goserbench.SmallStruct)
-	v.Name = a.Name
-	v.BirthDay = time.Unix(0, a.BirthDay)
-	v.Phone = a.Phone
-	v.Siblings = int(a.Siblings)
-	v.Spouse = a.Spouse
-	v.Money = a.Money
-	return nil
+func (s *OmniBufCodec) Unmarshal(d []byte, a *OmniBufGo) error {
+	return a.UnmarshalOmniBuf(d, s.zeroCopy)
 }
 
-func NewOmniBufSerializer() goserbench.Serializer {
-	return &OmniBufCodegen{}
+func NewOmniBufCodec() goserbench.Codec[OmniBufGo] {
+	return &OmniBufCodec{}
 }
 
-func NewOmniBufUnsafeReuseSerializer() goserbench.Serializer {
-	return &OmniBufCodegen{
+func NewOmniBufUnsafeReuseCodec() goserbench.Codec[OmniBufGo] {
+	return &OmniBufCodec{
 		buf:      make([]byte, 0, 128),
 		reuse:    true,
 		zeroCopy: true,
 	}
 }
 
-type OmniBufReflect struct {
-	a OmniBufGo
+type OmniBufReflectCodec struct {
+	omniBufConversions
 }
 
-func (s *OmniBufReflect) Marshal(o any) ([]byte, error) {
-	v := o.(*goserbench.SmallStruct)
-	a := &s.a
-	a.Name = v.Name
-	a.BirthDay = v.BirthDay.UnixNano()
-	a.Phone = v.Phone
-	a.Siblings = int32(v.Siblings)
-	a.Spouse = v.Spouse
-	a.Money = v.Money
+func (s *OmniBufReflectCodec) Marshal(a *OmniBufGo) ([]byte, error) {
 	return omnibufwire.Marshal(a)
 }
 
-func (s *OmniBufReflect) Unmarshal(d []byte, o any) error {
-	a := &s.a
-	*a = OmniBufGo{}
-	if err := omnibufwire.Unmarshal(d, a); err != nil {
-		return err
-	}
-	v := o.(*goserbench.SmallStruct)
-	v.Name = a.Name
-	v.BirthDay = time.Unix(0, a.BirthDay)
-	v.Phone = a.Phone
-	v.Siblings = int(a.Siblings)
-	v.Spouse = a.Spouse
-	v.Money = a.Money
-	return nil
+func (s *OmniBufReflectCodec) Unmarshal(d []byte, a *OmniBufGo) error {
+	return omnibufwire.Unmarshal(d, a)
 }
 
-func NewOmniBufReflectSerializer() goserbench.Serializer {
-	return &OmniBufReflect{}
+func NewOmniBufReflectCodec() goserbench.Codec[OmniBufGo] {
+	return &OmniBufReflectCodec{}
 }

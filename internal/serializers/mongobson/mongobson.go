@@ -7,20 +7,20 @@ import (
 	mongobson "go.mongodb.org/mongo-driver/bson"
 )
 
-type MongoBsonSerializer struct{}
+type MongoBsonCodec struct{ goserbench.NativeSmallStruct }
 
-func (m MongoBsonSerializer) TimePrecision() time.Duration {
+func (m MongoBsonCodec) TimePrecision() time.Duration {
 	return time.Millisecond
 }
 
-func (m MongoBsonSerializer) Marshal(o any) ([]byte, error) {
+func (m MongoBsonCodec) Marshal(o *goserbench.SmallStruct) ([]byte, error) {
 	return mongobson.Marshal(o)
 }
 
-func (m MongoBsonSerializer) Unmarshal(d []byte, o any) error {
+func (m MongoBsonCodec) Unmarshal(d []byte, o *goserbench.SmallStruct) error {
 	return mongobson.Unmarshal(d, o)
 }
 
-func NewMongoBSONSerializer() goserbench.Serializer {
-	return MongoBsonSerializer{}
+func NewMongoBSONCodec() goserbench.Codec[goserbench.SmallStruct] {
+	return MongoBsonCodec{}
 }

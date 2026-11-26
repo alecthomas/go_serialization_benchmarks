@@ -6,20 +6,11 @@ import (
 	"github.com/alecthomas/go_serialization_benchmarks/goserbench"
 )
 
-type Bebop200ScSerializer struct {
-	a   BebopBuf200sc
+type Bebop200ScCodec struct {
 	buf []byte
 }
 
-func (s *Bebop200ScSerializer) Marshal(o any) (buf []byte, err error) {
-	v := o.(*goserbench.SmallStruct)
-	a := &s.a
-	a.Name = v.Name
-	a.BirthDay = v.BirthDay
-	a.Phone = v.Phone
-	a.Siblings = int32(v.Siblings)
-	a.Spouse = v.Spouse
-	a.Money = v.Money
+func (s *Bebop200ScCodec) Marshal(a *BebopBuf200sc) ([]byte, error) {
 	if s.buf == nil {
 		return a.MarshalBebop(), nil
 	}
@@ -27,35 +18,42 @@ func (s *Bebop200ScSerializer) Marshal(o any) (buf []byte, err error) {
 	return s.buf[:n], nil
 }
 
-func (s *Bebop200ScSerializer) Unmarshal(bs []byte, o any) (err error) {
-	a := &s.a
-	err = a.UnmarshalBebop(bs)
-	if err != nil {
-		return
-	}
+func (s *Bebop200ScCodec) Unmarshal(bs []byte, a *BebopBuf200sc) error {
+	return a.UnmarshalBebop(bs)
+}
 
-	v := o.(*goserbench.SmallStruct)
+func (s *Bebop200ScCodec) FromSmall(v *goserbench.SmallStruct, a *BebopBuf200sc) {
+	a.Name = v.Name
+	a.BirthDay = v.BirthDay
+	a.Phone = v.Phone
+	a.Siblings = int32(v.Siblings)
+	a.Spouse = v.Spouse
+	a.Money = v.Money
+}
+
+func (s *Bebop200ScCodec) ToSmall(a *BebopBuf200sc, v *goserbench.SmallStruct) {
 	v.Name = a.Name
 	v.BirthDay = a.BirthDay
 	v.Phone = a.Phone
 	v.Siblings = int(a.Siblings)
 	v.Spouse = a.Spouse
 	v.Money = a.Money
-	return
 }
 
-func (s *Bebop200ScSerializer) TimePrecision() time.Duration {
+func (s *Bebop200ScCodec) TimePrecision() time.Duration {
 	return 100 * time.Nanosecond
 }
 
-func (s *Bebop200ScSerializer) ForceUTC() bool {
+var _ goserbench.SerializerEnforcesTimezone = (*Bebop200ScCodec)(nil)
+
+func (s *Bebop200ScCodec) ForcesUTC() bool {
 	return true
 }
 
-func NewBebop200ScSerializer() goserbench.Serializer {
-	return &Bebop200ScSerializer{}
+func NewBebop200ScCodec() goserbench.Codec[BebopBuf200sc] {
+	return &Bebop200ScCodec{}
 }
 
-func NewBebop200ScReuseSerializer() goserbench.Serializer {
-	return &Bebop200ScSerializer{buf: make([]byte, 1024)}
+func NewBebop200ScReuseCodec() goserbench.Codec[BebopBuf200sc] {
+	return &Bebop200ScCodec{buf: make([]byte, 1024)}
 }

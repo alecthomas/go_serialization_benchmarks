@@ -5,7 +5,9 @@ import (
 	"github.com/nazarifard/fastape"
 )
 
-type smallStructTape struct {
+type FastapeCodec struct {
+	goserbench.NativeSmallStruct
+
 	NameTape     fastape.StringTape
 	BirthDayTape fastape.TimeTape
 	PhoneTape    fastape.StringTape
@@ -14,7 +16,7 @@ type smallStructTape struct {
 	MoneyTape    fastape.UnitTape[float64]
 }
 
-func (cp smallStructTape) Sizeof(p goserbench.SmallStruct) int {
+func (cp FastapeCodec) Sizeof(p goserbench.SmallStruct) int {
 	return cp.NameTape.Sizeof(p.Name) +
 		cp.BirthDayTape.Sizeof(p.BirthDay) +
 		cp.PhoneTape.Sizeof(p.Phone) +
@@ -23,8 +25,7 @@ func (cp smallStructTape) Sizeof(p goserbench.SmallStruct) int {
 		cp.MoneyTape.Sizeof(p.Money)
 }
 
-func (cp smallStructTape) Marshal(o any) (buf []byte, err error) {
-	p := o.(*goserbench.SmallStruct)
+func (cp FastapeCodec) Marshal(p *goserbench.SmallStruct) (buf []byte, err error) {
 	buf = make([]byte, cp.Sizeof(*p))
 
 	k, n := 0, 0
@@ -43,8 +44,7 @@ func (cp smallStructTape) Marshal(o any) (buf []byte, err error) {
 	return
 }
 
-func (cp smallStructTape) Unmarshal(bs []byte, o any) (err error) {
-	p := o.(*goserbench.SmallStruct)
+func (cp FastapeCodec) Unmarshal(bs []byte, p *goserbench.SmallStruct) (err error) {
 
 	k, n := 0, 0
 	k, err = cp.NameTape.Unmarshal(bs[n:], &p.Name)
@@ -86,6 +86,6 @@ func (cp smallStructTape) Unmarshal(bs []byte, o any) (err error) {
 	return
 }
 
-func NewTape() goserbench.Serializer {
-	return smallStructTape{}
+func NewFastapeCodec() goserbench.Codec[goserbench.SmallStruct] {
+	return FastapeCodec{}
 }
