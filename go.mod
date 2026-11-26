@@ -1,6 +1,6 @@
 module github.com/alecthomas/go_serialization_benchmarks
 
-go 1.22.4
+go 1.25.0
 
 require (
 	github.com/200sc/bebop v0.5.0
@@ -23,6 +23,7 @@ require (
 	github.com/linkedin/goavro/v2 v2.12.0
 	github.com/mailru/easyjson v0.7.7
 	github.com/nazarifard/fastape v0.0.0-20240611084216-abaecf150e5b
+	github.com/omnibuf/omnibuf-go v0.2.10
 	github.com/prysmaticlabs/go-ssz v0.0.0-20190827151743-72881c4223d8
 	github.com/shamaton/msgpack/v2 v2.1.1
 	github.com/shamaton/msgpackgen v0.3.0

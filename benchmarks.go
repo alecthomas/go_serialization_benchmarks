@@ -27,6 +27,7 @@ import (
 	msgpacktinylib "github.com/alecthomas/go_serialization_benchmarks/internal/serializers/msgpack_tinylib"
 	msgpackvmihailenco "github.com/alecthomas/go_serialization_benchmarks/internal/serializers/msgpack_vmihailenco"
 	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/mus"
+	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/omnibuf"
 	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/protobuf"
 	protobufdedis "github.com/alecthomas/go_serialization_benchmarks/internal/serializers/protobuf_dedis"
 	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/pulsar"
@@ -277,6 +278,29 @@ var benchmarkCases = []BenchmarkCase{
 
 		TimeSupport: TSRFC3339Ns,
 		APIKind:     AKCodegen,
+	}, {
+		Name: "omnibuf",
+		URL:  "github.com/omnibuf/omnibuf-go",
+		New:  omnibuf.NewOmniBufSerializer,
+
+		TimeSupport: TSUnixNs,
+		APIKind:     AKCodegen,
+	}, {
+		Name: "omnibuf/unsafe_reuse",
+		URL:  "github.com/omnibuf/omnibuf-go",
+		New:  omnibuf.NewOmniBufUnsafeReuseSerializer,
+
+		UnsafeStringUnmarshal: true,
+		BufferReuseMarshal:    true,
+		TimeSupport:           TSUnixNs,
+		APIKind:               AKCodegen,
+	}, {
+		Name: "omnibuf/reflect",
+		URL:  "github.com/omnibuf/omnibuf-go",
+		New:  omnibuf.NewOmniBufReflectSerializer,
+
+		TimeSupport: TSUnixNs,
+		APIKind:     AKReflect,
 	}, {
 		Name: "gogo/protobuf",
 		URL:  "github.com/gogo/protobuf/proto",

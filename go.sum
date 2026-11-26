@@ -207,6 +207,8 @@ github.com/neelance/sourcemap v0.0.0-20200213170602-2833bce08e4c/go.mod h1:Qr6/a
 github.com/niubaoshu/goutils v0.0.0-20180828035119-e8e576f66c2b h1:T7vmCmpGIvqlOOp5SXatALP+HYc/40ZHbxmgy+p+sN0=
 github.com/niubaoshu/goutils v0.0.0-20180828035119-e8e576f66c2b/go.mod h1:aDwH4aWrEBXw/uvtSvwNwxdtnsx++aP8c8ad4AmlRCg=
 github.com/oklog/ulid v1.3.1/go.mod h1:CirwcVhetQ6Lv90oh/F+FBtV6XMibvdAFo93nm5qn4U=
+github.com/omnibuf/omnibuf-go v0.2.10 h1:JVfNkZYoBrkxUHbWYwhDc1vJ8nS6P7tzTdpb0DG2rF8=
+github.com/omnibuf/omnibuf-go v0.2.10/go.mod h1:wrcpM54pcS4exzDj7xo7aa/ivD2GrFzmXV63FwMETNI=
 github.com/pascaldekloe/goe v0.0.0-20180627143212-57f6aae5913c/go.mod h1:lzWF7FIEvWOWxwDKqyGYQf6ZUaNfKdP144TG7ZOy1lc=
 github.com/pelletier/go-toml v1.2.0/go.mod h1:5z9KED0ma1S8pY6P1sdut58dfprrGBbd/94hg7ilaic=
 github.com/philhofer/fwd v1.1.2 h1:bnDivRJ1EWPjUIRXV5KfORO897HTbpFAQddBdE8t7Gw=
