@@ -38,8 +38,6 @@ require (
 	wellquite.org/bebop v0.0.0-20231109192402-a92af83691ec
 )
 
-require github.com/mus-format/common-go v0.0.0-20240427160332-fda7f59c1da2 // indirect
-
 require (
 	github.com/DataDog/zstd v1.5.2 // indirect
 	github.com/glycerine/goconvey v0.0.0-20190410193231-58a59202ab31 // indirect
@@ -55,6 +53,7 @@ require (
 	github.com/minio/sha256-simd v0.1.0 // indirect
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
 	github.com/modern-go/reflect2 v1.0.2 // indirect
+	github.com/mus-format/common-go v0.0.0-20240427160332-fda7f59c1da2 // indirect
 	github.com/mus-format/mus-go v0.3.0
 	github.com/philhofer/fwd v1.1.2 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
