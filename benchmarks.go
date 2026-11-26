@@ -7,6 +7,7 @@ import (
 	bebop200sc "github.com/alecthomas/go_serialization_benchmarks/internal/serializers/bebop_200sc"
 	bebopwellquite "github.com/alecthomas/go_serialization_benchmarks/internal/serializers/bebop_wellquite"
 	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/benc"
+	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/bencgen"
 	binaryalecthomas "github.com/alecthomas/go_serialization_benchmarks/internal/serializers/binary_alecthomas"
 	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/bson"
 	"github.com/alecthomas/go_serialization_benchmarks/internal/serializers/capnproto"
@@ -480,6 +481,21 @@ var benchmarkCases = []BenchmarkCase{
 		UnsafeStringUnmarshal: true,
 		TimeSupport:           TSNoSupport,
 		APIKind:               AKManual,
+	}, {
+		Name: "bencgen",
+		URL:  "github.com/deneonet/benc",
+		New:  bencgen.NewBENCGenSerializer,
+
+		TimeSupport: TSNoSupport,
+		APIKind:     AKCodegen,
+	}, {
+		Name: "bencgen/unsafe",
+		URL:  "github.com/deneonet/benc",
+		New:  bencgen.NewBENCGenUnsafeSerializer,
+
+		UnsafeStringUnmarshal: true,
+		TimeSupport:           TSNoSupport,
+		APIKind:               AKCodegen,
 	}, {
 		Name: "mus",
 		URL:  "github.com/mus-format/mus-go",
